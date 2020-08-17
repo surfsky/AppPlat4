@@ -1,0 +1,220 @@
+{
+  "format": 1,
+  "restore": {
+    "\\\\Mac\\Downloads\\Dev\\AppPlat\\AppPlat4\\App.Test\\App.Tests.csproj": {}
+  },
+  "projects": {
+    "\\\\Mac\\Downloads\\Dev\\AppPlat\\AppPlat4\\App.BLL\\App.BLL.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "\\\\Mac\\Downloads\\Dev\\AppPlat\\AppPlat4\\App.BLL\\App.BLL.csproj",
+        "projectName": "App.BLL",
+        "projectPath": "\\\\Mac\\Downloads\\Dev\\AppPlat\\AppPlat4\\App.BLL\\App.BLL.csproj",
+        "packagesPath": "C:\\Users\\CJH\\.nuget\\packages\\",
+        "outputPath": "\\\\Mac\\Downloads\\Dev\\AppPlat\\AppPlat4\\App.BLL\\obj\\",
+        "projectStyle": "PackageReference",
+        "skipContentFileWrite": true,
+        "fallbackFolders": [
+          "C:\\Microsoft\\Xamarin\\NuGet\\"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\CJH\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net45"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net45": {
+            "projectReferences": {}
+          }
+        }
+      },
+      "frameworks": {
+        "net45": {
+          "dependencies": {
+            "EntityFramework": {
+              "target": "Package",
+              "version": "[6.2.0, )"
+            },
+            "Newtonsoft.Json": {
+              "target": "Package",
+              "version": "[11.0.2, )"
+            },
+            "Z.EntityFramework.Plus.EF6": {
+              "target": "Package",
+              "version": "[1.12.19, )"
+            }
+          }
+        }
+      },
+      "runtimes": {
+        "win": {
+          "#import": []
+        },
+        "win-x64": {
+          "#import": []
+        },
+        "win-x86": {
+          "#import": []
+        }
+      }
+    },
+    "\\\\Mac\\Downloads\\Dev\\AppPlat\\AppPlat4\\App.Test\\App.Tests.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "\\\\Mac\\Downloads\\Dev\\AppPlat\\AppPlat4\\App.Test\\App.Tests.csproj",
+        "projectName": "App.Tests",
+        "projectPath": "\\\\Mac\\Downloads\\Dev\\AppPlat\\AppPlat4\\App.Test\\App.Tests.csproj",
+        "packagesPath": "C:\\Users\\CJH\\.nuget\\packages\\",
+        "outputPath": "\\\\Mac\\Downloads\\Dev\\AppPlat\\AppPlat4\\App.Test\\obj\\",
+        "projectStyle": "PackageReference",
+        "skipContentFileWrite": true,
+        "fallbackFolders": [
+          "C:\\Microsoft\\Xamarin\\NuGet\\"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\CJH\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net45"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net45": {
+            "projectReferences": {
+              "\\\\Mac\\Downloads\\Dev\\AppPlat\\AppPlat4\\App.BLL\\App.BLL.csproj": {
+                "projectPath": "\\\\Mac\\Downloads\\Dev\\AppPlat\\AppPlat4\\App.BLL\\App.BLL.csproj"
+              },
+              "\\\\Mac\\Downloads\\Dev\\AppPlat\\AppPlat4\\App\\App.csproj": {
+                "projectPath": "\\\\Mac\\Downloads\\Dev\\AppPlat\\AppPlat4\\App\\App.csproj"
+              }
+            }
+          }
+        }
+      },
+      "frameworks": {
+        "net45": {
+          "dependencies": {
+            "EntityFramework": {
+              "target": "Package",
+              "version": "[6.2.0, )"
+            },
+            "MSTest.TestAdapter": {
+              "target": "Package",
+              "version": "[1.4.0, )"
+            },
+            "MSTest.TestFramework": {
+              "target": "Package",
+              "version": "[1.4.0, )"
+            },
+            "Newtonsoft.Json": {
+              "target": "Package",
+              "version": "[11.0.2, )"
+            }
+          }
+        }
+      },
+      "runtimes": {
+        "win": {
+          "#import": []
+        },
+        "win-x64": {
+          "#import": []
+        },
+        "win-x86": {
+          "#import": []
+        }
+      }
+    },
+    "\\\\Mac\\Downloads\\Dev\\AppPlat\\AppPlat4\\App.Web\\App.Web.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "\\\\Mac\\Downloads\\Dev\\AppPlat\\AppPlat4\\App.Web\\App.Web.csproj",
+        "projectName": "App.Web",
+        "projectPath": "\\\\Mac\\Downloads\\Dev\\AppPlat\\AppPlat4\\App.Web\\App.Web.csproj",
+        "packagesPath": "C:\\Users\\CJH\\.nuget\\packages\\",
+        "outputPath": "\\\\Mac\\Downloads\\Dev\\AppPlat\\AppPlat4\\App.Web\\obj\\",
+        "projectStyle": "PackageReference",
+        "skipContentFileWrite": true,
+        "fallbackFolders": [
+          "C:\\Microsoft\\Xamarin\\NuGet\\"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\CJH\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net45"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net45": {
+            "projectReferences": {
+              "\\\\Mac\\Downloads\\Dev\\AppPlat\\AppPlat4\\App.BLL\\App.BLL.csproj": {
+                "projectPath": "\\\\Mac\\Downloads\\Dev\\AppPlat\\AppPlat4\\App.BLL\\App.BLL.csproj"
+              }
+            }
+          }
+        }
+      },
+      "frameworks": {
+        "net45": {
+          "dependencies": {
+            "Newtonsoft.Json": {
+              "target": "Package",
+              "version": "[11.0.2, )"
+            }
+          }
+        }
+      },
+      "runtimes": {
+        "win": {
+          "#import": []
+        },
+        "win-x64": {
+          "#import": []
+        },
+        "win-x86": {
+          "#import": []
+        }
+      }
+    },
+    "\\\\Mac\\Downloads\\Dev\\AppPlat\\AppPlat4\\App\\App.csproj": {
+      "restore": {
+        "projectUniqueName": "\\\\Mac\\Downloads\\Dev\\AppPlat\\AppPlat4\\App\\App.csproj",
+        "projectName": "App",
+        "projectPath": "\\\\Mac\\Downloads\\Dev\\AppPlat\\AppPlat4\\App\\App.csproj",
+        "frameworks": {
+          "net45": {
+            "projectReferences": {
+              "\\\\Mac\\Downloads\\Dev\\AppPlat\\AppPlat4\\App.BLL\\App.BLL.csproj": {
+                "projectPath": "\\\\Mac\\Downloads\\Dev\\AppPlat\\AppPlat4\\App.BLL\\App.BLL.csproj"
+              },
+              "\\\\Mac\\Downloads\\Dev\\AppPlat\\AppPlat4\\App.Web\\App.Web.csproj": {
+                "projectPath": "\\\\Mac\\Downloads\\Dev\\AppPlat\\AppPlat4\\App.Web\\App.Web.csproj"
+              }
+            }
+          }
+        }
+      },
+      "frameworks": {
+        "net45": {}
+      }
+    }
+  }
+}

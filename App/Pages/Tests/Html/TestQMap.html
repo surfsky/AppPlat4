@@ -1,0 +1,198 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>腾讯地图测试</title>
+    <style type="text/css">
+        * {
+            margin: 0px;
+            padding: 0px;
+        }
+
+        body, button, input, select, textarea {
+            font: 12px/16px Verdana, Helvetica, Arial, sans-serif;
+        }
+
+        p {
+            width: 603px;
+            padding-top: 3px;
+            margin-top: 10px;
+            overflow: hidden;
+        }
+
+        #mapContainer {
+            min-width: 603px;
+            min-height: 767px;
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+<body onload="init()">
+    <div>
+        <label>GPS</label>
+        <input id="tbGPS" type="textbox" value="39.98174,116.30631" style="width:200px">
+        <label>地址</label>
+        <input id="tbAddr" type="textbox" value="" style="width:400px">
+        <input type="button" value="查找" onclick="searchAddr()">
+        <input type="button" value="路况" onclick="showTraffic()">
+        <input type="button" value="当前城市" onclick="setCurrentCity()">
+        <input type="button" value="当前位置1" onclick="setCurrentLocation()">
+        <input type="button" value="当前位置2" onclick="setCurrentLocation2()">
+    </div>
+    <div id="mapContainer"></div>
+    <script charset="utf-8" src="https://map.qq.com/api/js?v=2.exp&key=BZABZ-W2EHU-WELVJ-4ODPE-4KW5V-VRBQW&libraries=convertor"></script>
+    <script type="text/javascript" src="https://3gimg.qq.com/lightmap/components/geolocation/geolocation.min.js"></script>
+    <script>
+        var map, marker = null;
+        var tbGPS = document.getElementById("tbGPS");
+        var tbAddr = document.getElementById("tbAddr");
+
+        // 入口
+        var init = function () {
+            // 地图
+            var center = new qq.maps.LatLng(28.01469, 120.65523);
+            showGPS(center);
+            map = new qq.maps.Map(document.getElementById('mapContainer'), {
+                center: center,
+                zoom: 13
+            });
+
+            // 中心点图标
+            var middleControl = document.createElement("div");
+            middleControl.innerHTML = "<img src='/res/images/center.gif' />";
+            middleControl.index = 1;
+            map.controls[qq.maps.ControlPosition.CENTER].push(middleControl);
+
+            // 右下角图标
+            var locateControl = document.createElement("div");
+            locateControl.innerHTML = "<img src='/res/images/locator.png' />";
+            locateControl.index = 1;
+            locateControl.style.paddingRight = "10px";
+            locateControl.style.paddingBottom = "10px";
+            locateControl.onclick = setCurrentLocation2;
+            map.controls[qq.maps.ControlPosition.BOTTOM_RIGHT].push(locateControl);
+
+            //
+            //marker = new qq.maps.Marker({
+            //    map: map,
+            //    position: center
+            //});
+
+            // 地图中心更改事件(marker 始终居中, 显示GPS及文本地址)
+            qq.maps.event.addListener(map, 'center_changed', function () {
+                var point = map.getCenter();
+                //marker.setPosition(point);
+                showGPS(point);
+                searchGPS();
+            });
+        }
+
+        // 显示经度纬度（注意腾讯的是纬度经度）
+        function showGPS(latlng) {
+            tbGPS.value = toGPS(latlng);
+        }
+
+        // 设置当前城市中心点（根据IP)
+        function setCurrentCity() {
+            var citylocation = new qq.maps.CityService({
+                complete: function (result) {
+                    map.setCenter(result.detail.latLng);
+                }
+            });
+            citylocation.searchLocalCity();
+        }
+
+
+        // 设置当前定位（浏览器定位）
+        function setCurrentLocation() {
+            if (navigator.geolocation) {
+                // safari 要求 https
+                // chrome 必须翻墙才能进入回调函数
+                navigator.geolocation.getCurrentPosition(function (position) {
+                    var lat = position.coords.latitude;
+                    var lng = position.coords.longitude;
+                    var latlng = new qq.maps.LatLng(lat, lng);
+
+                    // 直接定位
+                    tbGPS.value = toGPS(latlng);
+                    map.setCenter(latlng);
+
+                    // 调用转换接口。type的可选值为 1:GPS经纬度，2:搜狗经纬度，3:百度经纬度，4:mapbar经纬度，5:google经纬度，6:搜狗墨卡托
+                    qq.maps.convertor.translate(latlng, 1, function (res) {
+                        var point = res[0];
+                        tbGPS.value = toGPS(point);
+                        map.setCenter(point);
+                        //marker.setPosition(point);
+                    });
+                });
+            }
+        }
+
+        // 设置当前坐标2（用腾讯定位服务）
+        // https://lbs.qq.com/tool/component-geolocation.html
+        function setCurrentLocation2() {
+            var geolocation = new qq.maps.Geolocation("BZABZ-W2EHU-WELVJ-4ODPE-4KW5V-VRBQW", "bearmanager");
+            geolocation.getLocation(
+                function (position) {
+                    var latlng = new qq.maps.LatLng(position.lat, position.lng);
+                    map.setCenter(latlng);
+                },
+                function () {
+                    console.info("定位失败");
+                },
+                { timeout: 8000 }
+            );
+        }
+
+        // 转化为经度纬度
+        function toGPS(latlng) {
+            var lat = latlng.lat.toString();
+            var lng = latlng.lng.toString();
+            return lng + ", " + lat;
+        }
+
+        // 转化为纬度经度
+        function toLatlng(gps) {
+            var array = gps.split(",", 2);
+            var lng = parseFloat(array[0]);
+            var lat = parseFloat(array[1]);
+            return new qq.maps.LatLng(lat, lng);
+        }
+
+        // 查找指定的GPS坐标（并返回文本地址）
+        function searchGPS() {
+            //获取经纬度数值
+            var gps = tbGPS.value;
+            var latLng = toLatlng(gps);
+
+            // 获取位置文本（调用 Geocoder 需要企业账户并购买配额）
+            var geocoder = new qq.maps.Geocoder({
+                complete: function (result) {
+                    tbAddr.value = result.detail.address;
+                }
+            });
+            geocoder.getAddress(latLng);
+        }
+
+        // 查找指定的文本地址（并返回GPS）
+        function searchAddr() {
+            var addr = tbAddr.value;
+            var geocoder = new qq.maps.Geocoder({
+                complete: function (result) {
+                    map.setCenter(result.detail.location);
+                }
+            });
+            geocoder.getLocation(addr);
+        }
+
+        //实时路况图层
+        function showTraffic() {
+            var layer = new qq.maps.TrafficLayer();
+            layer.setMap(map);
+        }
+    </script>
+</body>
+</html>
+

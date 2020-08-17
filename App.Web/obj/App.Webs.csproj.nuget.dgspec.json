@@ -1,0 +1,169 @@
+{
+  "format": 1,
+  "restore": {
+    "X:\\DevWZCC\\2020\\190712.电信知识库\\00.Code\\KB-git\\App.Webs\\App.Webs.csproj": {}
+  },
+  "projects": {
+    "X:\\DevWZCC\\2020\\190712.电信知识库\\00.Code\\KB-git\\App.BLL\\App.BLL.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "X:\\DevWZCC\\2020\\190712.电信知识库\\00.Code\\KB-git\\App.BLL\\App.BLL.csproj",
+        "projectName": "App.BLL",
+        "projectPath": "X:\\DevWZCC\\2020\\190712.电信知识库\\00.Code\\KB-git\\App.BLL\\App.BLL.csproj",
+        "packagesPath": "C:\\Users\\CJH\\.nuget\\packages\\",
+        "outputPath": "X:\\DevWZCC\\2020\\190712.电信知识库\\00.Code\\KB-git\\App.BLL\\obj\\",
+        "projectStyle": "PackageReference",
+        "skipContentFileWrite": true,
+        "fallbackFolders": [
+          "C:\\Microsoft\\Xamarin\\NuGet\\"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\CJH\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net45"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "http://nuget.wzcc.com/nuget": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net45": {
+            "projectReferences": {
+              "\\\\Mac\\Home\\Downloads\\Dev\\Dev\\AppPlat\\App.Core\\App.Core-github\\App.Core\\App.Core.csproj": {
+                "projectPath": "\\\\Mac\\Home\\Downloads\\Dev\\Dev\\AppPlat\\App.Core\\App.Core-github\\App.Core\\App.Core.csproj"
+              }
+            }
+          }
+        }
+      },
+      "frameworks": {
+        "net45": {
+          "dependencies": {
+            "EntityFramework": {
+              "target": "Package",
+              "version": "[6.2.0, )"
+            },
+            "EntityFramework.Extended": {
+              "target": "Package",
+              "version": "[6.1.0.168, )"
+            },
+            "Newtonsoft.Json": {
+              "target": "Package",
+              "version": "[11.0.2, )"
+            }
+          }
+        }
+      },
+      "runtimes": {
+        "win": {
+          "#import": []
+        },
+        "win-x64": {
+          "#import": []
+        },
+        "win-x86": {
+          "#import": []
+        }
+      }
+    },
+    "X:\\DevWZCC\\2020\\190712.电信知识库\\00.Code\\KB-git\\App.Spire\\App.Spire.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "X:\\DevWZCC\\2020\\190712.电信知识库\\00.Code\\KB-git\\App.Spire\\App.Spire.csproj",
+        "projectName": "App.Spire",
+        "projectPath": "X:\\DevWZCC\\2020\\190712.电信知识库\\00.Code\\KB-git\\App.Spire\\App.Spire.csproj",
+        "frameworks": {
+          "net45": {
+            "projectReferences": {
+              "\\\\Mac\\Home\\Downloads\\Dev\\Dev\\AppPlat\\App.Core\\App.Core-github\\App.Core\\App.Core.csproj": {
+                "projectPath": "\\\\Mac\\Home\\Downloads\\Dev\\Dev\\AppPlat\\App.Core\\App.Core-github\\App.Core\\App.Core.csproj"
+              }
+            }
+          }
+        }
+      },
+      "frameworks": {
+        "net45": {}
+      }
+    },
+    "X:\\DevWZCC\\2020\\190712.电信知识库\\00.Code\\KB-git\\App.Webs\\App.Webs.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "X:\\DevWZCC\\2020\\190712.电信知识库\\00.Code\\KB-git\\App.Webs\\App.Webs.csproj",
+        "projectName": "App.Webs",
+        "projectPath": "X:\\DevWZCC\\2020\\190712.电信知识库\\00.Code\\KB-git\\App.Webs\\App.Webs.csproj",
+        "packagesPath": "C:\\Users\\CJH\\.nuget\\packages\\",
+        "outputPath": "X:\\DevWZCC\\2020\\190712.电信知识库\\00.Code\\KB-git\\App.Webs\\obj\\",
+        "projectStyle": "PackageReference",
+        "skipContentFileWrite": true,
+        "fallbackFolders": [
+          "C:\\Microsoft\\Xamarin\\NuGet\\"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\CJH\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net45"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "http://nuget.wzcc.com/nuget": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net45": {
+            "projectReferences": {
+              "X:\\DevWZCC\\2020\\190712.电信知识库\\00.Code\\KB-git\\App.BLL\\App.BLL.csproj": {
+                "projectPath": "X:\\DevWZCC\\2020\\190712.电信知识库\\00.Code\\KB-git\\App.BLL\\App.BLL.csproj"
+              },
+              "X:\\DevWZCC\\2020\\190712.电信知识库\\00.Code\\KB-git\\App.Spire\\App.Spire.csproj": {
+                "projectPath": "X:\\DevWZCC\\2020\\190712.电信知识库\\00.Code\\KB-git\\App.Spire\\App.Spire.csproj"
+              },
+              "\\\\Mac\\Home\\Downloads\\Dev\\Dev\\AppPlat\\App.Core\\App.Core-github\\App.Core\\App.Core.csproj": {
+                "projectPath": "\\\\Mac\\Home\\Downloads\\Dev\\Dev\\AppPlat\\App.Core\\App.Core-github\\App.Core\\App.Core.csproj"
+              }
+            }
+          }
+        }
+      },
+      "frameworks": {
+        "net45": {
+          "dependencies": {
+            "Newtonsoft.Json": {
+              "target": "Package",
+              "version": "[11.0.2, )"
+            }
+          }
+        }
+      },
+      "runtimes": {
+        "win": {
+          "#import": []
+        },
+        "win-x64": {
+          "#import": []
+        },
+        "win-x86": {
+          "#import": []
+        }
+      }
+    },
+    "\\\\Mac\\Home\\Downloads\\Dev\\Dev\\AppPlat\\App.Core\\App.Core-github\\App.Core\\App.Core.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "\\\\Mac\\Home\\Downloads\\Dev\\Dev\\AppPlat\\App.Core\\App.Core-github\\App.Core\\App.Core.csproj",
+        "projectName": "App.Core",
+        "projectPath": "\\\\Mac\\Home\\Downloads\\Dev\\Dev\\AppPlat\\App.Core\\App.Core-github\\App.Core\\App.Core.csproj"
+      },
+      "frameworks": {
+        "net45": {}
+      }
+    }
+  }
+}

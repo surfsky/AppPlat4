@@ -1,0 +1,4146 @@
+---------------------------------------------
+此文档存储一些临时、废弃或参考的代码。请定时清理过旧代码。
+---------------------------------------------
+        private List<Menu> _menus;
+        {
+            set { _menus = value; }
+            get
+            {
+                return Asp.GetCacheData<List<Menu>>(this.UniID + "Menu", () => GetAllowMenus(this.Powers));
+                //if (_menus == null)
+                //    _menus = GetAllowMenus(this.Powers);
+                //return _menus;
+            }
+        }
+
+                    [UI("记录时间")]    public DateTime? CreateDt { get; set; }
+        [UI("更改时间")]    public DateTime? UpdateDt { get; set; }
+                [UI("创建时间")]  public DateTime? CreateDt { get; set; }
+        [UI("创建时间")]          public DateTime? CreateDt { get; set; }
+        [UI("发表时间")]          public DateTime? CreateDt { get; set; }
+        [UI("创建时间")]  public DateTime? CreateDt { get; set; }
+        [UI("创建时间")]   public DateTime? CreateDt { get; set; }
+        [UI("创建日期")]                       public DateTime? CreateDt { get; set; }
+        [UI("创建时间"), JsonIgnore]       public DateTime? CreateDt { get; set; }
+
+        {
+            set { _powers = value; }
+            get
+            {
+                if (_powers == null)
+                    _powers = GetUserPowers(this);
+                return _powers;
+            }
+        }
+        private List<PowerType> _powers;
+
+
+                // 所有菜单
+        private static List<Menu> _items = null;
+        public static List<Menu> All
+        {
+            get
+            {
+                if (_items == null)
+                    Load();
+                return _items;
+            }
+        }
+
+        
+        // 递归处理菜单，弄成树状的
+        static int BuildMenuTree(List<Menu> items, Menu parentItem, int level)
+        {
+            int count = 0;
+            Menu pre = null;
+            foreach (var menu in items.Where(m => m.Parent == parentItem))
+            {
+                count++;
+                _items.Add(menu);
+                menu.TreeLevel = level;
+                menu.IsTreeLeaf = true;
+                menu.Enabled = true;
+
+                // 前后链表
+                menu.Previous = pre;
+                if (pre != null)
+                    pre.Next = menu;
+                pre = menu;
+
+                // 子节点
+                level++;
+                int childCount = BuildMenuTree(items, menu, level);
+                if (childCount != 0)
+                    menu.IsTreeLeaf = false;
+                level--;
+            }
+            return count;
+        }
+                private static List<Menu> _items;
+
+
+                
+                        <f:BoundField DataField="ID" Width="50px"  HeaderText="ID" />
+                        <f:ImageField DataImageUrlField="ImageUrl" Width="30px" />
+                        <f:BoundField DataField="Name" HeaderText="菜单标题" DataSimulateTreeLevelField="TreeLevel" Width="250px" />
+                        <f:BoundField DataField="NavigateUrl" HeaderText="链接" Width="250px" ExpandUnusedSpace="true"/>
+                        <f:BoundField DataField="ViewPower" HeaderText="浏览权限" Width="120px" />
+                        <f:BoundField DataField="Visible" HeaderText="可见" Width="60px" />
+                        <f:BoundField DataField="IsOpen" HeaderText="展开" Width="60px" />
+                        <f:BoundField DataField="Seq" HeaderText="排序" Width="60px" />
+                        <f:BoundField DataField="Remark" HeaderText="备注" Width="100px" ExpandUnusedSpace="true" />
+
+
+                                public static bool EnableWechatPay
+        {
+            get { return Config.GetValue("Site", "EnableWechatPay").ParseBool().Value; }
+            set { Config.SetValue("Site", "EnableWechatPay", value.ToString()); }
+        }
+
+        
+        //微信公众号信息放到 WechatConfig 类去管理了
+        // 其它
+        public static string MPMallApp = ConfigurationManager.AppSettings["WechatMallApp"];               // 商城小程序
+        public static string MPRecycleApp = ConfigurationManager.AppSettings["WechatRecycleApp"];         // 手机回收小程序
+
+        
+        public static void Load()
+        {
+            Title = Config.GetValue("Site", "Title");
+            Logo = Config.GetValue("Site", "Logo");
+            LogoDark = Config.GetValue("Site", "LogoDark");
+            PageSize = Config.GetValue("Site", "PageSize").ParseInt() ?? 30;
+            HelpList = Config.GetValue("Site", "HelpList");
+            MenuType = Config.GetValue("Site", "MenuType");
+            Theme = Config.GetValue("Site", "Theme");
+            DefaultPassword = Config.GetValue("Site", "DefaultPassword");
+            AppBackground = Config.GetValue("Site", "AppBackground");
+
+            if (Title.IsEmpty())           Title = "网站管理系统";
+            if (Logo.IsEmpty())            Logo = DefaultLogoImage;
+            if (LogoDark.IsEmpty())        LogoDark = DefaultLogoImage;
+            if (DefaultPassword.IsEmpty()) DefaultPassword = "123456";
+            if (AppBackground.IsEmpty())   AppBackground = DefaultAppBannerImage;
+        }
+
+        public static void Save()
+        {
+            Config.SetValue("Site", "Title", Title);
+            Config.SetValue("Site", "Logo", Logo);
+            Config.SetValue("Site", "LogoDark", LogoDark);
+            Config.SetValue("Site", "PageSize", PageSize.ToString());
+            Config.SetValue("Site", "HelpList", HelpList);
+            Config.SetValue("Site", "MenuType", MenuType);
+            Config.SetValue("Site", "Theme", Theme);
+            Config.SetValue("Site", "DefaultPassword", DefaultPassword);
+            Config.SetValue("Site", "AppBackground", AppBackground);
+        }
+
+        
+        public static void Save()
+        {
+            Config.SetValue("Site", "Title", Title);
+            Config.SetValue("Site", "Logo", Logo);
+            Config.SetValue("Site", "LogoDark", LogoDark);
+            Config.SetValue("Site", "PageSize", PageSize.ToString());
+            Config.SetValue("Site", "HelpList", HelpList);
+            Config.SetValue("Site", "MenuType", MenuType);
+            Config.SetValue("Site", "Theme", Theme);
+            Config.SetValue("Site", "DefaultPassword", DefaultPassword);
+            Config.SetValue("Site", "AppBackground", AppBackground);
+        }
+            Title = Config.GetValue("Site", "Title");
+            Logo = Config.GetValue("Site", "Logo");
+            LogoDark = Config.GetValue("Site", "LogoDark");
+            PageSize = Config.GetValue("Site", "PageSize").ParseInt() ?? 30;
+            HelpList = Config.GetValue("Site", "HelpList");
+            MenuType = Config.GetValue("Site", "MenuType");
+            Theme = Config.GetValue("Site", "Theme");
+            DefaultPassword = Config.GetValue("Site", "DefaultPassword");
+            AppBackground = Config.GetValue("Site", "AppBackground");
+
+
+
+            {
+            get
+            {
+                return IO.GetCache("ConfigAli", () =>
+                {
+                    var cfg = ConfigAli.Set.FirstOrDefault();
+                    if (cfg == null)
+                    {
+                        cfg = new ConfigAli();
+                        cfg.Save();
+                    }
+                    return cfg;
+                });
+            }
+        }
+
+                {
+            get
+            {
+                return IO.GetCache("ConfigApp", () =>
+                {
+                    var cfg = ConfigApp.Set.FirstOrDefault();
+                    if (cfg == null)
+                    {
+                        cfg = new ConfigApp();
+                        cfg.Save();
+                    }
+                    return cfg;
+                });
+            }
+        }
+        /// <summary>重新加载配置</summary>
+        public static void Reload()
+        {
+            IO.RemoveCache("ConfigSite");
+            IO.RemoveCache("ConfigApp");
+            IO.RemoveCache("ConfigAli");
+        }
+
+
+        
+        //-------------------------------------------
+        // 预设值
+        //-------------------------------------------
+        // 图片路径及尺寸设置
+        [UI("图片", "默认")]             public string DefaultImage          { get; private set; } =  "~/Res/Images/defaultPicture.png";
+        [UI("图片", "默认用户图片")]     public string DefaultUserImage      { get; private set; } = "~/Res/Images/defaultUser.png";
+        [UI("图片", "默认文章图片")]     public string DefaultArticleImage   { get; private set; } = "~/Res/Images/defaultArticle.png";
+        [UI("图片", "默认班级图片")]     public string DefaultClassImage     { get; private set; } = "~/Res/Images/defaultClass.png";
+        [UI("图片", "默认产品图片")]     public string DefaultProductImage   { get; private set; } = "~/Res/Images/defaultProduct.png";
+        [UI("图片", "默认门店图片")]     public string DefaultShopImage     { get; private set; } = "~/Res/Images/defaultShop.png";
+        [UI("图片", "默认图标图片")]     public string DefaultLogoImage      { get; private set; } = "~/Res/logoWhite.png";
+        [UI("图片", "默认视频")]         public string DefaultVideo          { get; private set; } = "~/Res/about.mp4";
+        [UI("图片", "Logo大小")]         public string SizeLogoText          { get; private set; } = "20, 20";
+        [UI("图片", "Logo大小（深色）")] public string SizeLogoDarkText      { get; private set; } = "64, 64";
+        [UI("图片", "小图片大小")]       public string SizeSmallImageText    { get; private set; } = "80, 80";
+        [UI("图片", "中图片大小")]       public string SizeMiddleImageText   { get; private set; } = "200, 200";
+        [UI("图片", "大图片大小")]       public string SizeBigImageText      { get; private set; } = "600, 600";
+
+        [NotMapped] public Size SizeLogo        { get { return SizeLogoText.ParseSize(); }        set { SizeLogoText        = value.ToText(); } }
+        [NotMapped] public Size SizeLogoDark    { get { return SizeLogoDarkText.ParseSize(); }    set { SizeLogoDarkText    = value.ToText(); } }
+        [NotMapped] public Size SizeSmallImage  { get { return SizeSmallImageText.ParseSize(); }  set { SizeSmallImageText  = value.ToText(); } }
+        [NotMapped] public Size SizeMiddleImage { get { return SizeMiddleImageText.ParseSize(); } set { SizeMiddleImageText = value.ToText(); } }
+        [NotMapped] public Size SizeBigImage    { get { return SizeBigImageText.ParseSize(); }    set { SizeBigImageText    = value.ToText(); } }
+
+        [UI("APP", "默认背景图片")]         public string DefaultAppBgImage      { get; set; } = "~/Res/Images/defaultAppBg.png";
+        [UI("APP", "默认横幅图片")]         public string DefaultAppBannerImage  { get; set; } = "~/Res/Images/defaultAppBanner.png";
+
+        [NotMapped] public Size SizeAppBanner { get { return SizeAppBannerText.ParseSize(); }    set { SizeAppBannerText = value.ToText(); } }
+        [NotMapped] public Size SizeAppBg     { get { return SizeAppBgText.ParseSize(); }        set { SizeAppBgText = value.ToText(); } }
+
+
+
+        
+  <runtime>
+    <assemblyBinding xmlns="urn:schemas-microsoft-com:asm.v1">
+      <dependentAssembly>
+        <assemblyIdentity name="App.Utils" publicKeyToken="90FE8924135FEF55" culture="neutral" />
+        <bindingRedirect oldVersion="0.0.0.0-1.4.5.21344" newVersion="1.4.5.21344" />
+      </dependentAssembly>
+      <dependentAssembly>
+        <assemblyIdentity name="EntityFramework" publicKeyToken="b77a5c561934e089" culture="neutral" />
+        <bindingRedirect oldVersion="0.0.0.0-6.0.0.0" newVersion="6.0.0.0" />
+      </dependentAssembly>
+      <dependentAssembly>
+        <assemblyIdentity name="Newtonsoft.Json" publicKeyToken="30ad4fe6b2a6aeed" culture="neutral" />
+        <bindingRedirect oldVersion="0.0.0.0-11.0.0.0" newVersion="11.0.0.0" />
+      </dependentAssembly>
+    </assemblyBinding>
+  </runtime>
+
+
+      <appender name="RollingFileAppender" type="log4net.Appender.RollingFileAppender">
+      <param name="File" value="Logs\" />
+      <param name="RollingStyle" value="Date" />
+      <param name="DatePattern" value="yyyyMMdd.&quot;log&quot;" />
+      <param name="CountDirection" value="1" />
+      <param name="AppendToFile" value= "true"/>
+      <param name="MaxSizeRollBackups" value="30" />
+        <param name="ImmediateFlush" value="true" />
+      <layout type="log4net.Layout.PatternLayout">
+        <conversionPattern value="%date [%thread] %-5level %logger - %message%newline" />
+      </layout>
+    </appender>
+
+	        // 显示备注信息
+        protected void Grid1_PreRowDataBound(object sender, GridPreRowEventArgs e)
+        {
+            Type item = e.DataItem as Type;
+            var descField = Grid1.FindColumn("Description") as FineUIPro.BoundField;
+            if (descField != null)
+                descField.DataFormatString = " " + item.GetDescription();
+        }
+
+		            // 搜索条件
+
+            // 绑定网格
+            //IQueryable<Shop> q = Shop.Search(name, areaId);
+            //Grid1.BindGrid(q);
+            //IQueryable<Shop> q = _type.GetProperty("Set") as IQueryable;
+            //q.ToList();
+            //Grid1.BindGrid(q);
+            // 如何根据实体类型，获取对应的数据库数据??? 如何分页？排序?
+            //string sortField = Grid1.SortField;
+            //string sortDirection = Grid1.SortDirection;
+            //DbSet ds = AppContext.Current.Set(_type);
+            //var data = ds.SortBy(sortField, sortDirection);
+            //Grid1.DataSource = ds;   //.BindGrid(ds);
+            //Grid1.DataBind();
+            //var pi = _type.GetProperty("Set");
+            //dynamic ds = pi.GetValue(null, null);
+
+
+            //var set = Product.Set;
+
+            //var ds = Shop.Set.SortAndPage(sortField, sortDirection, Grid1.PageIndex,  
+            //     Configs.Site.PageSize);
+            //Grid1.BindGrid(ds);
+
+            //Grid1.BindGrid(Shop.Set);
+
+
+			
+                var url = Common.GetUploadFilePath(cate);
+                var path = Asp.MapPath(url);
+                IO.PrepareDirectory(path);
+                uploader.SaveAs(path);
+
+                // 图片大小限制
+                if (IO.IsImageFile(uploader.FileName))
+                {
+                    var imageWidth = Asp.GetQueryInt("imageWidth") ?? 500;
+                    var imageHeight = Asp.GetQueryInt("imageHeight");
+                    Drawer.CreateThumbnail(path, path, imageWidth, imageHeight);
+                }
+
+
+				
+        /// <summary>默认构造函数</summary>
+        public App(string appName)
+        {
+            appName = appName.ToLower();
+            if (App.Get(t => t.AppName == AppName) != null)
+            {
+                this.AppName = appName;
+                this.TimeStamp = timeStamp;
+                this.ExpireDt = expireDt;
+            }
+        }
+
+		            // 删除附属表数据
+            //Set.Include(t => t.Users).Where(t => t.ID == id).ToList().ForEach(t => t.Users = null);
+            //Db.SaveChanges();
+
+       // public virtual ICollection<User> Users { get; set; }
+
+	           /// <summary>控件有用性控制</summary>
+        public static void SetEnable(ControlBase control, Role role)
+        {
+            control.Enabled = Common.LoginUser.HasRole(role);
+        }
+		        /// <summary>控件可编辑性控制</summary>
+        public static void SetEditable(Field control, Role role)
+        {
+            control.Readonly = !Common.LoginUser.HasRole(role);
+        }
+/// <summary>控件可视性控制</summary>
+        public static void SetVisible(ControlBase control, Role role)
+        {
+            control.Hidden = !Common.LoginUser.HasRole(role);
+        }
+
+		                if (this.Auth.ViewRole != null && !Common.CheckRole(this.Auth.ViewRole))
+                    return;
+        public Role? ViewRole { get; set; }
+
+        // 扩展性预留
+        public int? ViewPowerId { get; set; }
+        public int? NewPowerId { get; set; }
+        public int? EditPowerId { get; set; }
+        public AuthAttribute(int viewPower, int newPower, int editPower)
+        {
+            this.ViewPowerId = viewPower;
+            this.NewPowerId = newPower;
+            this.EditPowerId = editPower;
+        }
+
+		/// <summary>检查当前用户是否拥有某个角色</summary>
+        public static bool CheckRole(Role? role)
+        {
+            if (role == null) return true;
+            if (LoginUser == null) return false;
+            return LoginUser.HasRole(role.Value);
+        }
+
+
+		
+        // 校验token（未完成）
+        private bool CheckToken()
+        {
+            // TODO: 根据URL参数计算token
+            // 剔除token参数
+            // 剩下的参数排序后hash
+            // 判断hash值是否等于token
+            var token = Asp.GetQueryString("token");
+            var folder = Asp.GetQueryString("folder");
+            var url = new Url(Request.Url.AbsoluteUri);
+            var calc = folder?.MD5();
+            return true;
+        }
+
+		public AuthAttribute(Power viewPower, Power newPower, Power editPower)
+        {
+            this.ViewPower = viewPower;
+            this.NewPower = newPower;
+            this.EditPower = editPower;
+        }
+		        /// <summary>校验新建权限</summary>
+        public Power? NewPower { get; set; }
+        /// <summary>校验编辑权限</summary>
+        public Power? EditPower { get; set; }
+
+
+		            //this.uploader.AcceptFileTypes = (Asp.GetQueryBool("imageOnly") == true) ? "image/*" : "*/*";
+            //UI.SetVisible(this.uploader, (this.Mode == PageMode.Edit));
+            //UI.SetVisible(this.btnSelect, (this.Mode == PageMode.Select));
+
+
+			                //var sb = new System.Text.StringBuilder();
+                //for (int i = 0; i < ids.Count; i++)
+                //    sb.AppendFormat("{0}({1}), ", names[i], ids[i]);
+                //var txt = sb.ToString().TrimEnd(' ', ',');
+
+
+				                <f:TextBox ID="tbIcon" runat="server" Label="图标" />
+								
+            /*
+            if (ddlParentMenu.SelectedIndex != -1)
+            {
+                var parentID = UI.GetLong(ddlParentMenu);
+                item.Parent = DAL.Menu.Get(parentID);
+            }
+            if (ddlViewPower.SelectedIndex != -1)
+            {
+                item.ViewPower = UI.GetEnum<Power>(ddlViewPower);
+            }
+            */
+
+			            if (this.Mode == PageMode.New)
+                item.CreateDt = DateTime.Now;
+
+            else
+                item.UpdateDt = DateTime.Now;
+
+
+				        /// <summary>获取IP地址列表</summary>
+        public static List<string> GetIPAddrs()
+        {
+            string hostName = Dns.GetHostName();   //获取本机名
+            var host = Dns.GetHostEntry(hostName); //.GetHostByName(hostName);    //方法已过期，可以获取IPv4的地址
+            var addrs = host.AddressList;
+            return addrs.CastString();
+        }
+            // 这段代码比httpmodule晚一触发
+            // 图像文件直接处理掉（不用写module和handler了)
+            if (IO.IsImageFile(url.GetFileName()))
+            {
+                var handler = new ImageHandler();
+                handler.ProcessRequest(HttpContext.Current);
+                HttpContext.Current.Response.End();
+            }
+
+
+			/*
+            application.BeginRequest += delegate (object sender, EventArgs e)
+            {
+                var uri = HttpContext.Current.Request.Url;
+                var url = new Url(uri.ToString());
+                var extension = url.FileExtesion;
+                if (_filter.Contains(extension)) // && url.Has("w"))
+                {
+                    var handler = new ImageHandler();
+                    handler.ProcessRequest(HttpContext.Current);
+                    HttpContext.Current.Response.End();
+                }
+            };
+            */
+
+			    /*
+    <system.webServer>
+      <modules>
+        <add name="ThumbnailModule" type="App.Components.ImageModule" />
+      </modules>
+    <system.webServer>
+    这个模块抢不过iis内置的 StaticFileModule，无法触发。需要iis放开mimetype才行。
+    若在webconfig中写
+        <remove name="StaticFileModule"/>
+        程序会报错：锁定冲突
+
+
+     */
+            /*
+            // 请保留本类中的注释部分，避免以后走弯路。
+            // 如果用到 session，必须用标准方法来指定处理器。
+            // 以下代码会获取不到session
+            application.BeginRequest += delegate (object sender, EventArgs e)
+            {
+                var ext = HttpContext.Current.Request.RawUrl.GetFileExtension();
+                if (_filter.Contains(ext))
+                {
+                    var handler = new OfficeHandler();
+                    handler.ProcessRequest(HttpContext.Current);
+                    HttpContext.Current.Response.End();
+                }
+            };
+            */
+                    // 以下代码同样也获取不到 session
+                    //OfficeHandler.DownOfficeFile(url);
+                    //HttpContext.Current.Response.End();
+
+
+					
+                // 计算水印缓存文件名
+                // 若已经登陆则打上水印再输出（融合缓存逻辑）
+                // 取文件的MD5，避免缓存文件过旧（可优化：文件名-md5可存储在缓存中）
+                // 缓存文件的key由文件哈希值和用户名组合而成
+                var fileMd5 = IO.GetFileMD5(rawPath); 
+                var key = $"{fileMd5}-{user.Name}".MD5(); 
+                var cachePath = Asp.MapPath(string.Format("/Caches/{0}.{1}", key, ext));
+                Logger.LogDb("OfficeModule", new { rawPath, cachePath }.ToJson());
+
+                // 生成水印缓存文件
+                if (!File.Exists(cachePath))
+                {
+                    IO.PrepareDirectory(cachePath);
+                    var watermarker = DrawHelper.GetWatermarker(rawPath);
+                    if (watermarker != null)
+                    {
+                        var userName = user.RealName.IsEmpty() ? user.NickName : user.RealName;
+                        var text = string.Format("{0}-{1:yyMMdd}", userName, DateTime.Now);
+                        try
+                        {
+                            watermarker.DoWatermark(rawPath, cachePath, true, "", text);
+                        }
+                        catch
+                        {
+                            cachePath = rawPath;
+                        }
+                    }
+                }
+
+                // 输出到客户端
+                var fileName = Asp.GetQueryString("name");
+                //var attachName = fileName.IsEmpty() ? url.GetFileName() : fileName; 
+                var attachName = fileName;
+                WriteFile(cachePath, mimeType, attachName);
+                Logger.LogDb("OfficeModule-Write", new { rawPath, cachePath, attachName }.ToJson());
+
+
+				      <!-- Office文件保护，使用IISExpress时可以开启 -->
+      <!--
+      <add name="Doc"  path="*.doc"  verb="*" type="App.Components.OfficeHandler" />
+      <add name="Docx" path="*.docx" verb="*" type="App.Components.OfficeHandler" />
+      -->
+	  
+        public static void SetCachePolicy(HttpResponse response, int cacheSeconds, string varyByParam = "*", HttpCacheability cacheLocation = HttpCacheability.ServerAndPrivate)
+        {
+            HttpCachePolicy cachePolicy = response.Cache;
+            if (cacheSeconds > 0)
+            {
+                cachePolicy.SetCacheability(cacheLocation);
+                cachePolicy.SetExpires(DateTime.Now.AddSeconds((double)cacheSeconds));
+                cachePolicy.SetSlidingExpiration(false);
+                cachePolicy.SetValidUntilExpires(true);
+                if (varyByParam.IsNotEmpty())
+                    cachePolicy.VaryByParams[varyByParam] = true;
+                else
+                    cachePolicy.VaryByParams.IgnoreParams = true;
+            }
+            else
+            {
+                cachePolicy.SetCacheability(HttpCacheability.NoCache);
+                //cachePolicy.SetNoServerCaching();
+                cachePolicy.SetMaxAge(TimeSpan.Zero);
+            }
+        }            //SetCachePolicy(response, 0);
+                //var fileName = Asp.GetQueryString("name");
+                //var attachName = fileName.IsEmpty() ? url.GetFileName() : fileName; 
+                // 取文件的MD5，避免缓存文件过旧（可优化：文件名-md5可存储在缓存中）
+                // 缓存文件的key由文件哈希值和用户名组合而成
+                //var fileMd5 = IO.GetFileMD5(rawPath); 
+            //
+            Logger.LogDb("OfficeModule", new { url, rawPath, user?.NickName}.ToJson());
+
+
+			        // 禁止下载的文件类型
+        List<string> _exts = new List<string>() { ".cs", ".config", ".ashx", ".asax", ".aspx" };
+
+        //
+            // 校验扩展名
+            var u = new Url(url);
+            //if (_exts.Contains(ext))
+            //{
+            ///   Asp.WriteError(403, "Forbid");
+            //    return;
+            //}
+            var exts = new List<string>() { ".doc", ".docx", ".xls", ".xlsx", ".ppt", ".pptx", ".pdf" };
+            if (exts.Contains(ext))
+                OfficeHandler.DownOfficeFile(url);
+            else
+
+
+
+			
+        [HttpApi("获取文章详情（请用 GetArticle )", true, Status = ApiStatus.Deprecated)]
+        public static APIResult GetArticleDetail(long articleId)
+        {
+            return Article.GetDetail(articleId).ToResult(ExportType.Detail);
+        }
+
+		
+
+        /// <summary>获取事件调用列表</summary>
+        public static List<Delegate> GetEventDelegates(object o, string eventName)
+        {
+            var type = o.GetType();
+            var name = "EVENT_" + eventName.ToUpper();
+            EventInfo[] events = type.GetEvents();
+
+            try
+            {
+                var evt = events.FirstOrDefault(t => t.Name == eventName);
+
+                // 获取所有事件列表
+                PropertyInfo propertyInfo = type.GetProperty("Events", BindingFlags.Instance | BindingFlags.NonPublic);   // 事件属性
+                EventHandlerList eventHandlerList = (EventHandlerList)propertyInfo.GetValue(o, null);                     // 事件列表
+
+                // 获取指定事件
+                var fields = type.GetFields(BindingFlags.Static | BindingFlags.NonPublic);
+                FieldInfo eventField = type.GetField(name, BindingFlags.Static | BindingFlags.NonPublic);
+                if (eventField != null)
+                {
+                    var e = eventField.GetValue(o);
+                    Delegate d = eventHandlerList[e];
+
+                    // 返回该事件的调用者列表
+                    return d.GetInvocationList().ToList();
+                }
+                return new List<Delegate>();
+            }
+            catch
+            {
+                return new List<Delegate>();
+            }
+        }
+
+		        /// <summary>检测 API 访问验票</summary>
+        private bool CheckToken(string token)
+        {
+            //return token == SiteConfig.Site.Name;
+            return DAL.App.CheckToken(token) != null;
+        }
+
+
+		        // 做任何更新都刷新缓存
+        public override void AfterSave()
+        {
+            Reload();
+        }
+
+        /// <summary>存储后处理（如刷新缓存）</summary>
+        public virtual void AfterSave() { }
+		        /// <summary>存储前处理（如计算区域全称）</summary>
+        public virtual void BeforeSave() { }
+
+
+
+        // 保存前处理
+        public override void BeforeSave()
+        {
+            this.FullName = string.Format("{0}/{1}", Parent?.FullName, Name);
+        }
+
+                public event Action BeforeSave;
+        public event Action AfterSave;
+        public event Action AfterDelete;
+        public LogConfig() : base()
+        {
+            this.AfterSave += () => Reload();
+            this.AfterDelete += () => Reload();
+        }
+
+
+
+        
+            // 解密
+            this.FileName = fileName; //.DesDecrypt("12345678");
+            this.Folder = folder; //.DesDecrypt("12345678");
+            this.Filter = filter; //.DesDecrypt("12345678");
+
+
+                    [HttpApi("获取热点文章（请直接使用GetArticles接口）", true, Status = ApiStatus.Obsolete)]
+        public static APIResult GetArticleHots(int pageIndex = 0, int pageSize = 10)
+        {
+            //var ids = UserFavorite.GetUserFavorites(Common.LoginUser.ID).Cast(t => t.ID).ToSeparatedString();
+            return GetArticles("", "", ArticleSortType.Date, pageIndex, pageSize);
+        }
+        
+        [HttpApi("微信公众号：二维码", cacheSeconds: 60, Status=ApiStatus.Obsolete, Remark="请使用OPQrCode")]
+        [Param("page", "带参路径（需进行UrlEncode），如inviteShopId=1&inviteUserId=1")]
+        public static Image OPENQrCode(string page)
+        {
+            return OPQrCode(page);
+        }
+        
+        // 根据权限设置多选列的显隐
+        public static void SetGridCheckColumnByPower(this FineUIPro.Grid grid, Power power)
+        {
+            grid.EnableCheckBoxSelect = Common.CheckPower(power);
+        }
+
+
+                DbSet<T> ToSet<T>(DbSet<T> dbset) where T : class
+        {
+            return dbset;
+        }
+
+                    //string path = string.Format("{0}/{1}-{2}{3}", folder, DateTime.Now.ToString("yyMMdd"), Guid.NewGuid().ToString("N"), extension);
+
+                                //var fullName = string.Format("{0}", type.FullName);
+            //Write("<table border=1 style='border-collapse:collapse' width='100%' cellpadding='2' cellspacing='0'>");
+
+
+                        // 所有PageBase都必须有Auth标签，否则就报错（强制安全措施） 2019-10-17 
+            //if (this.Auth == null)
+            //{
+            //    Common.AccessFail("缺少 AuthAttribute");
+            //    return;
+            //}
+
+
+
+            //------------------------------------------
+        // grid
+        //------------------------------------------
+        // 绑定数据
+        private void BindGrid()
+        {
+            string table = Request.QueryString["table"];
+            if (string.IsNullOrEmpty(table)) return;
+            string sql = string.Format("select * from {0}", table);
+            var dt = AppContext.Current.ExecuteSelectSql(sql);
+            Grid1.BindGrid(dt);
+        }
+
+                            //var img = string.Format("<img src='{0}' />", UI.GetIconUrl(FineUIPro.Icon.Information));
+                    //var text = e.Values[winField.ColumnIndex].ToString();
+                    //text = text.ReplaceRegex(@"show\((.*),", $"show('{url}',");
+                    //text = text.ReplaceRegex(@"show\(.*\)", $"show('{url}', '页面信息')");
+                    //e.Values[winField.ColumnIndex] = text;
+
+
+                                //return string.Format("/Maintains/PageInfo.ashx?url={0}", url.UrlEncode()).ToSignedUrl(1);
+                                        // 
+        MethodInfo _searchMethod;
+        Dictionary<string, EditorInfo> _searchControls;
+                _searchMethod = ms[0];
+                _searchControls = BuildSearchControls(this.toolbar.Items, _searchMethod);
+
+
+                        PrepareUrlTemplate();
+        /// <summary>准备URL模板</summary>
+        public virtual void PrepareUrlTemplate()
+        {
+
+        }
+
+
+        public static ArticleVisit GetDetail(long id)
+        {
+            var item = Set.Include(t => t.Article).Include(t => t.User).FirstOrDefault(t => t.ID == id);
+            return item;
+        }
+
+                /// <summary>JObject 增加属性</summary>
+        /// <returns>返回新建的属性对象</returns>
+        public static JToken AddProperty(this JObject jo, string name, object value)
+        {
+            if (value == null)
+                return null;
+            var o = JToken.FromObject(value);
+            jo.Add(name, o);
+            return o;
+        }
+
+        
+        /// <summary>增加属性（将忽略空值）</summary>
+        public static JObject AddJProperty(this object o, string name, object value)
+        {
+            return o.AsJObject().AddJProperty(name, value);
+        }
+
+                /// <summary>合并 QueryString</summary>
+        public static string CombineQueryString(this string q1, string q2)
+        {
+            var dict1 = q1.ParseDict();
+            var dict2 = q2.ParseDict();
+            foreach (var key in dict2.Keys)
+                dict1[key] = dict2[key];
+            return dict1.ToString();
+        }
+
+
+        //--------------------------------------------------
+        // Grid
+        //--------------------------------------------------
+        // 行绑定事件（BUG: 若是admin则删除按钮无效，代码都对，但整列都变无效了）
+        protected void Grid1_PreRowDataBound(object sender, FineUIPro.GridPreRowEventArgs e)
+        {
+            User user = e.DataItem as User;
+
+            // 经过测试i，以下代码放到 RowDataBound，第一行数据格式化有问题（因为DataFormatString 在第二行才起作用）
+            // 设置职务列
+            var titleField = Grid1.FindColumn("Titles") as FineUIPro.BoundField;
+            if (titleField != null)
+            {
+                string titles = "";
+                foreach (var item in user.Titles)
+                    titles += item.Name + ",";
+                titles = titles.TrimEnd(',');
+                titleField.DataFormatString = " " + titles;
+            }
+
+            // 设置角色列
+            var roleField = Grid1.FindColumn("Roles") as FineUIPro.BoundField;
+            if (roleField != null)
+            {
+                string roles = "";
+                foreach (var item in user.Roles)
+                    roles += item.GetDescription() + ",";
+                roles = roles.TrimEnd(',');
+                roleField.DataFormatString = " " + roles;
+            }
+        }
+
+        protected void Grid1_RowDataBound(object sender, GridRowEventArgs e)
+        {
+            User user = e.DataItem as User;
+
+            // 如果是管理员，隐藏删除按钮
+            var deleteField = Grid1.FindColumn("Delete") as LinkButtonField;
+            if (deleteField != null && user.Name == "admin")
+            {
+                e.CellCssClasses[deleteField.ColumnIndex] = "hide";
+            }
+        }
+
+        
+            //match = match.Replace("$", @"\$");
+            //var reg = string.Format("{0}$", match);
+            //return  Regex.Replace(text, reg, "", RegexOptions.IgnoreCase);
+
+                        //User user = e.DataItem as User;
+            // 经过测试i，以下代码放到 RowDataBound，第一行数据格式化有问题（因为DataFormatString 在第二行才起作用）
+                //e.CellCssClasses[deleteField.ColumnIndex] = "hide";
+                /*
+                foreach (var item in user.Titles)
+                    titles += item.Name + ",";
+                titles = titles.TrimEnd(',');
+                //titleField.DataFormatString = " " + titles;
+                */
+                string roles = "";
+                foreach (var item in user.Roles)
+                    roles += item.GetDescription() + ",";
+                roles = roles.TrimEnd(',');
+                //roleField.DataFormatString = " " + roles;
+                        protected void Grid1_PreRowDataBound(object sender, FineUIPro.GridPreRowEventArgs e)
+        {
+        }
+
+
+        
+
+            var deleteField = Grid1.FindColumn("Delete") as LinkButtonField;
+            if (deleteField != null && user.Name == "admin")
+            {
+                e.Values[deleteField.ColumnIndex] = "";
+                UI.SetGridCellText(e, deleteField, "");
+            }
+
+            // 设置职务列
+            var titleField = Grid1.FindColumn("Titles") as FineUIPro.BoundField;
+            if (titleField != null)
+            {
+                e.Values[titleField.ColumnIndex] = titles;
+            }
+
+            // 设置角色列
+            var roleField = Grid1.FindColumn("Roles") as FineUIPro.BoundField;
+            if (roleField != null)
+            {
+                e.Values[roleField.ColumnIndex] = roles;
+            }
+
+
+            
+        /*
+         * 
+         * 
+        <f:WindowField ColumnID="changePassword" TextAlign="Center" Icon="Key" ToolTip="修改密码"
+            WindowID="Window1" Title="修改密码"
+            DataIFrameUrlFields="ID" DataIFrameUrlFormatString="UserPassword.aspx?id={0}"
+            Width="38px"   />
+        <f:ThrumbnailField DataImageUrlField="Photo" HeaderText="照片" ImageWidth="30"  />
+        <f:BoundField DataField="Name" SortField="Name" Width="100px" HeaderText="用户名" />
+        <f:BoundField DataField="NickName" SortField="NickName" Width="100px" HeaderText="昵称" />
+        <f:BoundField DataField="RealName" SortField="RealName" Width="100px" HeaderText="真实姓名" />
+        <f:CheckBoxField DataField="InUsed" SortField="InUsed" HeaderText="启用" RenderAsStaticField="true"  Width="50px" />
+        <f:BoundField DataField="Name" Width="200px" HeaderText="角色" Hidden="false"  ColumnID="Roles" />
+        <f:BoundField DataField="Gender" SortField="Gender" Width="50px" HeaderText="性别" />
+        <f:BoundField DataField="Mobile" SortField="Mobile" Width="150px" HeaderText="移动电话" />
+
+        <f:BoundField DataField="Dept.Name"  Width="100px" HeaderText="部门" Hidden="true" />
+        <f:BoundField DataField="Name" Width="100px" HeaderText="职务" ColumnID="Titles" Hidden="true"  />
+        <f:BoundField DataField="Email" SortField="Email" Width="150px" HeaderText="邮箱" Hidden="true" />
+        <f:BoundField DataField="Phone" SortField="Phone" Width="150px" HeaderText="办公电话" Hidden="true" />
+        <f:BoundField DataField="IdentityCard" SortField="IdentityCard" Width="150px" HeaderText="身份证" Hidden="true" />
+        <f:BoundField DataField="Birthday" SortField="Birthday" Width="150px" HeaderText="生日" Hidden="true" />
+        <f:BoundField DataField="TakeOfficeDt" SortField="TakeOfficeDt" Width="150px" HeaderText="就职日期" Hidden="true" />
+        <f:BoundField DataField="LastLoginDt" SortField="LastLoginDt" Width="150px" HeaderText="最后登录日期" Hidden="true" />
+        <f:BoundField DataField="Remark" ExpandUnusedSpace="true" HeaderText="备注" Hidden="true" />
+        */
+
+                    // 文件链接列
+            var urlField = Grid1.FindColumn("Link-Url") as FineUIPro.HyperLinkField;
+            if (urlField != null)
+            {
+                e.Values[urlField.ColumnIndex] = tag;
+            }
+            //var url = string.Format("/down.ashx?url={0}&name={1}", data.Url.UrlEncode(), data.FileName.UrlEncode());
+            //var url = string.Format("{0}?name={1}", data.Url.UrlEncode(), data.FileName.UrlEncode());
+
+
+            // 行数据绑定事件（完全定制单元格内容）
+        private void Grid1_RowDataBound(object sender, GridRowEventArgs e)
+        {
+            var data = e.DataItem as WebFile;
+
+            // 图标列
+            var typeField = Grid1.FindColumn("Type") as FineUIPro.BoundField;
+            if (typeField != null)
+            {
+                var iconUrl = data.Type == WebFileType.Folder ? "/res/icon/folder.png" : "/res/icon/page.png";
+                var iconText = $"<img src='{iconUrl}' />";
+                e.Values[typeField.ColumnIndex] = $"<img src='{iconUrl}' />";
+            }
+
+            // 名称列
+            var nameField = Grid1.FindColumn("Name") as FineUIPro.BoundField;
+            if (nameField != null)
+            {
+                // 目录类型改为超链接
+                if (data.Type == WebFileType.Folder)
+                {
+                    string url = GetFilesUrl(data);
+                    e.Values[nameField.ColumnIndex] = $"<a href={url}>{data.Name}</a>";
+                }
+                else
+                {
+                    e.Values[nameField.ColumnIndex] = $"<a href='{data.Url}' target='_blank'>{data.Name}</a>";
+                }
+            }
+
+            // 下载文件链接列
+            var urlField = Grid1.FindColumn("Link-Url") as FineUIPro.HyperLinkField;
+            if (urlField != null)
+            {
+                if (data.Type == WebFileType.Folder)
+                    e.Values[urlField.ColumnIndex] = "";
+                else
+                {
+                    var url = Common.GetDownUrl(data.Url, data.Name);
+                    var img = string.Format("<img src='{0}' />", UI.GetIconUrl(FineUIPro.Icon.PackageDown));
+                    e.Values[urlField.ColumnIndex] = $"<a href='{url}' target='_blank'>{img}</a>";
+                }
+            }
+
+            // 下载按钮列（windows测试无效）
+            var downField = Grid1.FindColumn("Button-Download") as FineUIPro.LinkButtonField;
+            if (downField != null)
+            {
+                if (data.Type == WebFileType.Folder)
+                    e.Values[downField.ColumnIndex] = "";
+            }
+
+            // 页面信息列
+            var winField = Grid1.FindColumn("Win-Url") as FineUIPro.WindowField;
+            if (winField != null)
+            {
+                if (data.Type == WebFileType.Folder)
+                    e.Values[winField.ColumnIndex] = "";
+                else
+                {
+                    var url = Common.GetPageInfoUrl(data.Url);
+                    UI.SetGridWinCellUrl(e, winField, url);
+                }
+            }
+
+            // 如果是目录的话，隐藏所有checkbox列（不知道为什么，没有效果）
+            // var authLoginField = Grid1.FindColumn("Check-Auth.AuthLogin");
+            // var authSignField = Grid1.FindColumn("Check-Auth.AuthSign");
+            // if (authLoginField != null)  e.Values[authLoginField.ColumnIndex] = "";
+            // if (authSignField != null)   e.Values[authSignField.ColumnIndex] = "";
+            foreach (var col in Grid1.Columns)
+            {
+                var field = col as FineUIPro.CheckBoxField;
+                if (field != null)
+                    if (data.Type == WebFileType.Folder)
+                    {
+                        e.Values[field.ColumnIndex] = "";
+                    }
+            }
+        }
+
+                    var typeField = Grid1.FindColumn("Type");
+            if (typeField != null)
+            {
+                e.Values[typeField.ColumnIndex] = iconText;
+            }
+
+
+
+
+                        // 名称列
+            var nameField = Grid1.FindColumn("Name");
+            if (nameField != null)
+            {
+                // 目录类型改为超链接
+                if (data.Type == WebFileType.Folder)
+                {
+                    string url = GetFilesUrl(data);
+                    e.Values[nameField.ColumnIndex] = $"<a href={url}>{data.Name}</a>";
+                }
+                else
+                {
+                    e.Values[nameField.ColumnIndex] = $"<a href='{data.Url}' target='_blank'>{data.Name}</a>";
+                }
+            }
+
+            
+
+            var urlField = Grid1.FindColumn("Link-Url");
+            if (urlField != null)
+            {
+                if (data.Type == WebFileType.Folder)
+                    e.Values[urlField.ColumnIndex] = "";
+                else
+                {
+                    e.Values[urlField.ColumnIndex] = $"<a href='{downUrl}' target='_blank'>{downIcon}</a>";
+                }
+            }
+            var downField = Grid1.FindColumn("Button-Download");
+            if (downField != null)
+            {
+                if (data.Type == WebFileType.Folder)
+                    e.Values[downField.ColumnIndex] = "";
+            }
+
+                        var winField = Grid1.FindColumn("Win-Url");
+            if (winField != null)
+            {
+                if (data.Type == WebFileType.Folder)
+                    e.Values[winField.ColumnIndex] = "";
+                else
+                {
+                    var url = Common.GetPageInfoUrl(data.Url);
+                    UI.SetGridWinCellUrl(e, winField, url);
+                }
+            }
+
+                        // var authLoginField = Grid1.FindColumn("Check-Auth.AuthLogin");
+            // var authSignField = Grid1.FindColumn("Check-Auth.AuthSign");
+            // if (authLoginField != null)  e.Values[authLoginField.ColumnIndex] = "";
+            // if (authSignField != null)   e.Values[authSignField.ColumnIndex] = "";
+
+                        /*
+            // 大文件上传
+            var filter = "image/*"; //_filter
+            var win = this.Grid1.Win;
+            win.IFrameUrl = string.Format("/Up.aspx?folder={0}&filter={1}", _folder, filter).ToSignedUrl(1);
+            win.Height = 400;
+            win.Hidden = false;
+            */
+
+                                <f:Button runat="server" ID="btnUpload" OnClick="btnUpload_Click" Icon="FolderUp" Text="上传" Hidden="true" />
+
+        // 上传
+        protected void btnUpload_Click(object sender, EventArgs e)
+        {
+            Common.UploadFile(Request.Files[0], _folder);
+        }
+
+
+                // 根据对象类型，获取默认编辑控件名称
+        public static ColumnType GetDefaultColumnType(Type type, bool readOnly)
+        {
+            if (type == typeof(bool?))
+                return EditorType.BoolDropDown;
+
+            type = type.GetRealType();
+            if (readOnly)
+                return EditorType.TextBox;
+            else
+            {
+                if (type == typeof(String))             return EditorType.TextBox;
+                if (type == typeof(Int16))              return EditorType.NumberBox;
+                if (type == typeof(Int32))              return EditorType.NumberBox;
+                if (type == typeof(Int64))              return EditorType.NumberBox;
+                if (type == typeof(Double))             return EditorType.NumberBox;
+                if (type == typeof(Single))             return EditorType.NumberBox;
+                if (type == typeof(Decimal))            return EditorType.NumberBox;
+                if (type == typeof(DateTime))           return EditorType.DateTimePicker;
+                if (type == typeof(bool))               return EditorType.BoolSwitch;
+                if (type.IsEnum)                        return EditorType.EnumDropDown;
+                return EditorType.TextBox;
+            }
+        }
+
+                        if (attr.Type.GetRealType() == typeof(DateTime))
+                {
+                    attr.Format = "{0:yyyy-MM-dd HH:mm}";
+                    attr.Width = 140;
+                }
+
+
+                        public UIAttribute(string title, ShowType show) : this("", title, show) { }
+        public UIAttribute(string group, string title, ShowType show)
+        {
+            this.Group = group;
+            this.Title = title;
+            this.Column = show;
+        }
+        public UIAttribute(string title, EditorType type) : this("", title, type) { }
+        public UIAttribute(string group, string title, EditorType type)
+        {
+            this.Group = group;
+            this.Title = title;
+            this.Editor = type;
+        }
+
+                /// <summary>高度</summary>
+        public int Height { get; set; } = 50;
+
+
+            /// <summary>
+    /// 字段展示场合（表单、网格等）
+    /// </summary>
+    [Flags]
+    public enum ShowType : int
+    {
+        [UI("不展示")]  No   = 0,
+        [UI("只读时")]  View = 1,
+        [UI("编辑时")]  Edit = 2,
+        [UI("列表时")]  List = 4,
+        [UI("全部")]    All = Edit | List | View
+    }
+
+
+    
+        //---------------------------------------------
+        // 数据格式 IParam
+        //---------------------------------------------
+        /// <summary>名称</summary>
+        public string Name { get; set; }
+
+        /// <summary>要显示的数据的数据类型</summary>
+        public Type Type { get; set; }
+
+        /// <summary>格式化字符串</summary>
+        public string Format { get; set; } = "{0}";
+
+        /// <summary>是否只读</summary>
+        public bool ReadOnly { get; set; } = false;
+
+        /// <summary>是否必填</summary>
+        public bool Required { get; set; } = false;
+
+        /// <summary>精度（小数类型）</summary>
+        public int Length { get; set; } = -1;
+
+        /// <summary>精度（小数类型）</summary>
+        public int Precision { get; set; } = 2;
+
+        /// <summary>正则表达式</summary>
+        public string Regex { get; set; } = "";
+
+        /// <summary>默认值</summary>
+        public object Default { get; set; }
+
+        /// <summary>备注</summary>
+        public string Remark { get; set; }
+
+        
+        /// <summary>结合参数信息和参数属性创建控件（请参考FormPage或FormHelper代码）</summary>
+        private static EditorInfo CreateControl(ParameterInfo p, ParamAttribute attr)
+        {
+            var ctrl = new FineUIPro.TextBox() { ID = p.Name };
+            ctrl.EmptyText = attr == null ? p.Name : attr.Remark;
+            ctrl.Width = 80;
+            EditorInfo info = new EditorInfo()
+            {
+                Editor = ctrl,
+                Property = nameof(FineUIPro.TextBox.Text),
+                //PropertyType = p.ParameterType,
+                Type = EditorType.TextBox
+            };
+            return info;
+        }
+
+            /*
+            _map = new Dictionary<string, EditorInfo>();
+            var attrs = _method.GetAttributes<ParamAttribute>();
+            var ps = _method.GetParameters();
+            foreach (var p in ps)
+            {
+                var attr = attrs.FirstOrDefault(t => t.Name == p.Name);
+                var edt = CreateControl(p, attr);
+                _map.Add(p.Name, edt);
+                container.Add(edt.Editor);
+            }
+            */
+
+
+
+            using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace App.Utils
+{
+    /// <summary>
+    /// 数据模型描述
+    /// </summary>
+    public interface IParam
+    {
+        /// <summary>名称</summary>
+        string Name { get; set; }
+
+        /// <summary>数据类型</summary>
+        Type Type { get; set; }
+
+        /// <summary>格式化字符串</summary>
+        string Format { get; set; }
+
+        /// <summary>是否只读</summary>
+        bool ReadOnly { get; set; }
+
+        /// <summary>是否必填</summary>
+        bool Required { get; set; }
+
+        /// <summary>长度</summary>
+        int Length { get; set; }
+
+        /// <summary>精度（小数类型）</summary>
+        int Precision { get; set; }
+
+        /// <summary>正则表达式</summary>
+        string Regex { get; set; }
+
+        /// <summary>描述</summary>
+        string Remark { get; set; }
+
+        /// <summary>默认值</summary>
+        object Default { get; set; }
+
+        /// <summary>允许的值</summary>
+        List<object> AllowValues { get; set; }
+    }
+}
+
+        [XmlIgnore]
+        [XmlIgnore]
+
+        
+        /// <summary>获取字段说明</summary>
+        public static string GetDescription(this PropertyInfo info)
+        {
+            return GetDescription(info as MemberInfo);
+        }
+        
+        /// <summary>获取属性的文本说明。typeof(Product).GetDescription("Name");</summary>
+        public static string GetDescription(this Type type, string propertyName)
+        {
+            PropertyInfo info = type.GetProperty(propertyName);
+            return GetDescription(info);
+        }
+
+
+        
+        /// <summary>获取指定特性列表</summary>
+        public static List<T> GetAttributes<T>(this PropertyInfo p) where T : Attribute
+        {
+            T[] arr = (T[])p.GetCustomAttributes(typeof(T), true);
+            return arr.ToList();
+        }
+
+        /// <summary>获取指定特性列表</summary>
+        public static List<T> GetAttributes<T>(this MethodInfo m) where T : Attribute
+        {
+            T[] arr = (T[])m.GetCustomAttributes(typeof(T), true);
+            return arr.ToList();
+        }
+                /// <summary>获取指定特性（无异常，使用 FirstOrDefault 逻辑）</summary>
+        public static T GetAttribute<T>(this PropertyInfo p) where T : Attribute
+        {
+            T[] arr = (T[])p.GetCustomAttributes(typeof(T), true);
+            return (arr.Length == 0) ? null : arr[0];
+        }
+
+        /// <summary>获取指定特性（无异常，使用 FirstOrDefault 逻辑）</summary>
+        public static T GetAttribute<T>(this MethodInfo m) where T : Attribute
+        {
+            T[] arr = (T[])m.GetCustomAttributes(typeof(T), true);
+            return (arr.Length == 0) ? null : arr[0];
+        }
+
+        
+        [HttpApi("应答FAQ", true)]
+        public static APIResult AddFAQReply(long articleId, string comment, string img1, string img2, string img3)
+        {
+            return ReplyArticle(articleId, comment, img1, img2, img3);
+        }
+
+                public ParamAttribute(string name, string title)
+        {
+            this.Name = name;
+            this.Title = title;
+            this.Required = false;
+        }
+
+                    //if (o is string && o.IsNotEmpty() && type.IsEnum) // 处理枚举文本类型
+            //return Enum.Parse(type, o.ToString(), true);
+            //if (o is string && o.IsEmpty() && type.IsEnum)    // 如果字符为空，尝试解析 0
+            //return Enum.ToObject(type, 0);
+
+
+            
+        /// <summary>解析为基础类型（数字、枚举、布尔、日期）</summary>
+        public static T ParseBasicType<T>(this string text) where T : struct
+        {
+            return (T)text.ParseBasicType(typeof(T));
+        }
+
+                    // bool 值要单独处理一下，默认 true 会格式化为 True，会带来字符串比较上的隐患（算了，比较时用 true.ToString())
+            //if (o is bool || o is bool?)
+            //    return o.ToString().ToLower();
+
+
+                        //if (o is string && type.IsEnum)
+            //    return o.ToString().ParseEnum(type);
+
+
+                        bool result = false;
+            string str = HttpContext.Current.Request.QueryString[queryKey];
+            if (str.IsNotEmpty() && Boolean.TryParse(str, out result))
+                return result;
+            return null;
+
+        /// <summary>获取查询字符串中的日期时间参数值</summary>
+        public static DateTime? GetQueryDate(string queryKey)
+        {
+            DateTime result;
+            string str = HttpContext.Current.Request.QueryString[queryKey];
+            if (!string.IsNullOrEmpty(str) && DateTime.TryParse(str, out result))
+                return result;
+            return null;
+        }
+                    string str = HttpContext.Current.Request.QueryString[queryKey];
+            return str.ParseEnum<T>();
+
+                    /// <summary>获取查询字符串中的小数参数值</summary>
+        public static double? GetQueryDouble(string queryKey)
+        {
+            double result = -1;
+            string str = HttpContext.Current.Request.QueryString[queryKey];
+            if (str.IsNotEmpty() && double.TryParse(str, out result))
+                return result;
+            return null;
+        }
+
+        
+        /// <summary>获取查询字符串中的枚举参数值（支持枚举字符串或枚举数字）</summary>
+        public static T? GetQuery<T>(string queryKey) where T : struct
+        {
+            return GetQueryString(queryKey).ParseEnum<T>();
+        }
+
+        获取热点关键字
+
+                    //var typeGroup = Asp.GetQueryString("typeGroup");
+            //var types = typeof(ArticleType).GetEnumInfos(typeGroup).Select(t => t.Value).CastEnum<ArticleType>();
+
+
+            
+        // 新增文章
+        public static Article Add()
+        {
+            var news = new Article() { CreateDt = DateTime.Now };
+            news.Save();
+            return news;
+        }
+                public virtual void AfterSave(EntityOp op)   {}
+        public virtual void AfterDelete() {}
+
+
+        as ItemName,
+        as ItemPathDisplay,
+        as KindText,
+        as SearchAutoSummary,
+        as SearchRank,
+        as SearchHitCount,
+        as Filename,
+        as ItemTypeText,
+
+                    //d["payload"] = url.GetQuery().ToString().DesEncrypt("12345678"); // 不影响原有网页逻辑。原有的url自己负责加密
+
+                            /*
+         * Type : MemberInfo
+        /// <summary>获取类型说明（来自 UIAttribute 或 DescriptionAttribute）</summary>
+        public static string GetDescription(this Type type)
+        {
+            if (type != null)
+            {
+                var attr1 = type.GetCustomAttribute<UIAttribute>();
+                var attr2 = type.GetCustomAttribute<DescriptionAttribute>();
+                if (attr1 != null) return attr1.Title;
+                if (attr2 != null) return attr2.Description;
+                return type.Name;
+            }
+            return "";
+        }
+        */
+
+
+        /*
+        /// <summary>获取属性的标题。UIExtension.GetTitle<Product>(t =&lt; t.Name)</summary>
+        public static string GetTitle<T>(this Expression<Func<T, object>> expression)
+        {
+            Type type = typeof(T);
+            string propertyName = expression.GetExpressionName();
+            return type.GetProperty(propertyName)?.GetTitle();
+        }
+        */
+
+        
+            var ui = new Dictionary<string, string>
+            {
+                ["Approvel"] = "赞赏",
+                ["Title"] = "标题",
+                ["NickName"] = "昵称"
+            };
+
+            
+        // 显示模型
+        protected void btnModel_Click(object sender, EventArgs e)
+        {
+            var url = "DataModel.ashx";
+            UI.AddMainTab("Model", url, "数据模型", Icon.Brick);
+        }
+
+
+            <script src="res/js/jquery-1.10.2.min.js"></script>
+
+
+
+                <!-- bootstrap popup
+    <script src="/res/js/jquery-2.1.1.min.js"></script>
+    <link rel="stylesheet" href="/res/js/bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" href="/res/js/bootstrap-pop/bs4.pop.css">
+    <script src="/res/js/bootstrap/js/bootstrap.js"></script>
+    <script src="/res/js/bootstrap-pop/bs4.pop.js"></script>
+        -->
+
+
+                    /*
+            if (useTextWatermark)
+            {
+                //设置文本水印（此方法不会平铺）
+                var txtWatermark = new TextWatermark();
+                txtWatermark.Text = text;
+                txtWatermark.FontSize = 28;
+                txtWatermark.Layout = WatermarkLayout.Diagonal;
+                doc.Watermark = txtWatermark;
+            }
+            else
+            {
+                //设图片水印
+                var picture = new PictureWatermark();
+                picture.Picture = Image.FromFile(imgPath);
+                picture.Scaling = 28;
+                doc.Watermark = picture;
+            }
+            */
+
+                        Logger.LogDb("DingSso-GetUser", u.ToJson());
+            Logger.LogDb("DingSso-GetUserInfo", ui.ToJson());
+            Logger.LogDb("DingSso-GetSiteUser", user.ExportJson(ExportType.Normal).ToJson());
+
+                    public APIResult LoginBackend(string code)
+        {
+            if (code.IsEmpty())
+                throw new Exception("Need code");
+
+            var u = DingHelper.GetUser(code);
+            var ui = DingHelper.GetUserInfo(u.Userid);
+            if (u.Errcode != 0)
+                throw new Exception("No user");
+
+            User user = DingHelper.GetSiteUser(u.Userid);
+            Common.LoginSuccess(user, 999);
+            if (user.HasPower(Power.Backend))
+                return new APIResult(true, "Login OK");
+            else
+                return new APIResult(false, "No backend power");
+        }
+
+
+        
+        /// <summary>获取自己授权访问的商店（常用于商户权限控制）</summary>
+        public static List<Shop> AllowedShops
+        {
+            get
+            {
+                var shops = new List<Shop>();
+                if (LoginUser != null)
+                {
+                    if (LoginUser.HasPower(Power.Admin))
+                        shops = Shop.Search().Sort(t => t.Name).ToList();
+                    else if (LoginUser.Shop != null)
+                        shops.Add(LoginUser.Shop);
+                }
+                return shops;
+            }
+        }
+
+                /// <summary>是否归属某个部门</summary>
+        public bool HasDept(long deptId)
+        {
+            return this.DeptID == deptId;
+        }
+
+        
+        // 获取用户角色id列表
+        public static List<Role> GetUserRoles(long userID)
+        {
+            var user = User.GetDetail(userID);
+            return user.Roles;
+        }
+
+
+                        <img src="<%#Eval("Url") %>" />
+                <br />
+                <div class="img-desc"> <%#Eval("Remark") %> </div>
+
+                using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using App.DAL;
+using System.Web.Security;
+using App.Controls;
+using App.Utils;
+using App.Components;
+using App.HttpApi;
+
+namespace App.Dings
+{
+    /// <summary>钉钉小程序文件上传</summary>
+    /// <remarks>https://ding-doc.dingtalk.com/doc#/dev/frd69q</remarks>
+    [Auth(Ignore=true)]
+    [Param("filePath", "文件路径，如 Article", true)]
+    [Param("fileName", "文件名，如 a.png", true)]
+    [Param("fileType", "文件类型，如 image", false)]
+    public class Up : HandlerBase
+    {
+        List<string> _exts = new List<string> { ".jpg", ".png", ".gif", ".mp3", ".mp4" };
+
+        public override void Process(HttpContext context)
+        {
+            // 参数及校验
+            var request = context.Request;
+            var response = context.Response;
+            var filePath = Asp.GetParam("filePath");
+            var fileName = Asp.GetParam("fileName");
+            var fileType = Asp.GetParam("fileType");
+            var ext = fileName.GetFileExtension();
+            if (!_exts.Contains(ext))
+            {
+                //Asp.WriteError(13, "没有文件权限");
+                response.Write(new APIResult(false, "没有文件权限", 13));
+                return;
+            }
+
+            // 存储第一个文件
+            var url = Common.GetUploadPath(filePath, fileName);
+            var path = request.MapPath(url);
+            if (request.Files.Count == 0)
+            {
+                //Asp.WriteError(11, "文件不存在");
+                response.Write(new APIResult(false, "文件不存在", 11));
+            }
+            else
+            {
+                request.Files[0].SaveAs(path);
+                response.Write(url.ToResult());
+            }
+        }
+    }
+}
+
+            if (Request.HttpMethod == "GET")
+            {
+                this.Folder = Asp.GetQueryString("folder");
+                this.FileName = Asp.GetQueryString("file");
+                this.Filter = Asp.GetQueryString("filter");
+            }
+
+                    // 这一块都可以挪到aspx页面去
+        /*
+        public string FileName => Asp.GetQueryString("file");
+        public string Folder   => Asp.GetQueryString("folder");
+        public string Filter   => Asp.GetQueryString("filter");
+        public string ChunkUrl => "/HttpApi/App.ChunkUp/DoChunk".ToSignUrl();
+        public string MergeUrl => "/HttpApi/App.ChunkUp/DoMerge".ToSignUrl();
+        public string SaveUrl  => "/HttpApi/App.ChunkUp/DoSave".ToSignUrl();
+        */
+
+
+                    if (Asp.Request.Files.Count == 0)
+                return new APIResult(false, "文件不存在", 11);
+
+
+                            if (context == null)
+                context = HttpContext.Current;
+
+                
+    //try { type = WebHandlerParser.GetCompiledType(context, url, url); }
+
+    /// <summary>
+    /// 页面请求处理器解析器。可获取页面请求对应的处理类。
+    /// （抄的 Asp.net 源码）
+    /// </summary>
+    internal class WebHandlerParser : SimpleWebHandlerParser
+    {
+        private WebHandlerParser(HttpContext context, string virtualPath, string physicalPath)
+            : base(context, virtualPath, physicalPath)
+        {
+        }
+        /// <summary>获取路径对应的处理类型（已内置缓存）</summary>
+        internal static Type GetCompiledType(HttpContext context, string virtualPath, string physicalPath)
+        {
+            var parser = new WebHandlerParser(context, virtualPath, physicalPath);
+            return parser.GetCompiledTypeFromCache();
+        }
+        protected override string DefaultDirectiveName
+        {
+            get { return "webhandler"; }
+        }
+    }
+
+                            <f:PopupBox runat="server" ID="pbUser" EmptyText="用户" UrlTemplate="Users.aspx" />
+                        <f:PopupBox runat="server" ID="pbDept" EmptyText="部门" UrlTemplate="Depts.aspx" />
+
+
+                // 用户和部门参数
+                var user = DAL.User.Get(userId);
+                var dept = DAL.Dept.Get(deptId);
+                if (user != null)
+                {
+                    UI.SetValue(this.pbUser, user, t => t.ID, t => t.NickName);
+                    UI.SetEnable(false, pbUser);
+                }
+                if (dept != null)
+                {
+                    UI.SetValue(this.pbDept, dept, t => t.ID, t => t.Name);
+                    UI.SetEnable(false, pbDept);
+                }
+
+                        /// <summary>设置复选列表的选中值</summary>
+        public static void SetValues(CheckBoxList cbl, List<string> values)
+        {
+            values = values ?? new List<string>();
+            cbl.SelectedValueArray = values.ToArray();
+        }
+
+        
+            //string[] titles = (item.Titles == null) ? new string[] { } : item.Titles.Select(t => t.ID.ToString()).ToArray();
+            //string[] roles  = item.Roles.Select(t => ((int)t).ToString()).ToArray();
+            //this.cblTitle.SelectedValueArray = titles;
+            //this.cblRole.SelectedValueArray = roles;
+            //string[] titles = (item.Titles == null) ? new string[] { } : item.Titles.Select(t => t.ID.ToString()).ToArray();
+            //string[] roles  = item.Roles.Select(t => ((int)t).ToString()).ToArray();
+
+            
+        // 重构建缓存数据
+        public static void Reload()
+        {
+            var items = Set.OrderBy(d => d.Seq).ToList();
+            _items = new List<Dept>();
+            BuildDeptTree(items, null, 0);
+        }        private static List<Dept> _items;
+        public static List<Dept> All
+        {
+            get
+            {
+                if (_items == null)
+                    Reload();
+                return _items;
+            }
+        }
+
+
+                // 保存完毕后刷新部门数据
+        public override void SaveData(Dept item)
+        {
+            item.Save();
+            Dept.Reload();
+        }
+
+        
+      <!-- 图片及缩略图处理Module，部署时需要删除对应的 MimeType：jpg,jpeg,png,gif等 -->
+      <!-- Office文件保护Module，部署时需要删除对应的 MimeType: doc,docx,xls,xlsx,ppt,pptx,pdf -->
+
+      
+  <!-- ============================ 特殊目录文件的访问权限 ============================ -->
+  <location path="Admins"><system.web><authorization><deny users="?" /></authorization></system.web></location>
+  <location path="Pages"><system.web><authorization><deny users="?" /></authorization></system.web></location>
+  <location path="Maintains"><system.web><authorization><deny users="?" /></authorization></system.web></location>
+  <location path="Reports"><system.web><authorization><deny users="?" /></authorization></system.web></location>
+  <location path="Wechats"><system.web><authorization><allow users="*" /></authorization></system.web></location>
+  <location path="Malls"><system.web><authorization><deny users="?" /></authorization></system.web></location>
+
+
+                      <f:Grid ID="Grid1" runat="server" ShowBorder="true" ShowHeader="true"  BoxFlex="1" Title="Assembly"  >
+                        <Columns>
+                            <f:BoundField runat="server" DataField="Name" HeaderText="Assembly" Width="400" />
+                            <f:BoundField runat="server" DataField="Version" HeaderText="Version" ExpandUnusedSpace="true" />
+                        </Columns>
+                    </f:Grid>
+
+            Grid1.DataSource = arr;
+            Grid1.DataBind();
+
+                    // 查看系统状态
+        protected void btnSystem_Click(object sender, EventArgs e)
+        {
+            UI.ShowAlert(GetComputerInfo());
+        }
+
+
+                    // 默认UI设置
+            /*
+            if (item.SettingText.IsEmpty())
+            {
+                var type = item.EntityType;
+                if (type != null)
+                    item.SettingText = new UISetting(type).ToJson();
+            }
+            */
+
+                                    <f:Button runat="server" ID="btnUI" Icon="ApplicationForm" >
+                            <Menu runat="server">
+                                <f:MenuButton runat="server" Icon="TagBlue" EnablePostBack="true" Text="UI1" ID="btnUI1" OnClick="btnUI1_Click"/>
+                                <f:MenuButton runat="server" Icon="TagBlue" EnablePostBack="true" Text="UI2" ID="btnUI2" OnClick="btnUI2_Click"/>
+                            </Menu>
+                        </f:Button>
+        protected void btnUI2_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        protected void btnUI1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+
+        void CreateMenuButton(string typeName)
+        {
+            var entityType = ReflectionHelper.TryGetType(typeName);
+            var settings = XUI.Search(XUIType.Form, entityType.FullName).ToList();
+            if (settings.Count > 0)
+            {
+                var menu = new FineUIPro.Menu();
+                menu.ID = typeName;
+                foreach(var setting in settings)
+                {
+                    var mi = new MenuCheckBox() { Text = setting.Name, AttributeDataTag = setting.ID.ToString() };
+                    mi.CheckedChanged += (s, e) =>
+                    {
+                        var checkbox = s as MenuCheckBox;
+                        if (checkbox.Checked)
+                        {
+                            ChangeUISetting(checkbox.AttributeDataTag);
+                        }
+                    };
+                    menu.Items.Add(mi);
+                }
+                var button = new FineUIPro.Button() { Icon = Icon.ApplicationForm };
+                button.MenuID = menu.ID;
+                form2.Toolbars[0].Items.Add(button);
+            }
+        }
+
+        /// <summary>更改表单UI设置</summary>
+        private void ChangeUISetting(string settingID)
+        {
+            
+        }
+
+            if (IsPostBack)
+            {
+                var uiid = Request.Form[this.ddlSettings.ClientID.Replace('_', '$')];
+            }
+
+
+
+                        <Toolbars>
+                <f:Toolbar runat="server">
+                    <Items>
+                        <f:ToolbarFill runat="server" />
+                        <f:DropDownList runat="server" ID="ddlSettings" EmptyText="UI配置" AutoPostBack="true" />
+                        <f:Button runat="server" ID="btnSetting" Icon="PageWhiteGear" ToolTip="表单配置"  OnClick="btnSetting_Click" />
+                    </Items>
+                </f:Toolbar>
+            </Toolbars>
+
+                        btnSetting.Click += (sender, arg) =>
+            {
+                var url = Urls.GetUISettingsUrl(typeName);
+                UI.ShowWindow(win, url, "UI配置");
+            };
+            return btnSetting;
+
+                    [UI("界面", "菜单样式")]            public string MenuType              { get; set; } = "Tree";
+                UI.SetValue(ddlMenuType, Configs.Site.MenuType);
+            Configs.Site.MenuType = UI.GetText(ddlMenuType);
+            <f:DropDownList ID="ddlMenuType" Label="菜单样式" runat="server" Required="true" ShowRedStar="true" Hidden="true">
+                <f:ListItem Text="手风琴菜单" Value="accordion" />
+                <f:ListItem Text="树型菜单" Value="tree" />
+            </f:DropDownList>
+
+
+                    //[Param("title", "标题", Visible = false)]
+        //[Param("startDt", "开始时间", Visible=false)]
+        //[Param("endDt", "结束时间", Visible=false)]
+        //[Param("dirIds", "目录ID", Visible=false)]
+
+                    dynamic dataset = AppContext.GetEntitySet(_type);
+            var q = GridHelper.SortAndPage(dataset, this.Grid1);
+            var data = System.Linq.Enumerable.ToList(q) as IEnumerable;  // q.ToList(); 动态类型不支持扩展表达式
+            var d = data.Cast(t => (t as IExport)?.Export(ExportType.Normal));
+
+                        /*
+            return new ImageField()
+            {
+                DataImageUrlField = field,
+                HeaderText = title,
+                Width = width,
+                ImageWidth = width,
+                ImageHeight = height
+            };
+            */
+        /// <summary>增加自动列</summary>
+        public GridPro AddAutoColumns(Type type)
+        {
+            return GridHelper.AddColumns(this, type, this.WinID) as GridPro;
+        }
+
+        /// <summary>根据对象类别，自动添加网格列</summary>
+        public static Grid AddColumns(this Grid grid, Type type, string windowId)
+        {
+            return AddColumns(grid, new UISetting(type), windowId);
+        }
+
+        
+        //--------------------------------------------------
+        // 辅助方法
+        //--------------------------------------------------
+        /// <summary>修正列标题、排序等信息</summary>
+        private static void FixColumn(GridColumn field, string fieldName, string fieldDesc, bool canSort)
+        {
+            // ColumnID 
+            if (field.ColumnID.IsEmpty())
+                field.ColumnID = fieldName.Replace('.', '_');
+
+            // 修复标题
+            if (field.HeaderText.IsEmpty())
+                field.HeaderText = fieldDesc;
+
+            // 设置排序（组合字段和只读字段不允许排序）
+            if (field.SortField.IsEmpty())
+                if (!fieldName.Contains(".") && canSort)
+                    field.SortField = fieldName;
+        }
+        //--------------------------------------------------
+        // 列表
+        //--------------------------------------------------
+        /// <summary>找到第一个匹配的位置</summary>
+        public static int IndexOf<T>(this IEnumerable<T> data, Func<T, bool> condition)
+        {
+            int n = -1;
+            foreach (var o in data)
+            {
+                n++;
+                if (condition(o))
+                    return n;
+            }
+            return n;
+        }
+
+
+            var type = attr.Type.GetRealType();
+            var dataType = attr?.Field?.GetUIType()?.GetRealType() ?? type;
+            // 网格列表窗口：没什么用，没法限制windowField的数据内容
+            if (!type.IsType(typeof(string)) && type.IsInterface(typeof(IEnumerable)))
+            {
+                return null;
+                /*
+                dataType = type.GetGenericDataType();
+                var handler = Common.Handlers.FirstOrDefault(t => t.Type == type);
+                if (handler != null)
+                    return CreateGridColumn(windowId, field, title, width, handler);
+                */
+            }
+
+            // 表单窗口:复杂类对象（返回WindowField）
+            if (!type.IsType(typeof(string)) && type.IsClass)
+            {
+                return null;
+                /*
+                var handler = Common.Handlers.FirstOrDefault(t => t.Type == type);
+                if (handler != null)
+                    return CreateFormColumn(windowId, field, title, width, handler);
+                */
+            }
+
+
+                     writer.WriteValue(string.Format("{0}, {1}", type.FullName, type.Assembly.GetName().Name));
+                //if (type.IsValueType || type == typeof(string))
+                //return string.Format("{0}, {1}", type.FullName, assemblyName);
+            /*
+            if (type.IsGenericList())
+            {
+                type = type.GetGenericDataType();
+                return string.Format("List<{0}>", GetTypeString(type));
+            }
+            if (type.IsGenericDict())
+            {
+                var gType = type.GetGenericTypeDefinition();
+                var types = type.GetGenericArguments();
+                return string.Format("Dictionary<{0}>", types.Cast(t=> t.GetTypeString()).ToSeparatedString(", "));
+            }
+            */
+
+                    // 遍历处理表单的所有控件
+        public static void ProcessFormItems(FormBase form, Action<Field> process)
+        {
+            if (form is SimpleForm)
+            {
+                foreach (var item in form.Items)
+                {
+                    if (item is FormBase) ProcessFormItems(item as FormBase, process);
+                    else if (item is Field) process(item as Field);
+                }
+            }
+            if (form is Form)
+            {
+                var frm = form as Form;
+                foreach (var item in form.Items)
+                {
+                    if (item is FormBase) ProcessFormItems(item as FormBase, process);
+                    else if (item is Field) process(item as Field);
+                }
+                foreach (FormRow row in frm.Rows)
+                {
+                    foreach (var item in row.Controls)
+                    {
+                        if (item is FormBase) ProcessFormItems(item as FormBase, process);
+                        else if (item is Field) process(item as Field);
+                    }
+                }
+            }
+        }
+                    if (form is Form)
+            {
+                var frm = form as Form;
+                foreach (FormRow row in frm.Rows)
+                {
+                    foreach (var item in row.Controls)
+                    {
+                        if (item is PanelBase)  ProcessPanelItems(item as FormBase, process);
+                        else if (item is Field) process(item as Field);
+                    }
+                }
+            }
+        // 遍历处理表单的所有控件
+        public static void ProcessPanelItems(PanelBase form, Action<Field> process)
+        {
+            foreach (var item in form.Items)
+            {
+                if (item is PanelBase)  ProcessPanelItems(item as FormBase, process);
+                else if (item is FormRow) { }
+                else if (item is Field) process(item as Field);
+            }
+        }
+
+
+
+        
+        /// <summary>字段名称</summary>
+        //public string FieldName => Field?.Name;
+
+
+                /// <summary>重置内容缓存（清空）</summary>
+        public override void AfterChange(EntityOp op)
+        {
+            IO.RemoveCache(CacheName);
+        }
+
+        /// <summary>数据变更后清空缓存</summary>
+        public override void AfterChange(EntityOp op)
+        {
+            IO.RemoveCache(CacheName);
+        }
+
+        /// <summary>任何数据变更都删除缓存（促使重写获取数据）</summary>
+        public override void AfterChange(EntityOp op)
+        {
+            IO.RemoveCache(CacheName);
+        }
+                /// <summary>重置内容缓存（清空）</summary>
+        public override void AfterChange(EntityOp op)
+        {
+            IO.RemoveCache(CacheName);
+        }
+
+                // 做任何数据变更都更新缓存
+        public override void AfterChange(EntityOp op)
+        {
+            IO.RemoveCache(CacheName);
+        }
+
+                /// <summary>任何数据变更都删除缓存（促使重写获取数据）</summary>
+        public override void AfterChange(EntityOp op)
+        {
+            IO.RemoveCache(CacheName);
+        }
+
+        //-----------------------------------------------
+        // 缓存
+        //-----------------------------------------------
+        /// <summary>全部头衔（缓存）</summary>
+        public static List<Title> All => IO.GetCache(CacheName, () => Set.ToList());
+
+                //-----------------------------------------------
+        // 缓存处理
+        //-----------------------------------------------
+        /// <summary>所有配置（有缓存，如需刷新，请调用 Reload 方法）</summary>
+        public static List<LogConfig> All => IO.GetCache(CacheName, () => Set.Sort(t => t.From).ToList());
+
+                /// <summary>路由列表</summary>
+        public static List<IPFilter> All => IO.GetCache(CacheName, () => Set.ToList());
+
+                private static List<Area> _items;
+        public static List<Area> All
+        {
+            get
+            {
+                if (_items == null)
+                    Reload();
+                return _items;
+            }
+        }
+
+
+        /// <summary>重加载数据</summary>
+        public static void Reload()
+        {
+            List<Area> items = Set.OrderBy(d => d.Seq).ToList();
+            _items = new List<Area>();
+            BuildTree(items, null, 0);
+        }
+                // 缓存数据
+        private static List<ArticleDir> _items = null;
+        public static List<ArticleDir> All
+        {
+            get
+            {
+                if (_items == null)
+                    Reload();
+                return _items;
+            }
+        }
+
+
+
+        // 重构建缓存数据
+        public static void Reload()
+        {
+            var items = Set.Where(t => t.InUsed != false).OrderBy(d => d.Seq).ToList();
+            _items = new List<ArticleDir>();
+            BuildTree(items, null, 0);
+        }
+
+
+        /// <summary>实体ID</summary>
+        //public long ID { get; set; }
+
+
+        // 保存完毕后刷新部门数据
+        public override void SaveData(ArticleDir item)
+        {
+            item.Save();
+            ArticleDir.Reload();
+        }
+            ArticleDir.Reload();
+
+
+
+                        this.form2.AfterSave += (s, t) => Configs.Load();
+            this.form2.AfterSave += (s, t) => Configs.Load();
+            this.form2.AfterSave += (s, t) => Configs.Load();
+            this.form2.AfterSave += (s, t) => Configs.Load();
+            this.form2.AfterSave += (s, t) => Configs.Load();
+        public event EventHandler<EntityOp> BeforeSave;         // 保存前事件
+                if (BeforeSave != null) BeforeSave(item, EntityOp.New);
+                if (BeforeSave != null) BeforeSave(item, EntityOp.Edit);
+
+
+            IO.RemoveCache(CacheName);
+            IO.RemoveCache(CacheName);
+            IO.RemoveCache(CacheName);
+
+            
+        /// <summary>清除该实体的全部数据缓存</summary>
+        public static void ClearCache()
+        {
+            IO.RemoveCache(CacheName);
+        }
+
+        /// <summary>缓存名称</summary>
+        public static string CacheName => "";
+
+
+                    try
+            {
+            }
+            catch (Exception ex)
+            {
+                UI.ShowAlert("获取UI配置出错，错误信息：" + ex.Message);
+            }
+
+
+            
+        /// <summary>显示可用的UI配置信息</summary>
+        public static DropDownList CreateUISettingDDL(XUIType type, string typeName, long? uiId)
+        {
+            var ddlSettings = new DropDownList() { EmptyText = "UI 配置", AutoPostBack = true };
+            var entityType = ReflectionHelper.TryGetType(typeName);
+            var settings = XUI.Search(type, entityType.FullName).ToList();
+            UI.Bind(ddlSettings, settings, t => t.ID, t => t.Name);
+            UI.SetVisible(settings.Count > 0, ddlSettings);
+            if (settings.Count > 0)
+                ddlSettings.SelectedIndex = 0;
+            if (uiId != null)
+                UI.SetValue(ddlSettings, uiId);
+            if (settings.Count <= 1)
+                ddlSettings.Hidden = true;
+            ddlSettings.SelectedIndexChanged += (s, e) =>
+            {
+                var id = UI.GetLong(ddlSettings);
+                if (id != null)
+                {
+                    var url = new Url(Asp.Request.RawUrl);
+                    url["uiId"] = id.ToString();
+                    Asp.Response.Redirect(url.ToString());
+                }
+            };
+            return ddlSettings;
+        }
+
+  // IO.GetCache($"UISetting-{this.EntityType.FullName}", () => new UISetting(this.EntityType));  // 缓存处理
+                  //ui = IO.GetCache($"UIExport-{_type.FullName}", () => (Activator.CreateInstance(_type) as EntityBase).ExportSetting());
+
+                  
+        /// <summary>所有默认的UI配置信息</summary>
+        public static List<UISetting> UISettings => IO.GetCache("UISettings", () =>
+        {
+            var settings = new List<UISetting>();
+            foreach (var item in EntityTypes)
+                settings.Add(new UISetting(item.Type));
+            return settings;
+        });
+
+
+        
+        /*
+        /// <summary>从方法信息构建 UISetting 对象（如果没有ParamAttribute则显示所有参数；如果有，则只保留标注过的参数）</summary>
+        public static UISetting GetUISetting(MethodInfo m)
+        {
+            var setting = new UISetting();
+            setting.Title = $"{m.DeclaringType.Name}.{m.Name}";
+            var attrs = m.GetAttributes<ParamAttribute>();
+            var ps = m.GetParameters();
+            foreach (var p in ps)
+            {
+                var ui = new UIAttribute(p.Name);
+                ui.Name = p.Name;
+                ui.Type = p.ParameterType;
+                ui.Required = false;  // 搜索栏上的所有控件都不是必填的
+                if (attrs.Count == 0)
+                    setting.Items.Add(ui);
+                else
+                {
+                    var paramAttr = attrs.FirstOrDefault(t => t.Name == p.Name);
+                    if (paramAttr != null)
+                    {
+                        if (!paramAttr.Visible)
+                            continue;
+                        ui.Title = paramAttr.Title;
+                        ui.Remark = paramAttr.Remark;
+                        if (paramAttr.Type != null)
+                            ui.Type = paramAttr.Type;
+                        ui.Regex = paramAttr.Regex;
+                        ui.Precision = paramAttr.Precision;
+                        setting.Items.Add(ui);
+                    }
+                }
+            }
+            return setting;
+        }
+        */
+            var m = GetSearchMethod(_type);
+            //<f:DropDownList runat="server" ID="ddlSettings" EmptyText="UI配置" AutoPostBack="true" />
+            //<f:Button runat="server" ID="btnSetting" Icon="PageWhiteGear" ToolTip="表单配置"  OnClick="btnSetting_Click" />
+
+            
+        /// <summary>获取属性的 UI 配置信息</summary>
+        public UIAttribute(PropertyInfo prop)
+        {
+            var attr = ReflectionHelper.GetAttribute<UIAttribute>(prop);
+            this.Group = "";
+            this.Name = prop.Name;
+            this.Title = prop.GetTitle();
+            this.Field = prop;
+            this.Type = attr?.Type ?? prop.PropertyType;
+        }
+
+                        //.AddAutoColumns(_type)  // 考虑用生成的数据创建列
+                //.InitGrid<Shop>(BindGrid, Panel1, t => t.Name)
+
+                            cbl.DataSource = data;
+            cbl.DataTextField = textField.GetPropertyName();
+            cbl.DataValueField = valueField.GetPropertyName();
+            cbl.DataBind();
+            if (selectedId != null)
+                cbl.SelectedValueArray = new string[] { selectedId.ToString() };
+            rbl.DataSource = data;
+            rbl.DataTextField = textField.GetPropertyName();
+            rbl.DataValueField = valueField.GetPropertyName();
+            rbl.DataBind();
+            if (selectedId != null)
+                rbl.SelectedValue = selectedId.ToString();
+            else
+                rbl.SelectedIndex = 0;
+
+
+                            ddl.EmptyText = title;
+            ddl.AutoSelectFirstItem = false;
+            ddl.EnableEdit = true;
+            ddl.ForceSelection = true;
+            ddl.EnableMultiSelect = true;
+            ddl.DataSource = data;
+            ddl.DataTextField = textField.GetPropertyName();
+            ddl.DataValueField = valueField.GetPropertyName();
+            ddl.DataBind();
+            if (selectedValues != null)
+                ddl.SelectedValueArray = selectedValues;
+
+                
+        /// <summary>设置复选框列表可选项目</summary>
+        public static void EnableItems<T>(CheckBoxList cbl, IEnumerable<T> enableItems)
+        {
+            foreach (CheckItem item in cbl.Items)
+            {
+                //CheckBox cb = item as CheckBox;
+
+            }
+        }
+
+                /// <summary>绑定表单。自动生成表单控件，并显示数据</summary>
+        /// <param name="form">表单对象</param>
+        /// <param name="o">数据对象</param>
+        public static void BindForm(FormBase form, object o)
+        {
+            var map = FormRender.BuildForm(form, new UISetting(o.GetType()));
+            ShowFormData(map, o);
+        }
+
+
+            /*
+            // title
+            var attr = ReflectionHelper.GetAttribute<UIAttribute>(type);
+            if (!string.IsNullOrEmpty(title))
+                this.Title = title;
+            else
+            {
+                if (attr != null && !string.IsNullOrEmpty(attr.Title))
+                    this.Title = attr.Title;
+                else
+                    this.Title = type.Name;
+            }
+            */
+
+
+            
+        /// <summary>设置属性值. this.Set(t=>t.Title, "UserName")</summary>
+        public UIAttribute Set<T>(Expression<Func<UIAttribute, T>> field, T value)
+        {
+            var p = field.GetProperty();
+            p.SetValue(this, value);
+            return this;
+        }
+                    if (data == null)
+                return;
+            var tree = PrepareTree(data, "", disableId);
+            ddl.EmptyText = title;
+            ddl.AutoSelectFirstItem = false;
+            ddl.EnableEdit = true;
+            ddl.ForceSelection = true;
+            ddl.EnableSimulateTree = true;
+            ddl.DataTextField = textField.GetPropertyName();
+            ddl.DataValueField = valueField.GetPropertyName();
+            ddl.DataSimulateTreeLevelField = "TreeLevel";
+            ddl.DataEnableSelectField = "Enabled";
+            ddl.DataSource = tree;
+            ddl.DataBind();
+
+            if (selectedId != null)
+                ddl.SelectedValue = selectedId.ToString();
+
+                
+        /// <summary>获取表达式属性名。var name = GetPropertyName&lt;User&gt;(t =&gt; t.Dept.Name);</summary>
+        public static string GetName<T>(this Expression<Func<T, object>> expr)
+        {
+            return (expr == null) ? "" : GetName(expr.Body);
+        }
+        /// <summary>获取表达式属性信息</summary>
+        public static PropertyInfo GetProperty<T>(this Expression<Func<T, object>> expr)
+        {
+            return GetProperty(expr.Body);
+        }
+
+
+        /// <summary>获取类的属性名（子属性请使用 GetName）。var name = GetPropertyName&lt;User, string&gt;(t =&gt; t.Name);</summary>
+        public static string GetPropertyName<T>(this Expression<Func<T, object>> property)
+        {
+            return GetMember(property).Name;
+        }
+
+        /// <summary>获取对象的属性名。可用于获取一些匿名对象的属性名。GetPropertyName(() =&gt; user.Name)</summary>
+        public static string GetName<T>(this Expression<Func<T>> expr)
+        {
+            return (((MemberExpression)(expr.Body)).Member).Name;
+        }
+
+
+ /// <summary>获取类的成员信息。GetMemberInfo&lt;User&gt;(t =&gt; t.Name);</summary>
+        public static MemberInfo GetMember<T>(this Expression<Func<T, object>> property)
+        {
+            MemberExpression me;
+            if (property.Body is UnaryExpression)
+                me = ((UnaryExpression)property.Body).Operand as MemberExpression;    // array.Length 数组长度是一元操作符
+            else
+                me = property.Body as MemberExpression;
+            return me.Member;
+        }
+            //return GetProperty(t, expression.GetName());
+
+            
+        /// <summary>获取对象的属性信息。product.GetProperty(t =&lt; t.Name)</summary>
+        public static PropertyInfo GetProperty<T>(this T t, Expression<Func<T, object>> expression)
+        {
+            return expression.GetProperty();
+        }
+
+                /// <summary>获取对象的属性信息。product.GetProperty(t =&lt; t.Name)</summary>
+        public static PropertyInfo GetProperty<T>(Expression<Func<T, object>> expression)
+        {
+            return expression.GetProperty();
+        }
+
+
+        
+        public static void WriteFile(string filePath, string mimeType = "", string attachName = "")
+        {
+            if (mimeType.IsEmpty())
+                mimeType = filePath.GetMimeType();
+            WriteBinary(File.ReadAllBytes(filePath), mimeType, attachName);
+        }
+
+        /// <summary>输出二进制文件</summary>
+        /// <param name="mimeType">文件Mime类型。若为空，则尝试根据文件名扩展名解析。</param>
+        /// <param name="attachName">附件名。若不为空，则启动附件下载方式。</param>
+        public static void WriteBinary(byte[] bytes, string mimeType = "", string attachName = "")
+        {
+            var response = HttpContext.Current.Response;
+            if (mimeType.IsNotEmpty())
+                response.ContentType = mimeType;
+            if (attachName.IsNotEmpty())
+                response.AddHeader("Content-Disposition", "attachment; filename=" + attachName);
+            response.Cache.SetCacheability(HttpCacheability.NoCache);
+            response.BinaryWrite(bytes);
+            response.End();
+        }
+        /// <summary>输出附件</summary>
+        private static void WriteAttach(string path, string name)
+        {
+            // 文件信息
+            var attachName = path.GetFileName();
+            if (name.IsNotEmpty() && name.GetFileExtension().IsEmpty())
+            {
+                var ext = path.GetFileExtension();
+                attachName = $"{name}{ext}";
+            }
+
+            // 下载文件
+            Asp.WriteFile(path, attachName);
+        }
+
+
+                    //return ExportDict(type);
+
+                            public event Func<ExportType, object> OnExport;
+        public object ExportData(ExportType type = ExportType.Normal)
+        {
+            if (OnExport != null)
+                return OnExport(type);
+            else
+                return Export(type);
+        }
+
+                // 导出事件
+        public event Action<object> OnExport;
+        public object ExportData(ExportType type)
+        {
+            var o = Export(type);
+            if (OnExport != null)
+                OnExport(o);
+            return o;
+        }
+
+
+                [UI("文字")]  Text = 0,
+        if (type != ResType.Text)
+
+                public Dictionary<string, object> Params { get; set; }
+
+
+                            else if (_type.IsInterface(typeof(ICache)))
+                q = AppContext.GetCaches(_type);
+            else
+                q = AppContext.GetEntitySet(_type);
+
+
+                
+            if (auth == null)
+                return 
+                    .AddQueryString($"mode={mode}")
+                    .AddQueryString(queryString)
+                    .ToSignUrl();
+            else
+                return string.Format("~/Pages/Devs/Datas.aspx?type={0}&pv={1}&pn={2}&pe={3}&pd={4}", type?.FullName, auth.ViewPower, auth.NewPower, auth.EditPower, auth.DeletePower)
+                    .AddQueryString($"mode={mode}")
+                    .AddQueryString(queryString)
+                    .ToSignUrl()
+                    ;
+
+
+                    /// <summary>采集表单数据</summary>
+        /// <param name="map">属性名-控件字典</param>
+        /// <param name="o">数据对象</param>
+        public static void CollectData(Dictionary<string, EditorInfo> map, ref object o)
+        {
+            foreach (var key in map.Keys)
+            {
+                var info = map[key];
+                if (info.Property != null)
+                {
+                    object value = info.Editor.GetValue(info.Property);
+                    o.SetValue(key, value.ToText());
+                }
+            }
+        }
+
+
+                SetEditorValue(editor, value);
+        FormRender.SetEditorValue(map[key], null);
+        // 设置控件值
+        public static void SetEditorValue(EditorInfo info, object value)
+        {
+            info.Set(value);
+        }
+        var ctrl = _map[key].Editor;
+        var property = _map[key].Property;
+        if (property.IsNotEmpty())
+            _map[key].Editor.SetValue(property, value);
+
+
+                
+        /// <summary>编辑器值的类型（没用到）</summary>
+        public Type PropertyType { get; set; }
+        public EditorInfo(EditorType type, string property, Type propertyType, Field editor)
+        {
+            this.Type = type;
+            this.Property = property;
+            this.PropertyType = propertyType;
+            this.Editor = editor;
+        }
+            this.PropertyType = pi?.PropertyType;
+
+
+
+
+                    public void InitForm(EntityBase o, long? uiID)
+        {
+            this.EntityID = o.ID;
+            InitForm(o.GetType(), uiID);
+        }
+
+                    var uiId = Asp.GetQueryLong("uiId");
+            this.form2.EntityID = Asp.GetQueryLong("id");
+            this.form2.Mode = this.Mode;
+            this.form2.InitForm(typeName, uiId);
+
+                    public void InitForm(string typeName, UISetting setting = null, long? uiID=null)
+        {
+            InitForm(Reflector.TryGetType(typeName), setting, uiID, null);
+        }
+
+                /// <summary>设置成员</summary>
+        public UIAttribute Set(
+            Expression<Func<T, object>> field,
+            ColumnType column = ColumnType.Auto,
+            EditorType editor = EditorType.Auto,
+            bool? sort = null,
+            object tag = null)
+        {
+            var attr = GetOrCreate(field);
+            attr.Editor = editor;
+            attr.Column = column;
+            attr.Sort = sort;
+            attr.Tag = tag.ToJson();
+            return attr;
+        }
+
+
+
+                <f:Panel ID="Panel1" runat="server" BodyPadding="0px"  ShowBorder="false" ShowHeader="false" Layout="Fit">
+            <Items>
+            </Items>
+        </f:Panel>
+
+
+                /// <summary>表单模式下的编辑控件</summary>
+        public EditorType RealEditor { get; set; } = EditorType.Auto;
+
+        /// <summary>列模式下的展示方式</summary>
+        public ColumnType RealColumn { get; set; } = ColumnType.Auto;
+
+
+        // 克隆
+        public object Clone()
+        {
+            Area item = new Area
+            {
+                ID = ID,
+                Type = Type,
+                Name = Name,
+                Remark = Remark,
+                Seq = Seq,
+                FullName = FullName,
+                Enabled = Enabled,
+                TreeLevel = TreeLevel,
+                IsTreeLeaf = IsTreeLeaf,
+                CreateDt = CreateDt,
+                UpdateDt = UpdateDt
+            };
+            return item;
+        }
+
+        // 克隆
+        public object Clone()
+        {
+            var item = new ArticleDir
+            {
+                ID = ID,
+                ParentID = ParentID,
+                Name = Name,
+                Remark = Remark,
+                Seq = Seq,
+                TreeLevel = TreeLevel,
+                Enabled = Enabled,
+                IsTreeLeaf = IsTreeLeaf,
+                CreateDt = CreateDt,
+                UpdateDt = UpdateDt,
+                Icon = Icon
+            };
+            return item;
+        }
+// 克隆
+        public object Clone()
+        {
+            Dept item = new Dept
+            {
+                ID = ID,
+                Name = Name,
+                Remark = Remark,
+                Seq = Seq,
+                TreeLevel = TreeLevel,
+                Enabled = Enabled,
+                IsTreeLeaf = IsTreeLeaf
+            };
+            return item;
+        }
+
+        // 克隆
+        public object Clone()
+        {
+            return new Menu {
+                ID = ID,
+                Name = Name,
+                ImageUrl = ImageUrl,
+                NavigateUrl = NavigateUrl,
+                Remark = Remark,
+                Seq = Seq,
+                TreeLevel = TreeLevel,
+                Enabled = Enabled,
+                IsTreeLeaf = IsTreeLeaf,
+                IsOpen = IsOpen,
+                Visible = Visible,
+                Previous = Previous,
+                Next = Next,
+                CreateDt = CreateDt,
+                UpdateDt = UpdateDt
+            };
+        }
+ICloneable,
+
+ /*
+        /// <summary>添加按钮列</summary>
+        public GridPro AddButtonColumn<T>(Icon icon, Action<T> func, string commandName="", string confirmText="", string tooltip="", string columnId="", int width=ICONWIDTH, string title="")
+            where T : EntityBase
+        {
+            var field = new LinkButtonField()
+            {
+                TextAlign = FineUIPro.TextAlign.Center,
+                Icon = icon,
+                ToolTip = tooltip,
+                ConfirmText = confirmText,
+                ConfirmTarget = FineUIPro.Target.Top,
+                Width = width
+            };
+            if (commandName.IsEmpty())
+                field.CommandName = Guid.NewGuid().ToString("N");
+            if (columnId.IsNotEmpty())
+                field.ColumnID = columnId;
+            this.Columns.Add(field);
+            if (func != null)
+            {
+                this.RowCommand += (s, e) =>
+                {
+                    if (e.CommandName == field.CommandName)
+                    {
+                        var id = this.GetSelectedId();
+                        if (id == -1) return;
+                        var o = AppContext.Current.Set<T>().FirstOrDefault(t => t.ID == id);
+                        if (o != null)
+                            func(o);
+                    }
+                };
+            }
+            return this;
+        }
+        */
+
+        <%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Datas.aspx.cs" Inherits="App.Pages.Datas" %>
+<!DOCTYPE html>
+<html>
+<head runat="server">
+    <title>数据列表</title>
+</head>
+<body>
+    <form id="form1" runat="server">
+    <f:PageManager ID="PageManager1" AutoSizePanelID="Panel1" runat="server" />
+    <f:Panel ID="Panel1" runat="server" BodyPadding="0px"  ShowBorder="false" Layout="Fit" ShowHeader="false" >
+        <Toolbars>
+            <f:Toolbar runat="server" ID="toolbar" >
+                <Items>
+                    <f:Button runat="server" Icon="PageExcel"  Text="导出">
+                        <Menu runat="server">
+                            <f:MenuButton runat="server" ID="btnExport"  Text="查询结果"  OnClick="btnExport_Click" EnableAjax="false" DisableControlBeforePostBack="false"  />
+                            <f:MenuButton runat="server" ID="btnExportSelect" Text="选中数据" OnClick="btnExportSelect_Click" EnableAjax="false" DisableControlBeforePostBack="false"  />
+                        </Menu>
+                    </f:Button>
+                    <f:ToolbarFill runat="server" />
+                </Items>
+            </f:Toolbar>
+        </Toolbars>
+        <Items>
+            <f:GridX ID="Grid1" runat="server"
+                AutoCreateFields="false" 
+                ShowNumberField="true" ShowDeleteField="true" ShowEditField="true" ShowIDField="false" ShowViewField="true"
+                RelayoutToolbar="false"
+                WinWidth="1000"
+                WinHeight="600"
+                EnableTextSelection="true"
+                />
+        </Items>
+    </f:Panel>
+ 
+    </form>
+</body>
+</html>
+	
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using System.Collections;
+using App.Components;
+using App.Controls;
+using App.Utils;
+using App.DAL;
+using FineUIPro;
+
+namespace App.Pages
+{
+    /// <summary>
+    /// 通用数据管理页面
+    ///     [x] 显示
+    ///     [x] 排序
+    ///     [x] 分页
+    ///     [x] URL安全控制
+    ///     [x] 操作权限控制
+    ///     [x] 导出
+    ///     [x] 查找
+    /// 请用 Common.GetDatasUrl() 获取调用 url
+    /// </summary>
+    [UI("通用数据管理页面")]
+    [Auth(AuthLogin=true)]
+    [Param("type", "实体类名")]
+    [Param("q", "查询字典（如a=x&b=x）")]
+    [Param("pv", "访问权限")]
+    [Param("pn", "新建权限")]
+    [Param("pe", "编辑权限")]
+    [Param("pd", "删除权限")]
+    public partial class Datas : PageBase
+    {
+        public Type EntityType { get; set; }
+        public UISetting Setting { get; set; }
+
+        protected SearchRender _search;
+        protected Button _btnSetting;
+        protected string _q;
+
+
+        // Init
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            // 解析类型名
+            var typeName = Asp.GetQueryString("type", false);
+            EntityType = Reflector.TryGetType(typeName);
+            if (EntityType == null)
+            {
+                Common.ShowFail("未找到指定的类");
+                return;
+            }
+
+            //
+            _q = Asp.GetQueryString("q");
+            var url = string.Format("DataForm.aspx?type={0}&q={1}", typeName, _q.UrlEncode());
+            InitGrid(url);
+
+            //
+            if (!IsPostBack)
+            {
+                Grid1.SetPage(Configs.Site.PageSize, true);
+                SetSort(Setting);
+                BindGrid();
+                UI.SetVisibleByQuery("search", this.toolbar);
+            }
+        }
+
+        private void InitGrid(string url)
+        {
+            // 权限控制
+            this.Auth = GetAuth();
+
+            // 构建网格及搜索工具栏
+            Grid1
+                .SetPowers(this.Auth)
+                .SetDataKeyNames()
+                .SetUrls(url)  // TODO: 这里要做安全处理
+                .SetToolbar(this.Panel1, false)
+                .AddWindow()
+                .AddPager()
+                .AddNewButton()
+                .AddSelectButton()
+                .AddControlColumns()
+                .SetDeleteCommand(OnDelete)
+                .SetSortPageEvent()
+                .SetDataBinding(BindGrid)
+                .SetRowEvent()
+                ;
+            Grid1.PreRowDataBound += Grid1_PreRowDataBound;
+            BuildToolbar();
+
+            // ui
+            if (Setting == null)
+                Setting = GetUISetting();
+            Grid1.AddColumns(Setting);
+            Grid1.SetLastColumnExpand();
+        }
+
+        // 获取鉴权对象
+        private AuthAttribute GetAuth()
+        {
+            var auth = EntityType.GetAttribute<AuthAttribute>();
+            if (auth == null)
+            {
+                auth = new AuthAttribute();
+                auth.ViewPower = Asp.GetQuery<Power>("pv");
+                auth.NewPower = Asp.GetQuery<Power>("pn");
+                auth.EditPower = Asp.GetQuery<Power>("pe");
+                auth.DeletePower = Asp.GetQuery<Power>("pd");
+            }
+            return auth;
+        }
+
+
+        //---------------------------------------------------
+        // 搜索工具栏
+        //---------------------------------------------------
+        // 构建检索工具栏
+        private void BuildToolbar()
+        {
+            // 查找工具栏
+            var dict = Asp.GetQueryString("q").ParseDict();
+            var searchSetting = AppContext.SearchUIs.FirstOrDefault(t => t.Type == EntityType);
+            if (searchSetting != null)
+            {
+                _search = new SearchRender(searchSetting);
+                _search.Render(this.toolbar.Items, dict);
+                var btn = new Button() {Text = "查找", Icon = Icon.SystemSearch, Type = ButtonType.Submit};
+                btn.Click += (s, e) => BindGrid();
+                this.toolbar.Items.Add(btn);
+            }
+
+            // UI配置菜单按钮
+            var uiId = Asp.GetQueryLong("uiId");
+            var win = UI.CreateWindow("配置", 800, 600);
+            _btnSetting = UIRender.CreateUISettingButton(EntityType.FullName, win, XUIType.List, uiId);
+            this.Panel1.Items.Add(win);
+            this.toolbar.Items.Add(_btnSetting);
+        }
+
+        // 显示数据
+        private void BindGrid()
+        {
+            var d = GetData(true, false);
+            Grid1.DataSource = d;
+            Grid1.DataBind();
+        }
+
+
+        // 获取UI配置
+        private UISetting GetUISetting()
+        {
+            // UI 配置
+            UISetting ui = null;
+            var uiId = UIRender.GetSelectedMenuId(_btnSetting.Menu).ParseLong();
+            if (uiId != null && uiId != 0)
+                ui = XUI.Get(uiId).Setting;
+            if (ui == null)
+                ui = AppContext.GridUIs.FirstOrDefault(t => t.ModelType == EntityType);
+            return ui;
+        }
+
+        private void SetSort(UISetting ui)
+        {
+            // 排序
+            var attr = ui.Items.FirstOrDefault(t => t.Sort != null);
+            if (attr != null)
+            {
+                Grid1.SortField = attr.Name;
+                Grid1.SortDirection = attr.Sort.Value ? "ASC" : "DES";
+            }
+            else
+            {
+                Grid1.SortField = "ID";
+            }
+        }
+
+        /// <summary>获取查询结果</summary>
+        /// <param name="currentPage">仅本页数据</param>
+        private List<object> GetData(bool currentPage, bool useExport)
+        {
+            // 数据
+            dynamic q = null;
+            if (_search != null)
+                q = _search.GetResult();
+            else
+            {
+                q = AppContext.GetQuery(EntityType);
+                // 根据url参数进行过滤（未完成，或难以实现）
+                var dict = Asp.GetQueryString("q").ParseDict();
+            }
+
+
+
+            // 分页
+            q =  (currentPage) ? GridHelper.SortAndPage(q, this.Grid1) :  GridHelper.Sort(q, this.Grid1);
+            var data = System.Linq.Enumerable.ToList(q) as IList;
+
+            // 导出
+            return useExport 
+                ? data.Cast(t => (t as IExport)?.Export(ExportMode.Normal)) 
+                : data.Cast(t => (t as object))
+                ;
+        }
+
+
+
+
+        //---------------------------------------------------
+        // 网格控制
+        //---------------------------------------------------
+        // 行预绑定事件，控制数据弹窗列的url
+        private void Grid1_PreRowDataBound(object sender, GridPreRowEventArgs e)
+        {
+            dynamic data = e.DataItem;
+            long id = (long)Reflector.GetValue(data, "ID");  // data.ID
+
+            // 数据列
+            var dataField = Grid1.FindColumn("Edit") as FineUIPro.WindowField;
+            if (dataField != null)
+                dataField.DataIFrameUrlFormatString = Urls.GetDataFormUrl(PageMode.Edit, EntityType, id, this.Auth);
+        }
+
+        // 删除事件（简单删除，未实现级联删除）
+        private void OnDelete(object sender, List<long> ids)
+        {
+            foreach (long id in ids)
+            {
+                var item = AppContext.Current.Set(EntityType).Find(id) as EntityBase;
+                item.Delete();
+                //var entry = AppContext.Current.Entry(item);
+                //entry.State = EntityState.Deleted;
+            }
+            AppContext.Current.SaveChanges();
+        }
+
+        
+        // 查找
+        protected void btnSearch_Click(object sender, EventArgs e)
+        {
+            BindGrid();
+        }
+
+        // 导出查询结果
+        protected void btnExport_Click(object sender, EventArgs e)
+        {
+            var d = GetData(false, true);
+            var fileName = string.Format("{0}_{1:yyyyMMddHHmm}.xls", EntityType.Name, DateTime.Now);
+            Grid1.ExportExcel(d, fileName);
+        }
+
+        // 导出选中数据
+        protected void btnExportSelect_Click(object sender, EventArgs e)
+        {
+            var d = GetData(false, true);
+            var ids = GridHelper.GetSelectedIds(this.Grid1);
+            d = d.Search(t => ids.Contains((long)t.GetValue("ID")));
+            var fileName = string.Format("{0}_{1:yyyyMMddHHmm}.xls", EntityType.Name, DateTime.Now);
+            Grid1.ExportExcel(d, fileName);
+        }
+    }
+}   
+
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    public class GridPro<T> : GridPro
+    {
+
+    }
+
+        //-------------------------------------------------
+        // 实验
+        //-------------------------------------------------
+        public GridPro<T> SetType<T>()
+        {
+            return new GridPro<T>();
+        }
+
+        //<f:GridPro ID="Grid1" runat="server" SortDirection="DESC" WinHeight="600"  WinWidth="1000" AutoCreateFields="false"
+        //ShowNumberField="true"  ShowEditField="true" ShowDeleteField="true" ShowViewField="true"/>
+        public GridPro<T> Create<T>()
+        {
+            var grid = new GridPro<T>();
+            grid.SortDirection = "DESC";
+            return grid;
+        }
+        
+                            if (attr.Name == "CreateDt" || attr.Name == "UpdateDt")
+                            {
+                                attr.ReadOnly = true;
+                                if (mode == PageMode.New)
+                                    continue;
+                            }
+
+
+                            
+        // 查找
+        protected void btnSearch_Click(object sender, EventArgs e)
+        {
+            BindGrid();
+        }
+
+                // 导出查询结果
+        protected void btnExport_Click(object sender, EventArgs e)
+        {
+            var d = GetData(false, true);
+            var fileName = string.Format("{0}_{1:yyyyMMddHHmm}.xls", EntityType.Name, DateTime.Now);
+            ExportExcel(d, fileName);
+        }
+
+        // 导出选中数据
+        protected void btnExportSelect_Click(object sender, EventArgs e)
+        {
+            var d = GetData(false, true);
+            var ids = GridHelper.GetSelectedIds(this);
+            d = d.Search(t => ids.Contains((long)t.GetValue("ID")));
+            var fileName = string.Format("{0}_{1:yyyyMMddHHmm}.xls", EntityType.Name, DateTime.Now);
+            ExportExcel(d, fileName);
+        }
+                // 行预绑定事件，控制数据弹窗列的url
+        private void Grid_PreRowDataBound(object sender, GridPreRowEventArgs e)
+        {
+            dynamic data = e.DataItem;
+            long id = (long)Reflector.GetValue(data, "ID");  // data.ID
+
+            // 数据列
+            if (UseDataForm)
+            {
+                var dataField = this.FindColumn("Edit") as FineUIPro.WindowField;
+                if (dataField != null)
+                    dataField.DataIFrameUrlFormatString = Urls.GetDataFormUrl(PageMode.Edit, EntityType, id, this.Auth);
+            }
+        }
+EventHandler<List<long>> handler
+            if (handler != null)
+                this.Delete += handler;
+
+                
+
+                
+
+    /// <summary>检索工具栏UI配置信息</summary>
+    public class SearchSetting
+    {
+        public Type EntityType { get; set; }
+        public MethodInfo Method { get; set; }
+        public UISetting UI { get; set; }
+
+        /// <summary>构造函数</summary>
+        public SearchSetting() { }
+        public SearchSetting(MethodInfo method)
+        {
+            this.EntityType = method.DeclaringType;
+            this.Method = method;
+            this.UI = new UISetting(method);
+        }
+    }
+                    settings.Add(new SearchSetting() { EntityType = item.Type, Method = m, UI = s });
+
+
+
+
+        //---------------------------------------------------
+        // 网格控制
+        //---------------------------------------------------
+        // 删除事件（简单删除，未实现级联删除）
+        private void OnDelete(object sender, List<long> ids)
+        {
+            foreach (long id in ids)
+            {
+                var item = AppContext.Current.Set(EntityType).Find(id) as EntityBase;
+                item.Delete();
+                //var entry = AppContext.Current.Entry(item);
+                //entry.State = EntityState.Deleted;
+            }
+            AppContext.Current.SaveChanges();
+        }
+
+
+
+        public Type Type { get; set; }
+        public MethodInfo Method { get; set; }
+        public UISetting UI { get; set; }
+
+
+
+                //-------------------------------------------------
+        // 自动列
+        //-------------------------------------------------
+        public GridPro AddColumns(Type type)
+        {
+            // 生成控制列、自动列；最后一列自动拉伸
+            if (AutoCreateFields)
+                this.AddColumns(new UISetting(type));
+            if (expandLastColumn)
+                SetLastColumnExpand();
+            return this;
+        }
+
+
+               /// <f:Button runat="server" Icon="PageExcel"  Text="导出">
+        ///     <Menu runat="server">
+        ///         <f:MenuButton runat="server" ID="btnExport"  Text="查询结果"  OnClick="btnExport_Click" EnableAjax="false" DisableControlBeforePostBack="false"  />
+        ///         <f:MenuButton runat="server" ID="btnExportSelect" Text="选中数据" OnClick="btnExportSelect_Click" EnableAjax="false" DisableControlBeforePostBack="false"  />
+        ///     </Menu>
+        /// </f:Button>
+        // 构建检索工具栏
+        private GridX BuildToolbar(UISetting searchUI)
+        {
+            return this;
+        }
+
+
+        
+                if (Request.QueryString["mode"] != null)
+                {
+                    string mode = Asp.GetQueryString("mode")?.ToLower();
+                    if (mode == "view")        ViewState["PageMode"] = PageMode.View.ToString();
+                    else if (mode == "new")    ViewState["PageMode"] = PageMode.New.ToString();
+                    else if (mode == "edit")   ViewState["PageMode"] = PageMode.Edit.ToString();
+                    else if (mode == "select") ViewState["PageMode"] = PageMode.Select.ToString();
+                    return (PageMode)(Enum.Parse(typeof(PageMode), ViewState["PageMode"].ToString()));
+                }
+                //if (Request.QueryString["id"] == null)
+                //    return PageMode.New;
+                return PageMode.Edit;
+
+        var type = this.GetType();
+        var ms = type.GetMethods();
+        var m1 = ms.FirstOrDefault(t => t.Name == "Search");
+        var m = type.GetMethod("Search", BindingFlags.Public | BindingFlags.Static);
+        /// <summary>可见状态</summary>
+        [Flags]
+        public enum VisibleMode : int
+        {
+            [UI("隐藏")] None = 0,
+            [UI("查看")] View = 1,
+            [UI("新建")] New = 2,
+            [UI("编辑")] Edit = 4,
+            [UI("选择")] Select = 8,
+            [UI("全部")] All = View | New | Edit | Select,
+        }
+        Asp.GetQuery<PageMode>("mode");
+
+
+         
+        /// <summary>网格状态时的UI（Demo）</summary>
+        public override UISetting GridUI()
+        {
+            var ui = new UISetting<Article>(false);
+            ui.SetColumn(t => t.ID);
+            ui.SetColumnImage(t => t.CoverImage, Configs.Site.SizeBigImage);
+            ui.SetColumn(t => t.Type);
+            ui.SetColumn(t => t.Dir.Name);
+            ui.SetColumn(t => t.Title);
+            ui.SetColumn(t => t.AuthorName);
+            //ui.SetPopupForm(t => t.DirID, t => t.Dir.Name, typeof(ArticleDir));
+            //ui.SetPopupForm(t => t.AuthorID, t => t.AuthorName, typeof(User));
+            ui.SetColumn(t => t.Keywords);
+            ui.SetColumn(t => t.VisitCnt);
+            ui.SetColumn(t => t.ApprovalCnt);
+            ui.SetColumn(t => t.ReplyCnt);
+            ui.SetColumn(t => t.Weight);
+            ui.SetColumn(t => t.CreateDt, sort: true);
+            ui.SetColumn(t => t.UpdateDt);
+            return ui.BuildGroups();
+        }
+        /// <summary>表单状态时的UI（Demo）</summary>
+        public override UISetting FormUI()
+        {
+            var ui = new UISetting<Article>(true);
+            ui.SetImage(t => t.CoverImage, Configs.Site.SizeBigImage);
+            ui.SetPopupList(t => t.Type, new List<ArticleType>() { ArticleType.Knowledge, ArticleType.News }.ToDict());  // 文章类型展示为下拉列表（数据来自枚举）
+            //ui.SetList(t => t.DirID, typeof(ArticleDir), nameof(ArticleDir.Name));                                     // 文章目录展示为下拉列表（数据来自目录表）
+            ui.SetPopupTree(t => t.DirID, typeof(ArticleDir), nameof(ArticleDir.ID), nameof(ArticleDir.Name));           // 文章目录展示为下拉列表（数据来自目录表）
+            ui.SetPopupGrid(t => t.AuthorID, typeof(User), "");                                                          // 作者数据展示为弹窗
+            ui.SetEditor(t => t.Body, editor: EditorType.Html);
+            ui.SetGrid(t => t.UniID, typeof(Res), "附件", "key={0}");
+            ui.SetGrid(t => t.ID, typeof(Article), "回帖", "type=Reply&replyId={0}");
+            ui.Remove(t => t.TypeName);
+            return ui.BuildGroups();
+        }
+
+                /// <summary>裁掉尾部的匹配字符串</summary>
+        public static string TrimEnd(this string text, string key)
+        {
+            if (text.IsEmpty())
+                return "";
+            int n = text.LastIndexOf(key);
+            if (n == -1)
+                return text;
+            return text.Substring(0, n);
+        }
+
+
+
+
+                    //HttpContext context = HttpContext.Current;
+            //if (folder.IsEmpty()) folder = "/Files/";
+            //if (name.IsEmpty())   name = Configs.Snowflaker.NewID().ToString();
+
+
+            
+            if (item.Reses != null)
+            {
+                var text = Downloader.GetWatermarkText();
+                foreach (var r in item.Reses)
+                {
+                    var url = Urls.GetDownUrl(r.ID);
+                    r.Content = url;
+                    //var q = string.Format("protect={0}&watermark={1}", r.Protect, text.UrlEncode());
+                    //r.Content = r.Content?.AddQueryString(q).ToSignUrl();
+                }
+            }
+
+
+                            var p = typeof(T).GetProperty("ID");
+                var attr = p.GetAttribute<DatabaseGeneratedAttribute>();
+                if (attr.DatabaseGeneratedOption == DatabaseGeneratedOption.None)
+                //if (item.ID == 0)
+
+
+                        public static List<User> AllUsers
+        {
+            get { return User.Set.Where(t => t.InUsed != false).Sort(t => t.NickName).ToList(); }
+        }
+                public static List<EnumInfo> AllRoles
+        {
+            get { return typeof(Role).GetEnumInfos(); }
+        }
+
+        
+        public static List<Shop> AllShops
+        {
+            get { return Shop.Search().Sort(t => t.Name).ToList(); }
+        }
+
+
+        
+        /// <summary>获取（覆盖基类）</summary>
+        public static new XUI Get(long? id)
+        {
+            return XUI.All.FirstOrDefault(t => t.ID == id);
+        }
+
+                /// <summary>ID 生成方式</summary>
+        [NotMapped]
+        public static DatabaseGeneratedAttribute IDAttribute 
+        { 
+            get
+            {
+                var t = typeof(T);
+                return IO.GetDict<DatabaseGeneratedAttribute>(t.FullName.MD5(), () => t.GetProperty("ID").GetAttribute<DatabaseGeneratedAttribute>());
+            }
+        }
+
+        
+        /// <summary>用户拥有的角色名称字符串（用逗号隔开） </summary>
+        public string RoleNames
+        {
+            get
+            {
+                string roles = "";
+                foreach (var item in this.Roles)
+                    roles += item.GetTitle() + ",";
+                roles = roles.TrimEnd(',');
+                return roles;
+            }
+        }
+
+        <f:GridPro ID="grid" runat="server" WinHeight="500"/>
+        <f:FormPro ID="form" runat="server"  />
+
+        // Init
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            //var mangr = new PageManager() { AutoSizePanelID = nameof(grid.ID) };
+            //this.form1.Controls.Add(mangr);
+            //var grid = new GridPro() { ID = "grid", WinWidth = 800 };
+            //var form = new FormPro() { ID = "form" };
+            //this.form1.Controls.Add(grid);
+            //this.form1.Controls.Add(form);
+            Show(grid, form);
+        }
+
+
+        private void Show(GridPro grid, FormPro form)
+        {
+            var v = Asp.GetQueryString("v");
+            if (v == "Form")
+            {
+                grid.Hidden = true;
+                ShowForm(form);
+                PageManager.Instance.AutoSizePanelID = form.ID;
+            }
+            else
+            {
+                form.Hidden = true;
+                ShowGrid(grid);
+                PageManager.Instance.AutoSizePanelID = grid.ID;
+            }
+        }
+
+                /*
+            //return Get(q, id);
+            var mi = typeof(AppContext).GetMethod("Get", BindingFlags.Static | BindingFlags.NonPublic);
+            mi = mi.MakeGenericMethod(t);
+            return mi.Invoke(null, new object[] { q, id }) as EntityBase;
+            */
+            // q.Find(r => r.ID == id);  // List<T>.Find(...) 要写表达式调用了
+            //return Role.Set.Find(id);
+            //return Role.All.Find(r => r.ID == id);
+            //return Role.All.AsQueryable().FirstOrDefault(r => r.ID == id);
+            /*
+            var parameter = Expression.Parameter(typeof(EntityBase), "t");  // t
+            var property = Expression.Property(parameter, "ID");            // t.ID
+            var constExpr = Expression.Constant(id);                        // id
+            var eq = Expression.Equal(property, constExpr);                 // t.ID == id
+            var lambda = Expression.Lambda(eq, parameter);                  // t => t.ID == id
+
+            // Queryable<EntityBase>.FirstOrDefault(q.AsQuerayble(), lambda);
+            Expression methodCallExpression = Expression.Call(
+                typeof(Queryable),
+                "FirstOrDefault",
+                new Type[] { typeof(EntityBase) },
+                lambda
+                );
+            */
+            
+        static T Get<T>(List<T> entities, long id) where T : EntityBase
+        {
+            return entities.FirstOrDefault(t => t.ID == id);
+        }
+
+                    var assembly6 = typeof(App.Spire.IWatermarker).Assembly.GetName();
+            new { Name=assembly6.Name, Version=assembly6.Version.ToString()},
+
+            
+        [HttpApi("获取app登录背景图片", CacheSeconds = 600, Type=ResponseType.Image)]
+        public static Image GetAppBackground()
+        {
+            return HttpHelper.GetServerOrNetworkImage(Configs.Site.WatermarkPic);
+        }
+
+
+        
+        // 递归处理部门，弄成树状的(items -> _items)
+        private static int BuildTree(List<Area> areas, Area root, int level, ref List<Area> result)
+        {
+            int count = 0;
+            foreach (var item in areas.Where(d => d.Parent == root))
+            {
+                count++;
+                result.Add(item);
+                item.TreeLevel = level;
+                item.IsTreeLeaf = true;
+                item.Enabled = true;
+
+                // 构造子树
+                level++;
+                int childCount = BuildTree(areas, item, level, ref result);
+                if (childCount != 0)
+                    item.IsTreeLeaf = false;   // 叶子节点
+                level--;
+            }
+            return count;
+        }
+
+        // 递归处理，弄成树状的
+        private static int BuildTree(List<ArticleDir> items, ArticleDir parentItem, int level, ref List<ArticleDir> result)
+        {
+            int count = 0;
+            foreach (var item in items.Where(d => d.Parent == parentItem))
+            {
+                count++;
+                result.Add(item);
+                item.TreeLevel = level;
+                item.IsTreeLeaf = true;
+                item.Enabled = true;
+
+                level++;
+                // 如果这个节点下没有子节点，则这是个终结节点
+                int childCount = BuildTree(items, item, level, ref result);
+                if (childCount != 0)
+                    item.IsTreeLeaf = false;
+                level--;
+            }
+            return count;
+        }
+
+
+        
+        [UI("钉钉部门")]      public long? DingDeptID { get; set; }
+
+                /// <summary>查询文章</summary>
+        [Searcher]
+        [Param("type", "类型")]
+        [Param("author", "作者")]
+        [Param("keywords", "关键字")]
+        public static IQueryable<DAL.Article> Search(
+            ArticleType? type=null,
+            List<ArticleType> types = null, string author = null, string title = null, 
+            DateTime? startDt = null, DateTime? endDt=null, long? replyId = null,
+            string dirIds="", string keywords="")
+        {
+            IQueryable<Article> q = Set.Include(t => t.Dir).Include(t => t.Author).Include(t => t.Author.Dept).Where(t => t.InUsed != false);
+            if (type.IsNotEmpty())             q = q.Where(t => t.Type == type);
+            else if (types.IsNotEmpty())       q = q.Where(t => types.Contains(t.Type.Value));
+
+            if (author.IsNotEmpty())           q = q.Where(t => t.AuthorName.Contains(author));
+            if (title.IsNotEmpty())            q = q.Where(t => t.Title.Contains(title));
+            if (startDt != null)               q = q.Where(t => t.CreateDt >= startDt);
+            if (endDt != null)                 q = q.Where(t => t.CreateDt <= endDt);
+            if (replyId != null)               q = q.Where(t => t.ReplyID == replyId);
+
+            // 目录
+            if (dirIds.IsNotEmpty())
+            {
+                var ids = dirIds.SplitLong();
+                ids = ArticleDir.GetChildrenIds(ids, true);
+                q = q.Where(t => ids.Contains(t.DirID.Value));
+            }
+            // 关键字（构建OR语法）
+            if (keywords.IsNotEmpty())
+            {
+                var keys = keywords.SplitString();
+                var condition = EFHelper.False<Article>();
+                foreach (var key in keys)
+                    condition = condition.Or<Article>(t => t.Keywords.Contains(key) || t.Title.Contains(key) || t.Body.Contains(key));
+                q = q.Where(condition);
+            }
+            return q;
+        }
+
+                OnDelete="Grid1_Delete"
+        protected void Grid1_Delete(object sender, List<long> ids)
+        {
+            Area.DeleteRecursive(ids[0]);
+            Area.ClearCache();
+        }
+                    //var dirs = ArticleDir.All.Where(t => dirIds.Contains(t.ID)).ToList();
+            //dirs = ArticleDir.GetChildrens(dirs);
+            //return dirs;
+
+                        var result = new List<Area>();
+            BuildTree(items, null, 0, ref result);
+            return result;
+
+                        var result = new List<ArticleDir>();
+            BuildTree(items, null, 0, ref result);
+            return result;
+
+
+                    /// <summary>平面数据缓存</summary>
+        public new static List<ArticleDir> All => IO.GetCache(CacheAllName, () => ValidSet.OrderBy(d => d.Seq).ToList());
+
+                /// <summary>树缓存</summary>
+        public static List<ArticleDir> Tree => GetTree(All.OrderBy(t=> t.Seq).ToList());
+
+
+                    //item = ArticleDir.SearchChild(item, rootId.Value);
+            //item = item.Clone() as ArticleDir;
+
+
+                    /// <summary>发送钉钉 OA 消息（参考：https://ding-doc.dingtalk.com/doc#/serverapi2/pgoxpy）</summary>
+        public static OapiMessageCorpconversationAsyncsendV2Response SendOA()
+        {
+            var ding = Configs.Ding;
+            var accessToken = GetAccessToken();
+            var client = new DefaultDingTalkClient("https://oapi.dingtalk.com/topapi/message/corpconversation/asyncsend_v2");
+            var request = new OapiMessageCorpconversationAsyncsendV2Request();
+            request.AgentId = ding.MPAgentID;
+            request.UseridList = "092918280432982647";
+
+            var array = new ArrayList();
+            array.Add(new { key = "任务类型：  ", value = "安全隐患" });
+            array.Add(new { key = "任务状态：  ", value = "待处理" });
+            array.Add(new { key = "任务内容：  ", value = "测试图片不显示" });
+            array.Add(new { key = "任务时间：  ", value = DateTime.Now.ToString("yyyy年MM月dd日 HH:mm") });
+            request.Msg = JsonConvert.SerializeObject(new
+            {
+                msgtype = "oa",
+                oa = new
+                {
+                    head = new { bgcolor = "FFBBBBBB", text = "隐患任务" },
+                    body = new
+                    {
+                        image = "http://safeschool.wzcc.com/upfile/bf847cb5-c402-41c6-8a53-d243583bb05f.jpeg",
+                        //title = "您有一条隐患任务需要派发，请及时处理",
+                        form = array
+                    }
+                }
+            });
+            var response = client.Execute(request, accessToken.AccessToken);
+            return response;
+        }
+
+                // 初始配置：网站配置
+        public static List<XState> GetConfigs()
+        {
+            var configs = new List<XState> {
+                new XState {Category="Site",  Key = "Title",    Value = "管理后台",  Title = "网站标题" },
+                new XState {Category="Site",  Key = "PageSize", Value = "30",        Title = "网格行数" },
+                new XState {Category="Site",  Key = "MenuType", Value = "tree",      Title = "菜单样式" },
+                new XState {Category="Site",  Key = "Theme",    Value = "Neptune",   Title = "网站主题" },
+                new XState {Category="Site",  Key = "HelpList",
+                    Value = "[{\"Text\":\"万年历\",\"Icon\":\"Calendar\",\"ID\":\"wannianli\",\"URL\":\"~/admins/help/wannianli.htm\"},{\"Text\":\"科学计算器\",\"Icon\":\"Calculator\",\"ID\":\"jisuanqi\",\"URL\":\"~/admins/help/jisuanqi.htm\"},{\"Text\":\"系统帮助\",\"Icon\":\"Help\",\"ID\":\"help\",\"URL\":\"~/admins/help/help.htm\"}]",
+                    Title = "帮助下拉列表的JSON字符串"
+                },
+                new XState {Category="Site", Key = "DefaultPassword",    Value = "123456",   Title = "默认密码" },
+            };
+
+            return configs;
+        }
+            GetConfigs().ForEach(c => context.Configs.Add(c));
+
+                        if (Get(AdminSystemText) == null)    new Role(AdminSystemText).Save();
+            if (Get(AdminContentText) == null)   new Role(AdminContentText).Save();
+            if (Get(AdminDeptText) == null)      new Role(AdminDeptText).Save();
+            if (Get(AdminDirText) == null)       new Role(AdminDirText).Save();
+            if (Get(ZhenQiText) == null)         new Role(ZhenQiText).Save();
+            if (Get(GongZhongText) == null)      new Role(GongZhongText).Save();
+            //if (Get(Employee) == null)     new Role("", Employee).Save();
+        public const string AdminSystemText    = "系统管理员";  // 0
+        public const string AdminContentText   = "内容管理员";  // 10
+        public const string AdminDeptText      = "部门管理员";  // 11
+        public const string AdminDirText       = "目录管理员";
+        public const string ZhenQiText         = "政企";
+        public const string GongZhongText      = "公众";
+
+
+                // 单例配置对象
+        //public static SiteConfig     Site;
+        //public static AliSmsConfig      Ali;
+        //public static WechatConfig   Wechat;
+        //public static AliDingConfig     Ding;
+        //public static ArticleConfig  Article;
+
+
+
+                ConfirmText="确定退出系统？" OnClick="btnExit_Click" 
+        // 注销
+        protected void btnExit_Click(object sender, EventArgs e)
+        {
+            Common.Logout();
+            FormsAuthentication.RedirectToLoginPage();
+        }
+
+
+                // 静态构造
+        static Configs()
+        {
+            Load();
+        }
+
+        /// <summary>重载配置数据</summary>
+        public static void Load()
+        {
+            //Site   = SiteConfig.Set.FirstOrDefault()    ?? new SiteConfig().Save();
+            //Ali    = AliSmsConfig.Set.FirstOrDefault()     ?? new AliSmsConfig().Save();
+            //Wechat = WechatConfig.Set.FirstOrDefault()  ?? new WechatConfig().Save();
+            //Ding   = AliDingConfig.Set.FirstOrDefault()    ?? new AliDingConfig().Save();
+            //Article= ArticleConfig.Set.FirstOrDefault() ?? new ArticleConfig().Save();
+        }
+
+        /// <summary>SnowflakeID 生成器单例</summary>
+        public static SnowflakeID Snowflaker
+        {
+            get
+            {
+                return IO.GetCache<SnowflakeID>("__SnowFlaker", () => {
+                    var machineId = GetMechineId();
+                    return new SnowflakeID(machineId, 2010, 41, 10, 12);
+                });
+            }
+        }
+
+        /// <summary>获取当前Web服务器的主机编号</summary>
+        private static int GetMechineId()
+        {
+            // 方案1：获取当前主机的IP，查找配置表，获取对应的编号
+            // 方案2：获取appsetting，每台服务器单独手工配置
+            return IO.GetAppSetting<int?>("MachineID") ?? 1;
+        }
+
+                public override void AfterChange(EntityOp op)
+        {
+            Instance;
+            Configs.Load();
+        }
+
+                //public static AliDingConfig First => IO.GetCache("AliDingConfig", () => Set.FirstOrDefault() ?? new AliDingConfig().Save());
+
+        public override void AfterChange(EntityOp op)
+        {
+            Configs.Load();
+        }
+
+        public override void AfterChange(EntityOp op)
+        {
+            Configs.Load();
+        }
+
+        public override void AfterChange(EntityOp op)
+        {
+            Configs.Load();
+        }
+
+                // 检测菜单错误
+        protected void btnCheck_Click(object sender, EventArgs e)
+        {
+            var menus = GetErrorMenus();
+            this.Grid1.DataSource = menus;
+            this.Grid1.DataBind();
+        }
+
+                /// <summary>树缓存</summary>
+        public static List<Menu> Tree => BuildTree(All);
+
+
+
+        
+
+        [Param("name", "组织名称")]
+        //[Param("certNo", "组织机构代码证号码")]
+        public IQueryable<Org> Search(string name, string certNo)
+        {
+            var q = Org.IncludeSet;
+            if (name.IsNotEmpty())   q = q.Where(t => t.Name.Contains(name));
+            if (certNo.IsNotEmpty()) q = q.Where(t => t.CertNo.Contains(certNo));
+            return q;
+        }
+
+
+
+        /// <summary>删除职位和相关数据（如有该职务的用户）</summary>
+        public static void DeleteTitle(long titleID)
+        {
+            Set.Where(t => t.ID == titleID).ToList().ForEach(t => t.Users = null);
+            Set.Where(t => t.ID == titleID).Delete();
+        }
+
+        // 查找
+        protected void ttbSearchMessage_TriggerClick(object sender, string e)
+        {
+            BindGrid();
+        }
+
+
+        // 删除事件
+        protected void Grid1_Delete(object sender, List<long> ids)
+        {
+            DAL.Title.DeleteBatch(ids);
+        }
+OnDelete="Grid1_Delete"                    <f:SearchBox ID="ttbSearchMessage" runat="server" ShowLabel="false" EmptyText="搜索职称"   OnTriggerClick="ttbSearchMessage_TriggerClick" />
+
+        /// <summary>删除职位和相关数据（如有该职务的用户）</summary>
+        public static void DeleteBatch(List<long> ids)
+        {
+            Set.Where(t => ids.Contains(t.ID)).ToList().ForEach(t => t.Users = null);
+            Set.Where(t => ids.Contains(t.ID)).Delete();
+        }
+
+
+            /// <summary>递归删除接口</summary>
+    public interface IDeleteRecursive
+    {
+        void DeleteRecursive(EntityBase o);
+    }
+
+                // 从原始列表拷贝一份
+            /*
+            var items2 = new List<T>();
+            foreach (T item in items)
+            {
+                T newItem = (item is ICloneable c) ? (c.Clone() as T) : item; // TODO: 如何拷贝节点，并保持子节点信息
+                items2.Add(newItem);
+            }
+            */
+
+
+        /// <summary>树缓存</summary>
+        //public static List<Area> Tree => BuildTree(All);
+
+                var items = new List<Dept>();
+        GetRecursiveInternal(items, rootId);
+        return items;
+        static void GetRecursiveInternal(List<Dept> items, long? rootId)
+        {
+            if (rootId == null)
+                return;
+            List<Dept> all = Dept.All;
+            var root = all.AsQueryable().FirstOrDefault(t => t.ID == rootId);
+            if (root != null)
+            {
+                items.Add(root);
+                var children = all.AsQueryable().Where(t => t.ParentID == root.ID);
+                foreach (var child in children)
+                    GetRecursiveInternal(items, child.ID);
+            }
+        }
+
+                    var areas = new List<Area>();
+            GetRecursiveInternal(areas, rootId);
+            return areas;
+
+                    static void GetRecursiveInternal(List<Area> areas, long? rootId)
+        {
+            if (rootId == null)
+                return;
+            List<Area> all = Area.All;
+            var root = all.AsQueryable().FirstOrDefault(t => t.ID == rootId);
+            if (root != null)
+            {
+                areas.Add(root);
+                var children = all.AsQueryable().Where(t => t.ParentID == root.ID);
+                foreach (var child in children)
+                    GetRecursiveInternal(areas, child.ID);
+            }
+        }
+
+
+                    var items = new List<T>();
+            GetDescendantsInternal(all, items, rootId);
+            return items;
+
+
+            
+        /// <summary>递归获取所有子节点</summary>
+        public static List<ArticleDir> GetChildren(List<ArticleDir> dirs)
+        {
+            var items = new List<ArticleDir>();
+            foreach (var dir in dirs)
+            {
+                foreach (var child in GetChildren(dir))
+                    if (!items.Contains(child))
+                        items.Add(child);
+            }
+            return items;
+        }
+
+        /// <summary>递归获取所有子节点</summary>
+        public static List<ArticleDir> GetChildren(ArticleDir item)
+        {
+            var items = new List<ArticleDir>();
+            foreach (var child in item.Children)
+            {
+                items.AddRange(GetChildren(child));
+                items.Add(child);
+            }
+            return items;
+        }
+
+            /*
+            if (ids.IsEmpty())
+                return new List<long>();
+            var dirs = All.Where(t => ids.Contains(t.ID)).ToList();
+            var childIds = GetChildren(dirs).Cast(t => t.ID);
+            if (includeSelf)
+                childIds.AddRange(ids);
+            return childIds;
+            */
+
+                    /// <summary>递归子孙节点（包含自身）</summary>
+        public static List<ArticleDir> GetDescendants(long? rootId)
+        {
+            return All.GetDescendants(rootId);
+        }
+
+        /// <summary>递归子孙节点（包含自身）</summary>
+        public static List<ArticleDir> GetDescendants(List<long> rootIds)
+        {
+            return All.GetDescendants(rootIds);
+        }
+
+
+                /*
+                List<Area> items = new List<Area>();
+                foreach(var area in Common.LoginUser.GetManageAreas())  // ?? Common.LoginUser.Shop?.AreaID;
+                {
+                    foreach (var child in Area.GetDescendants(area.ID))
+                    {
+                        if (!items.Contains(child))
+                            items.Add(child);
+                    }
+                }
+                return items;
+                */
+
+                                        UI.BindTree(ddlDir, ArticleDir.All, t => t.ID, t => t.Name, "--目录--");
+
+                                                {
+            return string.Format(@"{0}caches\", HttpRuntime.AppDomainAppPath);
+        }
+
+                static Type GetType()
+        {
+            //return MethodBase.GetCurrentMethod().ReflectedType;
+            var st = new System.Diagnostics.StackTrace();
+            string name = st.GetFrame(1).GetMethod().Name;
+        }
+
+                //var t = Reflector.AsGeneric(typeof(EntityBase), EntityType);
+                //item.UpdateDt = DateTime.Now;
+                //AppContext.Current.SaveChanges();
+                //item.AfterChange(EntityOp.Edit);
+                //item.ID = SnowflakeID.Instance.NewID();
+                //item.CreateDt = DateTime.Now;
+                //AppContext.Current.Set(EntityType).Add(item);
+                //AppContext.Current.SaveChanges();
+                //item.AfterChange(EntityOp.New);
+
+
+                                new StatItem("系统管理员",   "",   DAL.User.SearchByRole(Role.Admin.ID).Count()),
+                new StatItem("内容管理员",   "",   DAL.User.SearchByRole(Role.AdminContent.ID).Count()),
+                new StatItem("部门管理员",   "",   DAL.User.SearchByRole(Role.AdminDept.ID).Count()),
+            /*
+            var data = new List<StatItem>()
+            {
+                new StatItem("会员",   "",  DAL.User.SearchRole(Role.Employees).Count()),
+                new StatItem("商户",   "",  DAL.User.SearchRole(Role.Shops).Count()),
+                new StatItem("工程师", "",  DAL.User.SearchRole(Role.Engineers).Count()),
+                new StatItem("雇员",   "",  DAL.User.SearchEmployee().Count())
+            };
+            */
+
+            
+        /*
+        /// <summary>查找所有顾客</summary>
+        public static IQueryable<User> GetCustomers()
+        {
+            return SearchRole(Role.Employees);
+        }
+        */
+                //.AddColumn<Feedback>("状态", 100, t=> t.Status.ToString()) // 会报错；不方便排序；先放弃
+
+                        [UI("运维", "投诉新增")]            ComplainNew = 44,
+        [UI("运维", "投诉查看")]            ComplainView = 45,
+        [UI("运维", "投诉修改")]            ComplainEdit = 46,
+        [UI("运维", "投诉删除")]            ComplainDelete = 47,
+
+                    return string.Format("/Pages/Common/Explorer.aspx?root={0}&filter={1}", root.UrlEncode(), filter.UrlEncode());
+
+                                    this.UrlTemplate = string.Format("~/Pages/Common/Explorer.aspx?root={0}&filter={1}&showDownload={2}&showInfo={3}",
+                    this.Root.UrlEncode(),
+                    this.Filter.UrlEncode(),
+                    this.ShowDownload,
+                    this.ShowInfo
+                    );
+            /*
+            return string.Format("Explorer.aspx?md={0}&root={1}&folder={2}&filter={3}&showDownload={4}&showInfo={5}",
+                this.Mode,
+                _root.UrlEncode(),
+                data.Url.UrlEncode(),
+                _filter.UrlEncode(),
+                _showDownload,
+                _showInfo
+                ).ToSignUrl();
+            */
+
+                
+                <f:FileUpload runat="server" ID="uploader1" ShowRedStar="false"  Label="图片1"
+                    ButtonText="上传图像" ButtonOnly="true" Required="false" ButtonIcon="ImageAdd" AcceptFileTypes="image/*"
+                    AutoPostBack="true" OnFileSelected="uploader_FileSelected"/>
+                <f:Thrumbnail runat="server" ID="img1" ShowEmptyLabel="true"/>
+                <f:FileUpload runat="server" ID="uploader2" ShowRedStar="false"   Label="图片2"
+                    ButtonText="上传图像" ButtonOnly="true" Required="false" ButtonIcon="ImageAdd" AcceptFileTypes="image/*"
+                    AutoPostBack="true" OnFileSelected="uploader_FileSelected"/>
+                <f:Thrumbnail runat="server" ID="img2" ShowEmptyLabel="true"/>
+                <f:FileUpload runat="server" ID="uploader3" ShowRedStar="false"   Label="图片3"
+                    ButtonText="上传图像" ButtonOnly="true" Required="false" ButtonIcon="ImageAdd" AcceptFileTypes="image/*"
+                    AutoPostBack="true" OnFileSelected="uploader_FileSelected"/>
+                <f:Thrumbnail runat="server" ID="img3" ShowEmptyLabel="true"/>
+
+                <f:FileUpload runat="server" ID="uploader4" ShowRedStar="false"   Label="回复图片"
+                    ButtonText="上传图像" ButtonOnly="true" Required="false" ButtonIcon="ImageAdd" AcceptFileTypes="image/*"
+                    AutoPostBack="true" OnFileSelected="uploader_FileSelected"/>
+                <f:Thrumbnail runat="server" ID="img4" ShowEmptyLabel="true"/>
+
+                            UI.SetValue(ddlStatus, FeedbackStatus.Create);
+            UI.SetValue(ddlStatus, item.Status);
+
+            // 新建状态
+            var steps = Feedback.Flow.StartSteps;
+            UI.Bind(ddlStatus, steps, t => t.Status, t => t.StatusName, "--状态--", (long)FeedbackStatus.Create);
+            var steps = Order.OrderFlow.StartSteps;
+            UI.Bind(ddlStatus, steps, t => t.Status, t => t.StatusName);
+
+                            //UI.Bind(this.ddlStatus, Feedback.Flow.Steps, t => t.Status, t => t.StatusName);
+
+                                                            <f:DropDownList runat="server" ID="ddlUser" Label="指定处理人" EmptyText="--请选择--" />
+
+                                                                    public static string Users              => $"{FolderBase}/Users.aspx";
+        public static string UserDepts          => $"{FolderBase}/UserDepts.aspx";
+
+                /// <summary>获取详细对象</summary>
+        //public new static History GetDetail(long id)
+        //{
+        //    return IncludeSet.FirstOrDefault(t => t.ID == id);
+        //}
+
+ // Set.Include(t => t.User);
+
+ 
+        /// <summary>用户统计报表</summary>
+        protected void ShowUserChart(Field field)
+        {
+            var data = DAL.User.StatDayAmount(DateTime.Now.AddDays(-60), DateTime.Now, t=> t.InUsed != false);
+            EChart.BuildLineChart(data, "用户数", "日期", "数量").Render(field.ClientID);
+        }
+
+        /// <summary>文章统计报表</summary>
+        protected void ShowArticleChart(Field field)
+        {
+            var data = DAL.Article.StatDayAmount(DateTime.Now.AddDays(-60), DateTime.Now, t=> t.Type == ArticleType.Knowledge);
+            EChart.BuildLineChart(data, "文章数", "日期", "数量").Render(field.ClientID);
+        }
+
+        /// <summary>文章访问统计报表</summary>
+        protected void ShowArticleVisitChart(Field field)
+        {
+            var data = ArticleVisit.StatDayNew(DateTime.Now.AddDays(-60), DateTime.Now, t=>t.Article.Type == ArticleType.Knowledge);
+            EChart.BuildLineChart(data, "文章日访问", "日期", "数量").Render(field.ClientID);
+        }
+
+        /// <summary>订单统计报表</summary>
+        protected void ShowOrderChart(Field field)
+        {
+            var shopId = Common.LoginUser.HasPower(Powers.Admin) ? null : Common.LoginUser.ShopID;
+            var data = DAL.Order.Stat(shopId, DateTime.Now.AddDays(-60), DateTime.Now);
+            EChart.BuildLineChart(data, "订单数", "日期", "数量").Render(field.ClientID);
+        }
+
+        /// <summary>签到统计报表</summary>
+        protected void ShowSignChart(Field field)
+        {
+            var shopId = Common.LoginUser.HasPower(Powers.Admin) ? null : Common.LoginUser.ShopID;
+            var data = DAL.UserSign.Stat(shopId, DateTime.Now.AddDays(-60), DateTime.Now);
+            EChart.BuildLineChart(data, "签到数", "日期", "数量").Render(field.ClientID);
+        }
+
+        /// <summary>角色统计报表</summary>
+        protected void ShowRoleChart(Field field)
+        {
+            var roles = Role.All;
+            var data = new List<StatItem>();
+            foreach (var role in roles)
+            {
+                data.Add(new StatItem(role.Name, "", DAL.User.SearchByRole(role.ID).Count()));
+            };
+            EChart.BuildPieChart(data, "角色").Render(field.ClientID);
+        }
+
+            /// - 经试验，直接用EChart控件的话，要放置在ContentPanel里面，也无法自动适配大小，也无法显示动画效果
+    /// - 本页面采用Timer来异步加载图表
+    ///     FineUI 的对象的是动态创建的，如果直接输出图表脚本，会找不到要渲染的控件
+    ///     用Timer也好，有个动态效果，也保证动态创建的对象都已经生成了。
+                        <f:ContentPanel BoxFlex="1" runat="server" ShowBorder="false" ShowHeader="true" Title="新闻公告" BodyPadding="5px"  AutoScroll="true" >
+                        <asp:Repeater runat="server" ID="rptNews">
+                            <ItemTemplate>
+                                <li>
+                                    <a href="#"  onclick="window.top.addMainTab('Article-<%#Eval("ID") %>', '/pages/articles/Article.aspx?id=<%# Eval("ID") %>', '新闻') ">
+                                        <%#Eval("Title") %>
+                                    </a>
+                                    <div class="createDt">
+                                        <%# String.Format("{0:yyyy-MM-dd}", Eval("CreateDt")) %>
+                                    </div>
+                                </li>
+                            </ItemTemplate>
+                        </asp:Repeater>
+                    </f:ContentPanel>
+
+                                    this.rptNews.DataSource = DAL.Article.SearchKnowledges("", null, ArticleSortType.Date, 0, 10);
+                this.rptNews.DataBind();
+                //new ArticleVisitChart().Render(startDt, today, Chart1.ClientID);
+                //new ArticleChart().Render(startDt, today, Chart2.ClientID);
+                //new UserChart().Render(startDt, today, Chart3.ClientID);
+
+<div id="Panel1_Panel5_ctl00_Content" style="">
+                        
+                                <li>
+                                    <a href="#" onclick="window.top.addMainTab('Article-1352745196755881984', '/pages/articles/Article.aspx?id=1352745196755881984', '新闻') ">
+                                        三月份第二期考学资料
+                                    </a>
+                                    <div class="createDt">
+                                        2020-03-21
+                                    </div>
+                                </li>
+                            
+                                <li>
+                                    <a href="#" onclick="window.top.addMainTab('Article-1351922724296986624', '/pages/articles/Article.aspx?id=1351922724296986624', '新闻') ">
+                                        政企三泛细分市场会议20200319
+                                    </a>
+                                    <div class="createDt">
+                                        2020-03-19
+                                    </div>
+                                </li>
+                            
+                                <li>
+                                    <a href="#" onclick="window.top.addMainTab('Article-1350890245603725312', '/pages/articles/Article.aspx?id=1350890245603725312', '新闻') ">
+                                        20200316政企周对接会
+                                    </a>
+                                    <div class="createDt">
+                                        2020-03-16
+                                    </div>
+                                </li>
+                            
+                                <li>
+                                    <a href="#" onclick="window.top.addMainTab('Article-1348348273169010688', '/pages/articles/Article.aspx?id=1348348273169010688', '新闻') ">
+                                        政企周对接会20200309
+                                    </a>
+                                    <div class="createDt">
+                                        2020-03-09
+                                    </div>
+                                </li>
+                            
+                                <li>
+                                    <a href="#" onclick="window.top.addMainTab('Article-1348333762575863808', '/pages/articles/Article.aspx?id=1348333762575863808', '新闻') ">
+                                        新形式政企厂区渠道协同机制（暂定）
+                                    </a>
+                                    <div class="createDt">
+                                        2020-03-09
+                                    </div>
+                                </li>
+                            
+                                <li>
+                                    <a href="#" onclick="window.top.addMainTab('Article-1347174611766218752', '/pages/articles/Article.aspx?id=1347174611766218752', '新闻') ">
+                                        酒店完美联盟及云EPG业务
+                                    </a>
+                                    <div class="createDt">
+                                        2020-03-06
+                                    </div>
+                                </li>
+                            
+                                <li>
+                                    <a href="#" onclick="window.top.addMainTab('Article-1347173613983240192', '/pages/articles/Article.aspx?id=1347173613983240192', '新闻') ">
+                                        温州启航2020套餐
+                                    </a>
+                                    <div class="createDt">
+                                        2020-03-06
+                                    </div>
+                                </li>
+                            
+                                <li>
+                                    <a href="#" onclick="window.top.addMainTab('Article-1347172313660919808', '/pages/articles/Article.aspx?id=1347172313660919808', '新闻') ">
+                                        2020年一季度政企营销策略文件
+                                    </a>
+                                    <div class="createDt">
+                                        2020-03-06
+                                    </div>
+                                </li>
+                            
+                                <li>
+                                    <a href="#" onclick="window.top.addMainTab('Article-1347169669735256064', '/pages/articles/Article.aspx?id=1347169669735256064', '新闻') ">
+                                        【3月7日】商客业务负责人会议材料
+                                    </a>
+                                    <div class="createDt">
+                                        2020-03-06
+                                    </div>
+                                </li>
+                            
+                                <li>
+                                    <a href="#" onclick="window.top.addMainTab('Article-1347157671618285568', '/pages/articles/Article.aspx?id=1347157671618285568', '新闻') ">
+                                        健康码
+                                    </a>
+                                    <div class="createDt">
+                                        2020-03-06
+                                    </div>
+                                </li>
+                            
+                    </div>
+        /All => ValidSet.ToList() 就会创建一个新的AppContext ? 搞不清楚。
+        /*
+        {
+            get { return EntityConfig.Db; }
+            //get { return AppContext.Current; }
+            //get { return EntityConfig.Instance.OnGetDb(); }
+        }
+        */
+        /*
+        {
+            get
+            {
+                if (Instance.OnGetDb != null)
+                    return Instance.OnGetDb();
+                return null;
+            }
+        }
+        */
+            /*
+            var items = IncludeSet.Where(t => t.Type == ArticleType.Reply && t.DirID == null).ToList();
+            foreach (var item in items)
+                item.DirID = item.Reply?.DirID;
+            Db.SaveChanges();
+            n += items.Count;
+            */
+
+                    // 获取目录URL
+        private string GetFolderUrl(string folder)
+        {
+            return Urls.GetExplorerUrl(_root, _filter, _showDownload, _showInfo, this.Mode, folder);
+        }
+
+
+            return data.Type == WebFileType.Folder
+                ? $"<a href='{GetFolderUrl(data.Url)}'>{data.Name}</a>"
+                : $"<a href='{data.Url}' target='_blank'>{data.Name}</a>"
+                ;
+
+                        private string GetNameText(WebFile data)
+        {
+            if (data.Type == WebFileType.File)
+                return $"<a href='{data.Url}' target='_blank'>{data.Name}</a>";
+            else
+            {
+                var url = Urls.GetExplorerUrl(_root, _filter, _showDownload, _showInfo, this.Mode, data.Url);
+                return $"<a href='{url}'>{data.Name}</a>";
+            }
+        }

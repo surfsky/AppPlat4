@@ -1,0 +1,10 @@
+﻿此目录保存运维相关页面
+
+
+监控
+	Online                : 在线
+	Log                   : 日志
+	IPFilter
+	Sequence
+	Theme
+

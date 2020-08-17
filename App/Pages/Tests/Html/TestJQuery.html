@@ -1,0 +1,23 @@
+﻿<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+    <div id="siteName">网站名称</div>
+
+    <script src="/res/js/jquery.min.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            $.ajax({
+                type: "GET",
+                url: "http://doc.oa.wz.zj.cn:88/HttpApi/Common/GetSiteInfo"
+            }).always(function (json) {
+                if (json.Result == true) {
+                    $("#siteName").text(json.Data.Name);
+                }
+            });
+        })
+    </script>
+</body>
+</html>

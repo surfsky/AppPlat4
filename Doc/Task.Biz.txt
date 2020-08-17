@@ -1,0 +1,131 @@
+﻿此文档记录项目相关的业务逻辑和接口清单
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------
+业务接口
+-----------------------------------------------------------------------------------------------------------------------------------------
+接口
+    名称                            |  数据接口                               | 备注
+    -----------------------------------------------------------------------------------------------------------------------------------------
+    /通用（Common）
+        /短信                       |  SendSms                                       | securityCode="BearManager"
+        /缩略图                     |  Thumbnail                                     |                  
+        /二维码图片                 |  QrCode                                        |                  
+        /验证码图片                 |  VerifyCode                                    |                 
+    /用户（User）                                                                     
+        /注册                       |  Regist                                        |                 
+        /修改手机                   |  EditMobile                                    | Profile.aspx       
+        /修改密码                   |  EditPassword                                  |                 
+        /账号密码登陆               |  Login                                         | Default.aspx       
+        /手机密码登陆               |  LoginByMobile                                 |                
+        /手机短信验证码登陆         |  LoginByMsgCode                                |              
+        /获取用户信息               |  GetUserInfo                                   |                
+        /注销                       |  Logout                                        | Logout.ashx        
+        /绑定手机（已登陆）         |  SetMobile                                     | Regist.aspx        
+    /微信（Wechat）                                                                     
+        /微信Session                |  JSCode2Session                                | WebConfig          
+        /微信公众号授权登陆         |  Login                                         | WebConfig          
+        /微信小程序授权登陆         |  LoginMP                                       | 有安全隐患，任意openid都可以注册登陆
+        /微信解开绑定               |  Unbind                                        | 有安全隐患，任意openid都可以注册登陆
+    /基础（Base）                                                                     
+        /邀请历史                   |  GetInvites, GetInvite                         | Invites, InviteForm
+        /邀请                       |  GetInviteCode，AddInvite, AddRegistInvite     | Regist.aspx
+        /App顶图                    |  GetAppBanners                                 | -                  
+        /App登陆背景图              |  GetAppBackground                              | -                 
+        /公告资讯                   |  GetArticles, GetArticle                       | Article, ArticleForm
+        /回收报价小程序             |  GetRecycleAppId                               | WebConfig          
+        /微信小店                   |  GetMallAppId                                  | WebConfig          
+        /签到                       |  GetSigns, GetSign, AddSign                    | Signs, SignForm    
+        /商店用户订单统计           |  GetScores                                     | -                  
+        /商店                       |  GetShops                                     | Shops.aspx
+        /用户财务                   |  GetFinances, GetFinance                       | 获取他人数据需要具有特定的权限，如 FinanceView
+    商城（Mall）
+        /商品                       |  GetProducts, GetProduct, GetProductSpec       | ProductType=Repair|Insurance|Check (维修、延保、鉴定）。如果无数据，后台会自动创建示例数据。
+        /协议                                                                           
+            /注册协议               |  /Res/protocols/注册协议.docx                  | 
+            /服务协议               |  Product.Protocol                              | 查看产品的Protocol字段
+        /历史订单                   |  GetOrders, GetOrder                           | 
+        订单                        |                                                | 
+            /下单                   |  OrderCreate, OrderPay, OrderComplete, OrderCancel  | 创建订单，并添加一种产品
+            /订单项                 |  OrderAddItem                                  | 添加对应类别的商品规格(可选，订单中有多商品时使用)
+            /资产及保卡             |  GetAssets, GetAsset, AddAsset                 | 如有需要，选择或增加对应的用户资产（如维修、延保、鉴定）
+            /微信支付                |                                                | 微信小程序自行实现？（提交订单序列号和标题）
+            /订单项目流程           |  GetOrderItemNextSteps, ChangeOrderItemStatus  | 本系统流程是针对订单项的，如维修流程，根据商品类别不同流程不同
+            /评价                    |  OrderRate                                     | 会修改Order.Rate属性，并插入一条History记录
+
+短信
+	http://localhost:5625/HttpApi/Common/SendSms?mobile=15305770121&type=0&appType=0&securityCode=xxx
+
+签到
+    https://localhost:5625/HttpApi/Base/AddSign
+    https://localhost:5625/HttpApi/Base/GetSigns?userId=63
+
+邀请
+	http://localhost:5625/HttpApi/Base/AddInvite?inviteShopId=1&inviteUserId=1&inviteUserMobile=15305770121&source=2
+
+商店
+    https://localhost:5625/HttpApi/Base/GetShops?clientGPS=1,1
+    https://localhost:5625/HttpApi/Base/GetShop?ShopId=
+
+绑定手机（含邀请）
+	http://localhost:5625/HttpApi/User/SetMobile?mobile=15305770121&msgCode=218498&inviteUserMobile=&inviteShopId=1&userName=x
+
+
+------------------------------------------------------
+业务逻辑
+------------------------------------------------------
+权限限定
+    /店员只能
+        /管理管理自己的员工
+        /查看自己的订单
+		/接受本店订单消息
+    管理员
+        查看所有员工、订单
+        分配订单
+        分配店账户
+        /分配用户时：不允许提升角色权限（只能显示自己相同的角色）
+
+商品体系
+    商品---(1:n)---商品规格（至少有一个）
+    商品
+         描述的是商品的概述信息，具有属性如：Type, ShopID, Name
+         字段 Spec1, Spec2, Spec3 描述规格的标题，如颜色、大小、套餐等
+         包含若干商品规格（至少有一个）
+    商品规格
+         是实际商品的最小颗粒，如 iphone-红色-128GB-标准套餐
+         每种规格具有各种属性，和独立的商品编码
+         订单操作是针对商品规格，而非商品
+        
+订单体系
+    订单---(1:n)---订单项---(1:1)---商品规格
+                         ---(1:n)---资产
+        ---(1:n)---操作历史
+    资产
+        一个订单项目对应多个用户资产（可参照订单项的Amount字段）
+        用户资产描述设备的型号、串号、保修日期等信息
+        服务商销售商品后，可在后台录入用户的资产信息（可能要放开 ProductType.Goods 枚举）
+
+
+支付
+    微信支付要求
+        系统先生成订单序列号和费用
+        系统将序列号传递给微信进行支付
+        系统接受返回结果后，再更改订单状态
+
+接口鉴权
+    很多接口都有可空userId参数，可以不填写，后台自动去寻找登录用户id
+    如果要获取他人数据需要具有特定的权限，如 FinanceView, AssetView，用于商务人员在手机端查看客户信息
+
+
+邀请二维码逻辑
+	（1）二维码都统一为公众号二维码，包括商店和用户两种。
+	（2）扫描用户二维码不用自动设置归属商店。
+		调整用户二维码，不带inviteShopid参数
+		扫描用户二维码时，不主动获取user.Shopid
+	（3）小程序用户已有邀请记录的话，绑定手机页面中：如果已有邀请商店的话，邀请商店不可编辑；已有邀请人的话，邀请人不可编辑。
+	（4）小程序设置邀请商店后，如果该用户已关注公众号，给他打上公众号标签（用商店简称）。
+	（5）完善邀请判断逻辑
+		如果用户的Shopid不为空，由Shop发起的邀请无效
+		如果用户的inviterid不为空，由user发起的邀请无效
+		若存在此用户的用户邀请记录，则新的用户邀请记录无效
+		若存在此用户的商店邀请记录，则新的商店邀请记录无效

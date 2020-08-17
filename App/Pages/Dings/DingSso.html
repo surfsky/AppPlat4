@@ -1,0 +1,58 @@
+﻿<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+    <script src="/Res/js/jquery-3.3.1.min.js"></script>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="blue">
+    <title>钉钉单点登陆</title>
+</head>
+<body>
+    <div>钉钉单点登陆中...</div><br/>
+    <small>注：此页面仅能在钉钉微应用或钉钉控制台跳转时有效</small><br />
+    <small><a href="/Login.html">手动登录</a></small>
+    <div id="log"> </div>
+</body>
+</html>
+
+<script src="https://g.alicdn.com/dingding/dingtalk-jsapi/2.7.13/dingtalk.open.js"></script>
+<script type="text/javascript">
+    // 记录日志（叠加显示）
+    function log(txt) {
+        var html = $("#log").html() + "<br/>" + txt;
+        $("#log").html(html);
+    }
+
+    // 钉钉免登
+    dd.ready(function () {
+        dd.runtime.permission.requestAuthCode({
+            corpId: "dingd1043dc53ab7131835c2f4657eb6378f",
+            onFail: function (info) {
+                log("获取 code 失败: " + info);
+            },
+            onSuccess: function (info) {
+                // 获取请求Code
+                var code = info.code;  
+                log(code);
+                // 调用钉钉企业应用登陆接口，判断是否有权限，
+                $.post('/HttpApi/Ding/LoginEnterprise',
+                    {authCode: code, authBackend: true, },
+                    function (response) {
+                        log(JSON.stringify(response));
+                        var result = response.Result;
+                        if (result) {
+                            // 如果有，跳转到后台首页
+                            log("logging");
+                            window.location.href = "/Pages/Dings/ChoiceJump.aspx";
+                        }
+                        else {
+                            // 如果没有，则跳转到登陆首页
+                            log(result.Info);
+                            //window.location.href = "/login.html";
+                        }
+                    });
+            }
+        });
+    });
+
+</script>

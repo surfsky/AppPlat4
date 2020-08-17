@@ -1,0 +1,152 @@
+﻿<!DOCTYPE html>
+<html  class="no-js">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>login</title>
+    <link rel="stylesheet" type="text/css" href="res/login/css/normalize.css" />
+    <link rel="stylesheet" type="text/css" href="res/login/css/demo.css" />
+    <link rel="stylesheet" type="text/css" href="res/login/css/component.css" />
+    <link rel="stylesheet" type="text/css" href="res/css/position.css" />
+    <!--[if IE]>
+    <script src="/res/login/js/html5.js"></script>
+    <![endif]-->
+</head>
+<body>
+    <div class="container demo">
+        <div class="content">
+            <div id="large-header" class="large-header">
+                <canvas id="demo-canvas"></canvas>
+                <div class="logo_box">
+                    <h3>
+                        <img id="logo" src="res/login/img/logo.png" width="15%" style="vertical-align: middle; padding-right: 10px;" />
+                        <span id="siteName">温州电信知识库平台</span>
+                    </h3>
+                    <form action="#" name="f" method="post">
+                        <div class="input_outer">
+                            <span class="u_user"></span>
+                            <input id="txtUserName" class="text" type="text" placeholder="账户" style=" height:43px; ">
+                        </div>
+                        <div class="input_outer">
+                            <span class="us_uer"></span>
+                            <input id="txtPassword" class="text" style="position:absolute; z-index:100; height:43px; " value="" type="password" placeholder="密码">
+                        </div>
+                        <div class="input_outer" style=" width: 70%; float: left;">
+                            <span class="us_yzm"></span>
+                            <input id="txtVerify" class="text" style=" position:absolute; z-index:100; width:150px; height:43px; " value="" type="text" placeholder="验证码">
+                        </div>
+                        <div class="us_yzm_btn">
+                            <img name="imgVerify" id="imgVerify"
+                                 width="100" height="39" alt="点击切换验证码" title="点击切换验证码"
+                                 style="margin-top: 0px; margin-left: 0px; vertical-align: top; cursor: pointer;"
+                                 src="/HttpApi/Common/VerifyImage"
+                                 onclick="resetVerifyImg(); return false;" />
+                        </div>
+                        <div class="clear"></div>
+                        <div class="mb2"><a class="act-but submit" id="btnLogin" href="javascript:login();" style="color: #FFFFFF">登录</a></div>
+                    </form>
+                </div>
+                <div class="fixBottom" style="font-size:12px; color:white; margin-bottom:20px; display:flex; flex-direction: column; align-items: center;">
+                    <div id="owner"></div>
+                    <div id="copyright"></div>
+                    <div id="icp"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- =================== script ======================== -->
+    <!--
+    <script src="res/login/js/TweenLite.min.js"></script>
+    <script src="res/login/js/EasePack.min.js"></script>
+    <script src="res/login/js/rAF.js"></script>
+    -->
+    <script src="res/login/js/demo.js"></script>
+    <script src="res/js/jquery.min.js"></script>
+    <script src="res/js/message.js"></script>
+    <script type="text/javascript">
+        // 提示框
+        function alert(msg) {
+            $.message({message: msg, type: 'error', duration:1000, center:true });
+        }
+
+        // 初始化
+        $(function () {
+            // 微信浏览器跳转微信登录页
+            var useragent = navigator.userAgent;
+            if (useragent.match(/MicroMessenger/i) == 'MicroMessenger') {
+                if (!!(window.attachEvent && !window.opera)) { document.execCommand("stop"); }
+                else { window.stop(); }
+                window.location.href = ("/Pages/Wechats/Auth.aspx");
+                opened.opener = null;
+                opened.close();
+            }
+
+            // 确保是顶级窗口
+            if (window.top != null && window.top.document.URL != document.URL) {
+                window.top.location = document.URL;
+                return;
+            }
+
+            // 按回车键触发登陆逻辑
+            $(document).keyup(function (event) {
+                switch (event.keyCode) {
+                    case 13: login(); break;
+                }
+            });
+
+            // 标题、版权等声明
+            $.ajax({
+                type: "GET",
+                url: "/HttpApi/Common/GetSiteInfo"
+            }).always(function (json) {
+                if (json.Result == true) {
+                    $("#siteName").text(json.Data.Name);
+                    $("#owner").text(json.Data.Owner);
+                    $("#copyright").text(json.Data.Copyright);
+                    $("#icp").text(json.Data.ICP);
+                    $("#logo").attr("src", json.Data.LogoDark);
+                    //$("#imgVerify").attr('src', url);
+                    if (json.Data.LoginBg != null)
+                        $("#large-header").css("background-image", "url(" + json.Data.LoginBg + ")");
+                }
+            });
+        })
+
+        // 登录
+        function login() {
+            // 参数校验
+            var userName = $("#txtUserName").val();
+            var password = $("#txtPassword").val();
+            var code = $("#txtVerify").val();
+            if (userName == "") { alert("账户不能为空"); return; }
+            if (password == "") { alert("密码不能为空"); return; }
+            if (code == "") { alert("验证码不能为空"); return; }
+
+            // 去服务器端验证
+            $.ajax({
+                type: "POST",
+                url: "/HttpApi/User/Login",
+                data: { userName: userName, password: password, verifyImage: code }
+            }).always(function (json) {
+                if (json.Result == true) {
+                    top.location.href = "/pages/Index.aspx";
+                }
+                else {
+                    alert(json.Info);
+                    $("#txtVerify").val("");
+                    resetVerifyImg();
+                }
+            });
+        }
+
+        // 重置验证码
+        function resetVerifyImg() {
+            var url = "/HttpApi/Common/VerifyImage?" + Math.random();  // 避免某些浏览器会缓存图片
+            $("#imgVerify").attr('src', url);
+        }
+
+    </script>
+</body>
+</html>

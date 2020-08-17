@@ -1,0 +1,15 @@
+[2020-08-17 10:29:41,942] [INFO ] [App] [1] App logger start
+[2020-08-17 10:29:41,950] [INFO ] [App] [1] [ApplicationStart] 
+[2020-08-17 10:29:46,194] [INFO ] [App] [1] [InitOk] 
+[2020-08-17 10:30:01,335] [INFO ] [App] [7] [LoginOk] 禾呈建和???...????
+[2020-08-17 10:32:02,569] [WARN ] [App] [10] [Monitor] 2020-08-17 10:32:02:569 请求 http://localhost:5626/Pages/maintains/Dashboard.aspx/GetComputerInfo, IP地址 ::1, 耗时 4.8250 秒
+[2020-08-17 10:32:54,692] [INFO ] [App] [1] App logger start
+[2020-08-17 10:32:54,700] [INFO ] [App] [1] [ApplicationStart] 
+[2020-08-17 10:32:58,420] [INFO ] [App] [1] [InitOk] 
+[2020-08-17 10:33:00,792] [WARN ] [App] [9] [Monitor] 2020-08-17 10:33:00:791 请求 http://localhost:5626/Pages/Index.aspx, IP地址 ::1, 耗时 1.1740 秒
+[2020-08-17 10:38:34,331] [WARN ] [App] [19] [Monitor] 2020-08-17 10:38:34:331 请求 http://localhost:5626/Pages/maintains/Dashboard.aspx/GetComputerInfo, IP地址 ::1, 耗时 2.2250 秒
+[2020-08-17 10:39:23,459] [WARN ] [App] [18] [Monitor] 2020-08-17 10:39:23:459 请求 http://localhost:5626/Pages/Devs/Data.aspx?ns=FF0FC14ADA&ts=1597631580&sn=3A1AA39F93, IP地址 ::1, 耗时 2.0360 秒
+[2020-08-17 11:02:26,436] [INFO ] [App] [1] App logger start
+[2020-08-17 11:02:26,445] [INFO ] [App] [1] [ApplicationStart] 
+[2020-08-17 11:02:30,022] [INFO ] [App] [1] [InitOk] 
+[2020-08-17 11:02:32,399] [WARN ] [App] [6] [Monitor] 2020-08-17 11:02:32:398 请求 http://localhost:5626/Pages/Index.aspx, IP地址 ::1, 耗时 1.2070 秒

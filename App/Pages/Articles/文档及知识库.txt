@@ -1,0 +1,14 @@
+﻿此目录保存基础后台管理页面。
+框架
+	Index                 : 主页面
+	Welcome               : 欢迎页
+基础管理
+	User                  : 用户
+	Dept                  : 部门
+	Title                 : 职务
+	UserChangePassword    : 用户更改密码
+	UserPassword          : 用户
+内容管理
+	Article               : 文章（页面）
+	Res                   : 资源
+    Files                 : 文件选择

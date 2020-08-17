@@ -1,0 +1,139 @@
+﻿几个微信接口
+	Pay.ashx               微信支付后会回调该页面，应该在该页面中做业务处理。在商户平台设置（超级管理员账户）
+	Signature.ashx         微信小程序通用的签名算法，需登录。客户端签名后，再传递给微信服务器
+	SignatureChecker.ashx  微信小程序推送签名校验，用于验证推送消息来自微信官方
+    OPService.ashx                   : 微信公众号推送消息处理服务
+    MPService.ashx                   : 微信小程序推送消息处理服务
+
+校验文件
+    jgnhdQ9GOz.txt                   : 微信业务域名校验文件 https://mp.weixin.qq.com/wxopen/devprofile?action=get_profile&token=374857754&lang=zh_CN
+    MP_verify_qLEWE11jOkqrhJPv.txt   : 忘记了
+    MP_verify_wDO2qvhCz3FCSCDl.txt   : 忘记了
+    MchSign.ashx                     : 已登录客户端可调用本接口，获取签名后的字符串。
+    Pay.ashx                         : 支付成功回调
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+		  [HttpApi(Description = "获取教练列表", Type = ResponseDataType.JSON, CacheDuration = 60)]
+        public DataResult GetCoaches()
+        {
+            List<FitCoach> list = FitCoach.Search().OrderByDescending(s => s.PositiveCnt).ToList();
+            return new DataResult("true", "获取成功", list, null);
+        }
+
+		
+        [HttpApi(Description = "教练登录", Type = ResponseDataType.JSON)]
+        public static DataResult CoachLogin(string userName, string password, string msgCode)
+        {
+
+            DataResult dataResult = new DataResult("true", "登录成功", null, null);
+            VerifyCode vCode = VerifyCode.Search(userName).OrderByDescending(s => s.ExpiredDt).FirstOrDefault();
+            if (vCode == null || vCode.ExpiredDt < DateTime.Now)
+            {
+                dataResult = new DataResult("false", "验证码已过期", null, null);
+            }
+            else if (vCode.Code != msgCode)
+            {
+                dataResult = new DataResult("false", "验证码错误", null, null);
+            }
+            else
+            {
+                User user = App.DAL.User.Get(userName);
+                if (user == null || !user.InUsed || !PasswordHelper.ComparePasswords(user.Password, password) || user.Roles.Count == 0)
+                {
+                    dataResult = new DataResult("false", "账号或密码错误", null, null);
+                }
+                else
+                {
+                    if (FitCoach.GetByUserId(user.ID) == null)
+                    {
+                        dataResult = new DataResult("false", "当前账号不属于教练", null, null);
+                    }
+                    else
+                    {
+                        LoginSuccess(user);
+                        Log.AddLog("登录成功", userName, "INFO", "微信公众号（教练入口）");
+                        dataResult = new DataResult("true", "登录成功", null, null);
+                    }
+
+                }
+            }
+            return dataResult;
+        }
+
+
+
+
+
+  ///// <summary>
+        ///// 移动端登录（附加若干账户附属信息，如部门、角色等；无需验证码）
+        ///// </summary>
+        ///// <param name="userName"></param>
+        ///// <param name="password"></param>
+        ///// <param name="OS">客户端操作系统(android, ios...)</param>
+        ///// <returns></returns>
+        //[HttpApi(Description = "用户登录", Type = ResponseDataType.JSON)]
+        //public DataResult LoginMobile(string userName, string password, string OS)
+        //{
+        //    // 校验账户和密码
+        //    User user = Common.Db.Users.Where(u => u.Name == userName).FirstOrDefault();
+        //    if (user != null && user.Enabled && PasswordHelper.ComparePasswords(user.Password, password))
+        //    {
+        //        LoginSuccess(user);
+        //        Log.AddLog("登录成功", userName, "INFO", OS);
+
+        //        // 返回更详细的信息
+        //        var q = Common.Db.Users.Select(u => new
+        //        {
+        //            u.ID,
+        //            u.Name,
+        //            u.Email,
+        //            u.Gender,
+        //            u.RealName,
+        //            QQ = u.QQ.ToText(),
+        //            Photo = u.Photo.ToText(),
+        //            OfficePhone = u.Phone.ToText(),
+        //            CellPhone = u.Mobile.ToText(),
+        //            Remark = u.Remark.ToText(),
+        //            Birthday = u.Birthday,
+        //            LastLoginDt = u.LastLoginDt,
+        //            DeptName = u.Dept.Name.ToText(),
+        //            DeptID = u.Dept.ID
+        //        }).Where(u => u.Name == userName).FirstOrDefault();
+        //        return new DataResult("true", "登录成功", q, null);
+        //    }
+        //    else
+        //    {
+        //        Log.AddLog("登录失败", userName, "WARN", OS);
+        //        return new DataResult("false", "账户或密码错误", null, null); ;
+        //    }
+        //}

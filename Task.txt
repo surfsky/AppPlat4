@@ -1,0 +1,1579 @@
+﻿---------------------------------------------
+# 任务
+---------------------------------------------
+First
+    App.Entities 考虑迁移到 FreeSql? 或者并行一个版本。
+    优化工作流
+        流程处理弹窗改为独立页面，复用之。
+        流程处理页面增加图片录入
+        流程处理历史页面增加图片详情
+    BUG
+        Datas.aspx 编辑有问题
+        实现 AutoUI.SetEditorPanel
+    根据模块拆分系统
+    Power改造
+        方案1：Power -> long 
+        方案2：Power 改为 类，类似Role那样改造
+        App.Web 项目不依赖BLL：urls, appcontext, siteconfig, power, authattribute
+        系统剥离，避免重复编码: 把 AppContext 迁移到 App.Entites。
+    优化附件预览能力
+        附件上传后
+            在Cache文件夹创建目录
+            立即转化为pdf，供客户端下载使用（要打水印）
+            立即拆分为png，供客户端浏览使用（要打水印）
+            客户端优化：附件链接直接点击查看png，右侧“下载”按钮点击后下载
+        优化附件下载
+            预分解: 使用 OfficeImager.exe
+            异步加载方案（算了，很麻烦）
+                客户端点击后通知服务器准备文件，并显示图标“下载中”（异步handler）
+                服务器完成后回调通知客户端已完成，客户端显示图标“已完成”（用什么机制？SignalR）
+                客户端打开浏览器下载并查看文件
+
+业务
+    钉钉首页关注模块需要配置一下: 根据角色或部门来
+    Web版开发
+    报表需求
+        线上学习、培训打卡，学习时长，学习后考试等报表统计，管理人员查看。
+        1、登录积分：每日首次登陆1分
+        2、阅读非视频，应知应会内容有效阅读一篇计2分；非应知应会内容有效阅读一篇计1分；重复阅读同一篇不计分
+        3、非视频内容，有效阅读累计2分钟计1分，封顶5分
+        4、视频培训内容，有效收看累计4分钟计1分，封顶5分
+        5、有效评论一条0.5分，每日上限2分
+        6、出累计积分、本月积分、当天积分
+
+框架-改进
+    AutoUI
+        Editor 默认值
+        Editor 数据校验
+        Editor 事件回调
+    UI
+        图片上传控件可以删除图片
+    改造FormPro。可关联已存在控件，这样布局很灵活，坏处是aspx页面代码会增加很多
+    菜单管理：创建网页参数配置弹窗 PageParamsBox，简化编写参数难度
+    用 FState 改造控件，便于迁移到AspCore
+
+框架-规划
+    考虑 Users 信息需要缓存，一处更改，全局更改
+    Monitor web 化，可显示日志、SignalR 刷新页面
+    SignalR & Chat
+    使用多个数据库存储数据：
+        sqlserver：主数据库
+        sqlite：存储主机相关信息，如machineid、主机信息、数据库连接信息等。
+        redis：分布式缓存方案。单服务器的话不需要，多服务器的话就要用了。可考虑改造 IO.GetCache() 方法，令其支持Redis
+        其它：根据项目需求，各个模块依赖的数据库可定制。
+    IO.SetCache() 增加 Redis 分布式缓存配置（注：Asp.net core cache已经支持）。
+    AutoUI
+        尽量完善配置界面，在界面上进行快速配置
+        FormUI
+            实现控件附属参数的解析：如图片控件的{Width=x, Height=x} {ImageSize:{Width:x,Height:y}}
+            Collection数据》网格
+            合并行输出
+            UIAttribute 关联上已有控件
+            待优化：PopupTree 设置不可选节点（如部门的父部门）
+        GridUI
+		    增加导入数据功能
+            实现批量删除
+            增加参数并实现：GridUI.FormUIID、AllowPage、AllowSort
+            Grid/PopupGrid/PopupForm支持url
+            优化 ExportExcel（加参数 UISetting ui)
+        结论：
+            尚处于实验状态，很适合小量数据的快速编辑和原型开发
+            单独表单和列表解析尚可，但关联其它表尚未完善（如文章的附件如何展示）
+            在模型层定义还是有点麻烦，还是尽量完善配置界面，在界面上进行快速配置
+    页面框架简化尝试
+        items.aspx 结构都是一样的，尝试删除掉，并创建一个module，参数为handle类名（类似mvc，只剩下代码了）
+        aspx 融合 razor 引擎：放在一起，不分目录存储
+        集成RazorEngine，处理RazorPage逻辑。可考虑用于内容管理页面
+
+BUG & Hard
+	文章编辑器优化
+        word图文混合拷贝到编辑器：文字去除格式，图片自动上传
+		看情况使用UEditor编辑器
+    ajax post 方式访问报错：未将对象引用设置到对象的实例: http://localhost:5626/Pages/Maintains/Dashboard.aspx/GetComputerInfo
+    点击弹出新tab，校验该方法
+    MarkdownSharp 未解析 - [x] 任务列表
+	PopupBox 实现回写后的事件（摆不平）
+		notify.HideScript = PageManager1.GetCustomEventReference("HideNotify");
+		UI.GetPostReference
+    FriendlyModule: 无法传递cookie等信息，Common.LoginUser为空
+    WindowsServer2008 多关键字全文检索
+	角色权限管理》权限分组可全选（未完成）
+
+
+框架插件化
+    插件化思路
+        提供BLL层供插件开发商调用
+        提供Web层供插件提供商调用，如 GetUserFormUrl()
+        提供插件热拔插的能力
+            插件市场及列表：
+            插件安装：拷贝dll、拷贝页面文件
+            插件卸载：删除dll、删除页面文件
+            可用Nuget库协助实现，或自己写
+    内容管理优化
+        提供系列模板
+	    提供网页编辑能力： Designer
+        Razor 模板，直接在Web上进行设计
+	改造角色权限逻辑：
+		插件的权限校验是针对int类型的。每个平台可根据自己的特点，用int或者用enum都没关系
+		插件的权限基准值是平台动态颁发的，为了避免冲突，
+		每个插件预留100个权限值
+
+云平台规划：
+    User.OrgID, Search, List, Form
+    Dept.OrgID, Search, List, Form
+    Dept.All -> GetTree(orgId)
+
+---------------------------------------------
+插件系统
+---------------------------------------------
+插件系统
+    AutoUI
+        将全局UI配置移到 Web 层，这样可用写url参数
+        直接在Grid页面写Form表现形式？用参数v=Form/Grid控制。可用写一个示例
+    简化power参数->pow
+    扩展方案
+        数据库表
+            扩展表都需要加前缀，避免表重名
+            AppContext.OnBuild事件。添加实体类。（先用手工，以后再考虑自动查找）
+        权限
+            本系统大量采用 Power枚举来检测权限，很方便。但不方便扩展。
+            检测权限考虑兼容int类型
+            插件系统动态分配权限值范围
+        角色
+            角色无关紧要了，改为数据库表
+            初始化时默认创建插件需要的角色
+        DLL
+            用nuget方式部署（或撤销）
+        页面
+            用nuget方式部署（或撤销）
+        数据接口
+            向主系统注册数据接口类
+    部署
+        插件市场
+            已公开的插件
+            插件的上传
+        部署插件
+            已部署插件
+            部署界面（含更新）
+            撤销页面
+    开发方式
+        引用App及App.BLL项目
+        创建模型、页面、接口并测试成功
+        实现插件扩展接口代码
+    其它
+        修改获取 AppContext.DbSet的方法（不能用获取DbSet属性的方式了，可考虑在OnModuleBuild方法内处理）
+
+
+---------------------------------------------
+已完成
+---------------------------------------------
+2020-04-24
+    /新建菜单，图标默认为 page.png
+    /菜单地址，可选html
+    /Dashboard：增加系统IP、Host、Internet、DNS检测能力
+    /FixVersion
+    /剥离 App.Utils，或仍采用 App.Core。减少系统代码量。
+
+2020-04-13
+    /流程可指定处理人、时限：(算了)
+    /优化文章编辑器
+		/实现图片黏贴上传功能：https://blog.csdn.net/laokaizzz/article/details/97815471。可以单个图片黏贴，图文混合不可以。
+		/删除“添加按钮”
+        /修正大文件页面上传错误
+
+2020-04-08
+    /News 插件化
+    /ISitePlugin
+    /修正Monitor数据库保存问题。解决 AppContext 在非网页环境下的创建和关闭能力
+    /Explorer.aspx 链接跳转有问题（url sign有问题）
+
+
+2020-04-07
+    /剥离 App.Web ，不依赖于 App.BLL，比较困难。要重新纵向分割才行（把核心类库剥离出来）
+    /修改Feedback，改为工作流引擎，作为示例
+    /App.DAL 用注入的方式注册其它表。
+    /考虑 .Delete .Update 自己写，依赖三方的风险很大（算了）
+    /部门下拉框全部改为弹窗
+    /EntityFramework.Extended -> http://entityframework-plus.net/
+    /拆分App.Entities 项目
+    /增加 IInit 接口
+    /ISiteService
+    /隐藏错误（不可重现）
+        用户更改了密码Abc123，但登陆时失败
+        错误：Value cannot be null. Parameter name: s
+        类名：System.Convert
+        方法：FromBase64String
+        堆栈：
+           at System.Convert.FromBase64String(String s)
+           at App.Utils.PasswordHelper.Compare(String dbPassword, String planPassword) in \\Mac\Home\Downloads\Dev\Dev\AppPlat\App.Utils\App.Utils-github\App.Utils\Maths\PasswordHelper.cs:line 21
+           at App.Components.ApiUser.Login(String userName, String password, String verifyImage) in X:\DevWZCC\2020\190712.电信知识库\00.Code\KB-git\App\API\ApiUser.cs:line 107
+    /default menu icon：/res/icon/page.png
+    /plugin：图形报表模块
+    /更换Api的命名空间： App.Apis
+    /Open/
+        /Apps.aspx
+        /Orgs.aspx
+        /Api.aspx
+    /UserForm/Dept -> PopupBox
+    /User.aspx/Dept -> PopupBox
+    /修真 15305770868 潘震苞 菜单问题，只能看到目录，看不到子菜单。有多个账户。登录接口有问题，会返回已经删除的账户
+        User.GetDetail 未过滤
+            if (id == null && name.IsEmpty() && mobile.IsEmpty() && wechatMPId.IsEmpty() && wechatUnionId.IsEmpty() && wechatOpenId.IsEmpty())
+                return null;
+            var q = GetQuery();
+            if (id != null)                 q = q.Where(t => t.ID == id);
+            if (name.IsNotEmpty())          q = q.Where(t => t.Name == name);
+            if (wechatUnionId.IsNotEmpty()) q = q.Where(t => t.WechatUnionID == wechatUnionId);
+            if (wechatMPId.IsNotEmpty())    q = q.Where(t => t.WechatMPID == wechatMPId);
+            if (wechatOpenId.IsNotEmpty())  q = q.Where(t => t.WechatOPID == wechatOpenId);
+            if (mobile.IsNotEmpty())        q = q.Where(t => t.Mobile == mobile);
+            var o = q.FirstOrDefault();
+    /首页图表可配置。IWidget
+
+
+2020-03-27
+    /统一使用 GetExplorerUrl
+    /Users.aspx 增加 power 参数限制
+    /流程完善
+        /动作不对，动作应该是针对下一个节点的名称
+    /实现工作流-》反馈处理
+        /流程定义
+        /列表页面
+        /新增页面
+        /流程处理页面：增加处理按钮，点击后弹窗
+        /流程历史页面
+        /流程历史补足用户名和手机
+
+
+2020-03-21
+    /重构位置
+        /webconfig
+        /login.html, login.aspx
+        /pages/index.ashx, welcome.aspx
+        /Pages/Common/resex, explorer
+        /Articles.aspx + popupbox
+    /OfficeConfig.OfficeImager
+    /OfficeConfig.OfficeMarker
+    /DAL按照Scope切割（微应用）
+        /ConfigArticle -> ArticleConfig
+        /UserFavorite  -> ArticleDirFavorite
+        /部署时要删除 Messages 表的外键约束
+    /BUG：SiteConfig 未修改: 修正FormPro逻辑，统一Save()入口
+    /DAL
+        /考虑自动实现 ITree.All
+        /考虑自动实现 ITree.OnDeleteReference()
+
+2020-03-20
+    /菜单重新排序后，左侧菜单未更新
+    /调整Titles.aspx，作为示例
+    /调整SiteConfig.访问限制的名称
+    /Ding + GetAccessToken
+    /调整测试目录和页面：Html, Controls, API, Tool,
+        <f:BoundField runat="server" DataField="DirectoryName" HeaderText="目录" Width="400px" />
+    /钉钉推送测试
+    /删除接口IDeleteRecursive
+    /修正回帖无目录的记录
+    /部门使用率统计报表
+        /调整文章访问清单页面，增加类别过滤，增加输出列
+                UI.BindTree(ddlDept, Dept.All, t => t.ID, t => t.Name, "部门");
+                    <f:DropDownList runat="server" ID="ddlDept" EmptyText="部门" Width="200" />
+    /统一 ITree<T>.GetDescendants()
+    /检索回帖时也要过滤目录。 GetArticleReplies增加参数 articleDirIds
+
+2010-03-19
+    /重构Role.AdminXXX
+    /分拆Logic.XXX
+    /用户增加RealNamePinYin, RealNamePinYinCapital
+    /修改树状缓存逻辑：
+        /All只存储平面的数据；每次要用的时候，整个All都拷贝一份，再处理。
+        /Tree存储树状数据；每次要用的时候，整个All都拷贝一份，再处理。改为扩展方法 Clone()
+    /cookie失效时，直接跳到登录页面
+    /cookie失效时，点击退出无效
+    /SiteConfig.CookieHours
+    /钉钉消息推送
+	    /有新跟帖，发送给管理员
+	    /有新文章，且匹配用户关键字，发送给用户
+    /文章增加定时逻辑，到期后自动失效
+    /分拆配置页面到各个目录
+        /ConfigArtcles -> ArticleConfigForm.aspx
+        /ConfigSites -> SiteConfigForm.aspx
+        /ConfigDings -> DingConfigForm.aspx
+        /ConfigAlis  -> AliSmsConfigForm.aspx
+    /改造菜单》检测错误，若有错误编辑后刷新保留
+    /修正欢迎页数据年份数据问题（数据间隔过大，去年的排序到最后了）
+    /性能优化考虑：CheckArticleDir, GetArticles 增加 userId 参数，便于缓存（遇到瓶颈再说把，目录已经有缓存了）
+
+
+2010-03-18
+    /回帖管理接口
+        /http://doc.oa.wz.zj.cn:88/HttpApi/Knowledge/GetArticleReplies?articleId=x
+        /articleId可以为空，加上文字标题字段（不加了）
+    /回帖时确保其目录与原文目录一致。
+
+
+
+2020-03-17
+    /修正 Asp.GetHandler bug
+    /修正 Url.AbsolutePath bug
+    /部署新版本
+        /记录管理员清单》部署》重新配置管理员角色
+        /修正菜单，所有文章相关的都移到/Page/Articles/目录下
+        /删除Dept的外键引用：Dept, User, UserDept, UserFavorite
+        /拷贝dll和pages目录，并删除.cs文件
+        /删除webconfig中的一段代码（会引起部署时文件占用）
+        /运行测试>钉钉》同步钉钉部门
+        /配置
+            /角色: 政企、公众
+            /角色可访问的文章目录
+            /批量设置现有用户拥有政企角色
+        /测试接口
+            /获取文章目录
+            /获取文章列表
+    /自定义的虚拟输出逻辑，可兼容 InUsed 逻辑。如Status。共存算了。
+    /FixBug：删除后，菜单仍然存在。
+    /fixbug: 菜单角色如果不设置，则使用网页内置的view权限来判断
+    /统一级联删除逻辑
+        /删除：EntityBase.DeleteRecursive()方法
+        /统一用 OnDeleteReferences(id) 方法
+        /删除 IDeleteRecursive 接口
+            if (this is IDeleteRecursive)
+                (this as IDeleteRecursive).DeleteRecursive(this);
+        /覆盖 
+            Base/Depts.aspx, 
+            Configs/Menus.aspx, 
+            Base/Areas.aspx
+            Articles/ArticleDirs.aspx
+    /修正接口，限制用户目录
+    /自己构建树结构！！！！
+    /启用 ITree<T> 接口
+
+
+2020-03-16
+    /同步钉钉部门
+        /获取钉钉部门树-》Dept表（OrgID，ID，ParentID，Name）
+        /每个组织的根目录id=1 （钉钉逻辑）
+    /修改钉钉登录逻辑，修改用户的部门ID
+    /实现授权业务逻辑：
+        /政企部、公众部，目录管理员
+        /User.GetAllowedArticleDirIDs
+        /修改授权访问文章接口
+    /文章：
+        /增加失效时间、状态字段
+        /迁移InUsed -> Status
+
+2020-03-12
+    /单页模式 RoleDirPage.aspx
+    /集中迁移 /Pages/Articles/ 目录
+    /解决文件锁定问题: 
+        /剥离 Watermarker.exe 及 App.Spire 项目
+        /剥离水印工具为console程序，避免文件锁定问题
+        /查死锁原因
+            /用console处理office
+            /WMI
+            /cachefile（bug:cache 文件刷新时有冲突，文件在用中）
+    /修改 IFix 接口
+    /修改 ITree 接口
+
+
+2020-03-10
+    /EntityBase : IFix
+    /剥离出角色表
+        /废除Role 枚举
+        /初始化角色表
+        /用户角色设置窗口 RolePower.aspx
+        /角色管理窗口 Roles.aspx
+        /所有的角色绑定控件逻辑
+        /系统菜单
+        /User.Roles, RoleIds, RoleNames
+        /Users.aspx
+
+2020-03-11
+    /实现 ICacheAll 的类无法调用 AppContext.GetEntity（用foreach 实现）
+    /角色目录表
+        角色目录表；不允许选择已选目录的子目录；
+        角色目录表
+            R：分两种角色可以解决。并增加角色目录表。（优化）
+            R：可以实现，目录管理员可以编辑目录并分配编辑的权限。普通编辑只能在负责目录下编撰文章。（优化）
+            R：解决方案同1。用角色、角色目录表维护。（优化）
+                1、客户经理端分两级，一级为客户经理，一级为政企部主任及以上级别，可以专门锁定一个文件夹。
+                2、管理员端分两级，一级为只能编制自己模块的知识点，一级是超级管理员。
+                3、部分人员要求政企、公众知识库两个视图都开放。
+        多部门共用
+            部门
+	            多部门共用
+                不同的角色资料隔离: 政企部、公众部
+                不同的用户可见的目录和文件不同
+            文章-文章目录-受角色控制
+
+
+2020-03-06
+    /文章类别下拉框不能选
+    /mode -> md
+    /修正文件下载逻辑，android也可以用浏览器打开下载
+        // 是否保护文件逻辑（如果设置了参数，以参数为准；如果未设置参数，以系统为准；若系统也未设置，不保护）
+        //protect =  protect ?? (Configs.Article.Protect ?? false);
+        http://localhost:5626/down.ashx?rid=1347242394151555072&watermark=x+20200306&ns=4964D6A65B&ts=1583482826&sn=F21B8FED68
+        http://localhost:5626/down.ashx?rid=1344354812468137984&watermark=%e7%a8%8b%e9%94%ae+20200306&ns=761E84E0CF&ts=1583483943&sn=C46C7D5348
+
+
+2020-03-03
+    /重构树结构及绑定:恢复clone 逻辑
+    /重构
+        /app.dal
+            /UpExtensions -> UpFileTypes
+            /UpSize -> UpFileSize
+        /app.Web
+            /剥离 Uploader
+            /剥离 Cacher
+            /剥离 WebTool
+        /app.core
+            /+SplitString
+            /+SplitLong
+            /+RebootSite
+            /ToImage -> ParseImage
+    /大文件上传。传递小文件测试
+    /修正缩略图问题
+
+
+2020-01-31
+    /目录无法选择：BingTree要重置
+    /附件无法下载（可能是附件名太长）
+
+2020-02-04
+    /修正GetArticle的Bug：if (item.Reses != null)
+
+2020-02-27
+    /支撑50M以内的大附件上传（90%）
+        + Configs.Site.UpExtensions
+        + Configs.Site.UpSize
+        * /Common/ChunkUp.aspx
+        * Urls.GetChunkUpUrl()
+        * Common.UploadFile()
+        * Downloader.cs
+        * Asp.IO.WriteFile
+        * GetFileExtension
+        * ChunkUp -> HugeUp
+        /考虑把扩展名带上，补足文件名
+        //int n = ext.LastIndexOf("-");
+        //if (n != -1)
+        //    ext = ext.Substring(0, n);
+            //xhr.setRequestHeader("X_Requested_With", location.href.split("/")[3].replace(/[^a-z]+/g, '$'));
+            //xhr.setRequestHeader("X_Requested_With", location.href.split("/")[3].replace(/[^a-z]+/g, '$'));
+            xhr.setRequestHeader("X_Requested_With", location.href.split("/")[3].replace(/[^a-z]+/g, '$'));
+    /管理员维护界面的目录展示优化增加页面数据行数，避免分页。（优化）
+
+
+2020-02-25
+	/优化附件水印性能（需新主机），没啥办法
+
+2020-02-05
+	/文件是否打水印控制下放到单个文件
+        /方案一：.doc?protect=true
+        /方案二：down.ashx?resId=x
+            /Down方式钉钉端下载乱码: 试试不输出附件名称
+            /支持 cdr\mp4\docx, 不支持的文件格式用 application/octet-stream mimetype下载
+
+
+2019-12-31
+    /迁移网站
+    /跟帖统一管理页面，便于管理员维护
+    将角色改为库表
+
+
+2019-12-26
+    /GridPro.ViewColumn / EditColumn 互斥
+    /修正 SearchUI 配置信息。非可选字段需要带入，且隐藏
+    /合并 PageMode VisibleMode
+    /GridPro.Column 支持 PageMode
+    /Fix XUI.Setting.EntityType is null
+    /add GridPro.InitForm(UiSetting)
+
+2019-12-25
+    /简化GridPro标签代码
+        ShowIDField="false" ShowNumberField="true" ShowDeleteField="true" ShowEditField="true" ShowViewField="true" 
+        AutoCreateFields="false" RelayoutToolbar="false"
+        public bool AutoCreateFields { get; set; } = false;
+    /合并GridPro/GridX
+
+
+2019-12-24
+    /融合 UISetting - SearchSetting
+
+2019-12-23
+    /简化ITree，去除IClonable
+    /GridX 非泛型版本: Orgx.aspx + OrgForm.aspx
+        /直接构建search框
+        /写uisetting传递给gridpro就行
+    /AutoUI.UIAttribute.Visible: All,PageMode
+    /UISetting.ModelType -> EntityType, Visible->VisibleMode
+
+2019-12-23
+    /Org: model-grid-form
+
+2019-12-19
+    /PopupTree 不可选？增加ValueID。
+    /FormUI.实现FormEditor.Grid
+    /Datas.aspx
+        /Searcher 根据参数q设置控制控件值
+        /Datas.aspx 根据参数q过滤数据
+        /Datas.aspx 根据参数q设置新建窗口的url模板
+        /FormPro  根据参数值q设置控件值
+        /自定义属性过滤，如Type=Reply
+        /枚举下拉框设置值显示得不对：绑定时用的是数字，赋值时用的如果时字符串，需要转化一下
+
+2019-12-18
+    /文件保护单独设置: 用 down.ashx?rid=x
+    /图片文件保护
+    /简化 Res，只保存文件
+    /图片文件上传尺寸控制（用FormUI实现）
+    /ConfigSite用FormUI实现
+    /修改文章既有资源时报错：Access to the path 'E:\www\KB\Files\Articles\191021-a0aaa81d98284299879fc43d26720f7f.docx' is denied.
+    /AutoUI.图片上传后自动更新字段，避免头像丢失
+    /实现FormEditor.PopupTree  ：数据来源于数据库统一用PopupGrid
+
+2019-12-16
+    /GridUI
+        /GridUI.实现多级属性(如Dept.Name),无需弹窗
+        /修正export导致的binding错误
+        /自动修正级联属性的 Title
+        /修正排序时机和问题
+    /UI.Bind的非泛型版本
+        /DDL
+        /RDL
+        /CBL
+        /ITree : IClonable, IID
+    /FormUI.新建时不用显示创建时间和更改时间
+        /// <summary>添加列表成员</summary>
+        public UIAttribute SetList<TEnum>(Expression<Func<T, object>> field, List<TEnum> enums) where TEnum :struct
+        {
+            return SetList(field, enums.ToDict());
+        }
+        /实现FormEditor.PopupList  : 少量预设数据绑定。数据来自数据库的统一用 PopupGrid
+        /实现FormEditor.PopupGrid
+        /以Article为例：
+            /Type -> PopupList: 选取少量ArticleType作为值
+            /ArticleDir -》 PopupList
+            /User -> PopupGrid
+            /Type -> PopupEnum
+    /简化ReflectionHelper.GetName, GetProperty, GetTitle
+    /UI.BindTree 非泛型版本
+
+
+2019-12-15
+    /理出功能清单
+    /ExportSetting -> 其实就是将UI层设置移动到 Model 层了
+        /EntityBase.FormUI
+        /EntityBase.GridUI
+        /EntityBase.SearchUI 缓存起来
+    /简化Tree的设置
+        /如改为UISetting.TreeField=xxx，则这个列自动构成树（要求该类实现ITree接口）
+        /+ bool Tree
+    /排序：UIAttribute：bool? Sort;
+    /简化UISetting方法
+    /修改设置菜单，增加默认UI配置
+        //if (uiId == null && i == 0)
+        //    chk.Checked = true;
+    /再次简化UISetting.Add方法，如AddImage(), AddPopupForm()...
+
+
+2019-12-13
+    /数据管理》增加UI设置列
+    /重写缓存逻辑
+        /All cache 内置在EntityBase
+        /Area
+        /ArticleDir
+        /引入ICache接口，标注了该接口的实体类，都将使用属性 All进行检索数据
+    /DAL.直接加上缓存体系All， Get、Search 都从缓存中获取
+        /参考 Dept
+    /自动化UI系统
+        /Default ImageColumnWidth->30
+        /树型数据的自动化UI：
+            /Menu、Dept、Area
+            /ICache -> override Set
+        /缓存所有UISetting
+        /查找自动UI的性能瓶颈（数据量大了就慢）
+        /Win -> 拆分为 
+            /PopupForm
+            /PopupGrid
+            /PopupList
+                /ValueType
+                /Values
+        /AutoUI.Grid.Add ViewColumn
+        /只要查看了ViewForm，再打开编辑窗口，无法编辑？
+        /fixbug: DataForm.aspx 无法编辑数据
+        /自动设置列宽
+
+2019-12-12
+    /完善自动UI系统
+        /缓存Models-》加速Datas.aspx
+        /缓存UISetting-》加速DataForm.aspx
+        /Title.Users: 暂时屏蔽 System.Collections.Generic.HashSet`1[App.DAL.User]
+        /UISetting 下拉框组合到菜单中
+            _ddlSettings = UI.CreateUISettingDDL(XUIType.List, typeName, uiId);
+            this.toolbar.Items.Add(_ddlSettings);
+            ddlSettings = UI.CreateUISettingDDL(XUIType.Form, this.EntityTypeName, this.UIID);
+            toolbar.Items.Add(ddlSettings);
+            protected DropDownList ddlSettings;                   // UI设置下拉框
+            FineUIPro.DropDownList _ddlSettings;                   // UI设置下拉框
+        /获取当前url补足uiid参数
+    /Datas.aspx -> Article
+        服务器上部署出错
+        Object reference not set to an instance of an object.
+        [NullReferenceException: Object reference not set to an instance of an object.]
+           System.Object.GetType() +0
+           App.Controls.GridPro.GridPro_RowDataBound(Object sender, GridRowEventArgs e) +1196
+           FineUIPro.Grid.OnRowDataBound(GridRowEventArgs e) +209
+           FineUIPro.Grid.pgjmHtUhLTzbxmcuXOWninhacrCj(Int32 , Object ) +318
+           FineUIPro.Grid.guTXuwYPIbXqeNxeHcaVnaiupTUe(IEnumerable , Boolean ) +551
+           FineUIPro.Grid.DataBind(Boolean keepCurrentRows) +1887
+        暂时加个null判断
+    /复杂Form的Readonly设置
+    /完善Article的mode传递模式
+    /去除GridPro参数
+        /// <summary>上传图片大小限制</summary>
+        public Size? ImageSize
+        {
+            get { return GetState("ImageSize", "").ParseJson<Size>(true);  }
+            set { SetState("ImageSize", value.ToJson()); SetButtonText(); }
+        }
+    /修正SetVisibleByQuery，支持大小写
+    /简化代码应用 ImageUploader，
+        ArticleForm.aspx
+            <f:Thrumbnail ID="imgCover" ImageUrl="~/res/images/blank.png" runat="server"  Label="封面图"/>
+            <f:FileUpload runat="server" ID="uploader" ShowRedStar="false" ShowEmptyLabel="true"
+                ButtonText="上传图像" ButtonOnly="true" Required="false" ButtonIcon="ImageAdd" AcceptFileTypes="image/*"
+                AutoPostBack="true" OnFileSelected="uploader_FileSelected"/>
+
+2019-12-11
+    /导出文章访问记录：
+        /全部数据（非分页）；
+        /带出部门
+    /ArticleVisit+ VisitCnt
+        /Model
+        /Page
+        /Interface
+    /APIArticle.DeleteArticleReply
+    /角色管理，名称丢失
+    /废除 ExpressionBuilder，用 App.Utils.EFHelper
+    /修正文章访问报表，剔除非知识库文章数据
+    /修正用户报表，剔除已删除用户
+    /DataForm.aspx 剔除复杂导航属性
+    /UISetting 列表页面，查询结果准确匹配，不用like逻辑
+    /UIAttribute中的TypeName 简化
+         泛型内的类型也要解析掉，避免 net 升级不支持
+         System.Nullable`1[[System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]], mscorlib
+         System.Collections.Generic.List`1[[App.DAL.Res, App.BLL, Version=1.0.7278.37881, Culture=neutral, PublicKeyToken=null]], mscorlib
+         -->
+         System.Nullable`1[[System.Boolean]]
+         System.Collections.Generic.List`1[[App.DAL.Res, App.BLL]]
+    /工作流引擎区分 Type, ValueType
+
+
+2019-12-09
+    /重构合并 GridPro.Columns
+    /实现自动表单PageMode=View 只读
+    /实现访问记录的部门过滤
+    /调整接口，关注进行排序
+    /实现弹窗网格的 Select模式
+    /实现枚举列，要找地方保存callback。拆分 GridPro 做一个非泛型的版本？（GridPage？）
+
+
+2019-12-07
+    /优化自动化网格系统（以文章为例 Datas.aspx）
+        /Window列，要根据附属参数创建。如 [UI(ValueType=App.DAL.Product, TextField=ProductName)] long? ProductID;
+        /导出数据：选中数据、查询结果
+        /导出数据列与表格一致。 
+        /DataModels.ashx 枚举类型显示成员
+    /优化自动表单系统（以文章为例 DataForm.aspx）
+        /PopupBox 的展示
+
+2019-12-06
+    /ColumnType, EditorType, ExportType
+        /* No -> None
+        /+ Win
+    /Auth移到模型层
+        /若设置，Datas.aspx 和 DataForm.aspx 采用设置的权限
+        /若未设置，权限可以推断：ArticleView,New,Edit,Delete（还是强制设置吧，避免程序员偷懒，留下安全隐患）
+        /pv-pn-pe-pd 参数也可以取消掉
+        /ns-ts-sn    参数也可以取消掉
+        /去除Datas.aspx 和 DataForm.aspx 的 urlsign
+    /导出 access 数据库（算了）
+
+2019-12-05
+    /打印内部异常
+    /优化自动化网格系统
+        /主要是图片字段
+        /Article网格页面有点问题，标题列多了
+        /修正缩略图列
+        /简化搜索栏的创建，要么全部，要么只显示标注了ParamAttribute的参数
+        /给模型层加上[Auth], 可以自动获取 url 或权限判定
+    /优化自动表单系统
+        /更改 UI 配置后刷新页面，而不是post（重建页面控件不匹配会报错的）
+        /XUIForm 对应表：一个url对应一个配置。不用了，用ID来区分即可
+        /网站配置》删除菜单样式；
+        /网站配置》样式主题弄成枚举
+        /Html 的展示
+    /界面配置按钮改为下拉菜单按钮：拷贝地址 | 界面配置 | 刷新按钮
+    /优化缩略图，如果图片很小，就不放大了
+    /BUG（忽然又没问题了。。。。服务器好像重启了）
+        http://doc.oa.wz.zj.cn:88/HttpApi/Knowledge/GetArticleApprovals?articleIds=1310554042170085376
+        http://doc.oa.wz.zj.cn:88/HttpApi/Knowledge/GetArticles?keywords=&dirIds=&pageIndex=0&pageSize=5&sort=Visit
+        Common.LoginUser 出问题，LazyLoad出问题.
+        2019-12-05 10:41
+        An error occurred while executing the command definition. See the inner exception for details.
+        at System.Data.Entity.Core.EntityClient.Internal.EntityCommandDefinition.ExecuteStoreCommands(EntityCommand entityCommand, CommandBehavior behavior)
+        at System.Data.Entity.Core.Objects.Internal.ObjectQueryExecutionPlan.Execute[TResultType](ObjectContext context, ObjectParameterCollection parameterValues)
+        at System.Data.Entity.Core.Objects.ObjectContext.ExecuteInTransaction[T](Func`1 func, IDbExecutionStrategy executionStrategy, Boolean startLocalTransaction, Boolean releaseConnectionOnSuccess)
+        at System.Data.Entity.Core.Objects.ObjectQuery`1.<>c__DisplayClass7.b__5()
+        at System.Data.Entity.SqlServer.DefaultSqlExecutionStrategy.Execute[TResult](Func`1 operation)
+        at System.Data.Entity.Core.Objects.ObjectQuery`1.GetResults(Nullable`1 forMergeOption)
+        at System.Data.Entity.Core.Objects.ObjectQuery`1..GetEnumerator>b__0()
+        at System.Data.Entity.Internal.LazyEnumerator`1.MoveNext()
+        at System.Linq.Enumerable.FirstOrDefault[TSource](IEnumerable`1 source)
+        at System.Linq.Queryable.FirstOrDefault[TSource](IQueryable`1 source)
+        at App.DAL.User.GetDetail(Nullable`1 id, String name, String mobile, String wechatMPId, String wechatUnionId, String wechatOpenId)
+        at App.Common.<>c.b__15_0()
+        at App.Utils.Asp.GetSessionData[T](String key, Func`1 creator)
+        at App.Common.get_LoginUser()
+        at App.Components.ApiKnowledge.GetArticleApprovals(String articleIds)
+	/表单设计器
+		/应用示例：配置管理>图片字段》可上传图片
+			.SetImageField(t=>t.Avaltar, savefolder)
+		/模型字段UI控制：
+			/显示方式和格式，数据来源等（可替代原有的 UIAttribute）
+			/可多行，支持web、mobile等
+			/其实就是表单设计器了，可用剥离模型层与展现层
+		/快速表单设计器
+			/系统运行后进行配置
+			/在默认表单右侧放置一个设置按钮
+			/配置数据规则（长度、正则、范围等）
+			/点击后显示数据来源：
+				/来源于枚举
+				/来源于数据实体集合、排序、剔除、何时显示
+				/来源于数据实体集合+代码（动态编译）
+        /原系统可以依赖此架构，删除大量代码
+	/图片上传 ImageUploader
+		组合缩略图控件、上传按钮
+		思路：
+			继承triggerBox
+			生成image控件
+			生成file控件，隐藏不显示
+			点击triggerbox button时触发客户端脚本，让file选择文件并触发上传事件
+			上传处理完毕后，给image.url赋值
+    /测试管理平台（算了，不会带来收益）
+        /页面信息: URL, Auth, Parameters
+        /测试状态: Untest, Pass，Unpass
+        /测试项
+            /功能性测试    
+            /安全性测试   
+            /参数测试   
+        /测试历史  
+        /页面自动化测试：根据页面信息自动进行测试，主要测试是否可以正常打开
+    /DataForm.aspx 直接编辑实体 
+        /存储列表和表单的配置
+        /找个地方配置及存储表单信息
+	    /实现 数据表单配置
+        /用户检索弹窗，UserDept，userId 参数的 Type = App.DAL.User，则弹出 User 的选择窗口
+    /优化Datas.aspx 
+        /导出数据可选择：导出查询结果、导出选中行数据
+        /检索条件可配置（由Search方法创建）
+        /用后端代码创建检索对话框
+    /Comets 修复（不改了，迁移到SignalR）
+	/RouteModule: Server.Transfer()会报错，有空查看UrlRewrite源码
+    /CheckColumn 无法将cell内容设置为空（算了，设置为选中好了）
+
+        
+2019-12-04
+    /去除 UISetting.ID
+    /迁移目录：Api, Data, DataForm, DataModel, Datas, DbSchema
+    /去除UIAttribute.FieldName
+    /修复EnumColumn、boolColumn等的bug
+    /表单配置
+        /UISetting.Model
+        /UISetting.Grid
+        /UISetting.Form
+        /UISetting json 序列化
+        /UISetting json 反序列化
+        /UISetting.Form.EntityTypes ddl
+        /DataForm 显示 UISetting 配置按钮及下拉框
+        /DataForm.ApplySetting()
+        /实现网站配置
+        /接受 uiID url 参数
+        /将 ddlSettings 迁移到 FormPro
+        /UIs.aspx 接受type参数
+        /UIForm.aspx 接受type参数
+        /优化缩略图控件
+            /ImageUploader
+            /实现图片展示及上传组合控件
+            /如果图片小于指定宽度不缩小
+    /修正缩略图模块解析：http://localhost:5626/Pages/Devs/~/Res/Images/defaultAppBanner.png?w=200
+
+
+
+2019-12-03
+    /Admins->Base： 更改页面；更改菜单
+    /ServicePages, Common -> Urls 统一放置Url
+    /Controls->Pages/
+    /检测菜单可用性
+    /检测网站不安全的文件
+        <f:Button runat="server" ID="btnCheckUnsafe" Icon="CheckError"  Text="检测不安全文件"  OnClick="btnCheckUnsafe_Click" />
+        protected void btnCheckUnsafe_Click(object sender, EventArgs e)
+        {
+        }
+    /ParseJson(ignoreException)
+    /AuthAttribute -> App.Components
+    /ToJson() 类型只输出名称和程序集，不输出版本号
+
+
+2019-11-28
+    /用户界面非常慢，估计就是Title字段的缘故。=》grid不显示该字段
+    /设置 GridPro 选中的数据（有ID的没问题）
+    /MenuForm -> FileBox -> Explorer.aspx 预设值传递能力
+    /移动 Help 目录，修改数据库
+        [
+        {'Text': '万年历',  'Icon': 'Calendar', 'ID': 'calendar', 'URL': '~/pages/helps/calendar.htm' },
+        {'Text': '科学计算器',  'Icon': 'Calculator', 'ID': 'caculator', 'URL': '~/pages/helps/calculator.htm' },
+        {'Text': '系统帮助',  'Icon': 'Help',  'ID': 'help', 'URL': '~/pages/admins/article.aspx?id=5' }
+        ]
+    /FAQ 编辑时，未限制输入下拉框
+    /优化及完善DashBoard.aspx
+        /美化serverinfo
+        /显示系统运行状态和时间
+        /运行时库版本号
+    /系统状态用 ajax post 异步获取
+
+2019-11-27
+    /优化 /HttpApi/Ding/Up 接口，可一次性上传多个文件
+    /编写测试页面 TestUpload.html
+    /+CombinePath, CombineWebPath
+    /Asp.GetHandler() 简化及优化缓存
+    /UrlRewriteModule
+    /FriendlyUrlModule
+    /简化 Dept.All 缓存逻辑
+    /User优化
+        /设置用户管辖部门
+        /用户管辖部门
+        /将职务缓存，减少数据库检索
+        /修改User.Titles，自己写方法，或用逗号表达式（算了）
+    /IPFilters.aspx -> IPFilterForm.aspx
+    /部门多选逻辑
+    /测试RouteModule，解析文章短路径
+    /UrlRewrite()后导致cookie鉴权出问题 authloginfail
+    /文章Bug： System.Web.HttpException:“DataBinding:“System.Data.Entity.DynamicProxies.Article_CA81255F1785FCE5C8C703695C114B26B26C97C9B2CFDC45BDBC0281FEE527F8”不包含名为“Author?”的属性。”
+    /被攻击
+        /服务器上保存用户管辖部门时报错：An error occurred while updating the entries. See the inner exception for details.
+        /检测后IPFilter，更新缓存
+        /服务器自带防火墙，没有用
+        /安装服务器安全狗，设置黑名单，解决
+        /继续考虑web级别的防护
+    /访问频率限制和IP黑名单机制
+    /剥离 VisitCounter.IsHeavy
+    /HttpApi 接口安全优化
+        /HttpApiConfig.Roles
+        /HttpApi.AuthTraffic
+        /FileDowload: void
+        /AuthSign demo
+    /减少LogRequest()方法，不保存服务器信息
+    /HttpApi Api 调试网站的可视性（算了，公开的接口如果没有防护得住是设计者的责任）
+    /更改目录结构
+        拷贝目录
+        修改钉钉管理后台地址
+        改数据库
+            update menus
+            set navigateurl = '/Pages' + navigateurl 
+            WHERE     (NavigateUrl IS NOT NULL) AND (NavigateUrl <> '')
+        除了logout.aspx
+
+
+
+2019-11-26
+    /美化链接，可去除 aspx
+    /完善Artile.aspx，附件未显示
+    /修改评论等接口，支持两步上传
+    /Dings/Up.ashx
+    /Logout.ashx 迁移到 HttpApi
+    /DingUp 迁移到 HttpApi
+    /HttpApi -> 文件上传
+    /将AuthSign机制带到httpapi （算了，在OnAuth方法里面自己写吧）
+    /调整接口：增加AuthorDept、CreateDtText
+    /用单一 Up.aspx 处理普通文件上传及大文件上传
+        /xhr.open("POST", '<%=App.Compoents.Security.GetSignUrl("Up.aspx")%>', true);
+        /把大文件上传编写成jquery插件（算了）
+
+
+2019-11-25
+    /用户部门及管辖部门
+        /简化部门，避免混淆
+            /取消用户部门字段，用户拥有多部门，避免重叠设计。同样也考虑用逗号表达式。
+            /决策：保留用户部门（表示归属部门），另外一个命名为用户管辖部门（UserManageDept or UserAdminDept)
+            /保留现状
+        /用户管辖部门可以多个
+    /重构User
+        /User.ManageAreaID -> UserManageArea
+        /User.ManageDept -> UserManageDept
+            ManagerAreaName   = type.HasFlag(ExportType.Detail) ? ManageArea?.FullName : null,
+            [UI("管理区域")]                         public long? ManageAreaID { get; set; }
+            public virtual Area ManageArea { get; set; }
+            if (this.ManageAreaID == null)
+            this.ManageAreaID = shopAreaID;
+            UI.SetValue(ddlManageArea, item.ManageAreaID);
+            <f:DropDownList runat="server" ID="ddlManageArea" Label="管理区域" />
+            UI.BindTree(ddlManageArea, Area.All, t => t.ID, t => t.Name);
+            UI.SetValue(ddlManageArea, null);
+            item.ManageAreaID = UI.GetLong(this.ddlManageArea);
+        /用户管辖区域也可考虑用一个字段管理，用逗号隔开
+        /或者参考List<Title>属性，动态显示管辖部门
+    /如何给 Export 的字段增加标题
+        * 不考虑了，尽快实现UI管理及配置功能，UI层解决方案
+        * 另外提供一个方法，UISetting ExportSetting(..) ，指定标题、分组，模型层解决方案，或者复用Export（type=schema）
+        /可融合实体类的UIAttribute和ExportClass，显示部分字段，新增的就没办法了（算了，不治本）
+        /给匿名对象加上 UIAttribute？（现有渠道做不到）
+            // 可参考 https://www.cnblogs.com/yjmyzz/archive/2011/11/13/2247600.html,未测试性能
+            // 其实这一段代码，编译器自动生成了一个类，调用时只做赋值处理
+            // 如果是自己处理的话，需要先创建类，再赋值，就是有点担心性能问题，可考虑将动态创建的类型缓存起来
+        /增加一个属性 _UI : UISetting。（不可取，类型中无此数据）
+        /增加一个属性 _Title : ["ID", "姓名", "部门"]，（不可取，类型中无此数据）
+
+2019-11-24
+    /清理不用的角色
+	    /将工作流引擎也改为依赖 Power
+        /// <summary>是否拥有某个角色</summary>
+        public bool HasRole(Role role)
+        {
+            return this.Roles.Contains(role);
+        }
+    /调整目录：
+        /Admins 基础后台管理：用户、部门、文档等
+        /Configs 配置管理
+            RolePowers.aspx -> Roles.aspx
+        /Maintains 系统运维及开发管理
+        /ServicePages 统一进行管理，供插件系统使用
+	/系统页面浏览器（显示UIAttribute）Files.aspx
+		/所有页面都打上Auth() 标签，如果没有就报错
+		/便于快速检索页面错误
+		/后期考虑直接用数据库进行管理页面访问授权
+		/菜单管理里面的访问授权还是要保留的，菜单是可视权限
+
+
+2019-11-22
+    /修正点赞接口，查看数不增加1
+    /修正报表：改为存量曲线
+    /简化及优化EChart
+    /EntityBase.StatDayNew, StatDayAmount
+    /ReflectionHelper.GetProperyValue() support subproperty
+    /Favorites.aspx + ArticleDir.Icon column
+    /ConfigArticle.Watermark -> ProtectDoc
+    /删除UserFavorite.ShowInHome            
+        UI.SetValue(this.chkHome, item.ShowInHome);
+        <f:CheckBox runat="server" ID="chkHome" Label="显示在首页" Hidden="true" />
+        UI.SetValue(this.chkHome, false);
+        [UI("在首页显示")]  public bool? ShowInHome { get; set; }
+    /新文章钉钉消息通知：非必须，仅供研究
+    /登录页钉钉免登逻辑：钉钉小程序实现不了；要微应用才能传递code参数
+        /钉钉扫码登陆：
+            文档：https://ding-doc.dingtalk.com/doc#/serverapi2/kymkv6
+            第一种方式是直接使用钉钉提供的扫码登录页面
+            在企业Web系统里，用户点击使用钉钉扫描登录，第三方Web系统跳转到如下地址：
+            https://oapi.dingtalk.com/connect/qrconnect?appid=APPID&response_type=code&scope=snsapi_login&state=STATE&redirect_uri=REDIRECT_URI
+            url里的参数需要换成第三方Web系统对应的参数。在钉钉用户扫码登录并确认后，会302到你指定的redirect_uri，并向url参数中追加临时授权码code及state两个参数。
+
+2019-11-21
+    /美化登录页面的错误弹窗
+    /首页增加报表
+	/excel 水印在iphone客户端无法显示，可能还是得用覆盖png的方式实现
+	/水印使用控制台方式，简化系统结构，避免app.dll被锁定（算了）
+	/水印异步方式（没必要，网页本身就是异步的）
+	/优化pdf的水印要优化，背景有问题，黑黑的。
+    /优化水印逻辑
+        /更改思路，所有文件上传后都自动生成pdf，打水印时根据pdf临时打就行了，这样会快很多（先不变更了）
+        /word 水印图片也改为放置覆盖图: 考虑更改逻辑，先生成pdf，再打水印
+
+
+2019-11-20
+    /文章详情增加“是否点赞”参数
+    /设计点赞图标
+    /Data->UserFavorite 
+        Object reference not set to an instance of an object.
+        App.Pages.Datas.Grid1_PreRowDataBound
+        App.Utils.ReflectionHelper.GetPropertyValue
+        /Data->UsrFinance
+        /Data->UserScore
+        /Export方法增加ID字段
+	/全文检索
+		/Search Service + SqlServer
+		/Lucent.Net https://www.cnblogs.com/zjoch/p/4467909.html  还太原始，要自己解析文本给这个引擎
+		/接口：吐出检索结果关联文本
+        /全文检索测试页面
+        /无法在服务器上检索文件内容
+            配置均已设置，且能用资源浏览器检索到文件内容
+            编写的检索程序在win10可以检索文件内容，但无法在服务器上检索到文件内容（可以检索文件名）
+        /解决方案
+        /经过测试，现阶段在windows server 2008上只能检索1个关键字，故只取关键字1
+    /是否打水印可配置
+    /PageBase 优化
+		[ ] 实现AuthToken机制：
+			对于开放性系统，允许三方厂商进行接入，三方厂商不允许调用UrlSign机制访问网站
+			可提供token机制，先提供接口给厂商访问 token，
+			后继访问都附加token参数
+			服务器端对token参数进行校验
+			如 Up.ashx
+            算了，可考虑提供例如 GetXXXFormUrl()的方法作为接口提供给三方厂商即可
+		[ ] 若不设置，默认为AuthSign：
+			所有直接访问页面url的操作都将被禁止
+    /AppContext.GetEntityTypes 缓存处理
+	/权限控制检测小梅她们的权限
+
+2019-11-19
+    /简化安全URL参数, ns,ts,sn
+    /简化EntityBase.Export() 直接输出自己
+    /微调菜单设置页面
+    /目录管理若权限不设置自动设置为页面的ViewPower权限
+    /UISetting 加一个object 的构造方法，尝试获取对象的 TypeDescriptor，而不是直接获取 Attribute（算了，太复杂）
+    /数据管理
+        /增加查找按钮
+        /增加数据模型按钮
+        /增加数据字典按钮
+        /DataModels.aspx -> Data.aspx
+    /DataModel.ashx 表头样式调整以下，稍微加一点颜色
+    /Datas.aspx bool类型也用下拉框显示，不用checkbox
+    /简化Online类和操作页面
+        /.AddColumn<Online>(t => t.LastActiveDt, 120, "最后活动时间", "{0:yyyy-MM-dd HH:mm}", t => t.LastActiveDt)
+        /[UI("最后操作更新时间")]   public DateTime? LastActiveDt { get; set; }
+
+
+2019-11-18
+    /钉钉用户登陆，若昵称为空，则填写钉钉用户名
+    /微信调整菜单隐藏失败
+    /fix AddQueryString 
+    /备份管理
+    /操作手册
+    /文章查看》下载无效果
+    /fix ToExcelXml<object>，解析第一个元素才是正确的
+    /Data.aspx searchbutton 自动生成  <f:Button ID="btnSearch" runat="server" Text="查找" Icon="SystemSearch" OnClick="btnSearch_Click"  Type="Submit"  />
+    /根据Export出的数据，而非Type生成网格界面
+    /FixBUG: http://122.229.31.237:88/Files/Articles/1307724662561574912.pptx?w=200 Illegal characters in path.
+    /Fix Datas.aspx EnumColumn（不用了，直接用 Export 结果）
+    /UrlSign 级别可控（非必要）
+        初级：只提供sign短参数，适合安全级别中等的内部系统，生成的url长度没有负担，生成的url可以持续拷贝使用
+        高级：提供nonce、create、sign三个参数，安全级别高，要注意避免url超长->ns,tm,sn
+
+
+2019-11-14
+	/文章评论 ArticleComment
+        /结构
+        /接口
+        /回帖列表和窗口
+    /提问 Question
+        /FAQ及应答
+    /FAQ: 无需目录下拉框
+    /配置：文档库-》知识库
+    /查看文章浏览记录窗口
+        /增加导出
+        /文章可跳转
+        /用户弹窗
+    /补足 Articles.aspx 参数
+    /补足 ArticleForm.aspx 参数
+    /设置默认登陆页面为：login.html
+    /关注》来源下拉框默认字符串改为：来源
+    /文章：补充AuthorIDl列，可用于回帖跟踪
+    /文章：补足回帖数列
+    /Update EntityBase.BeforeSave, AfterChange
+    /补足文章评论部分，考虑用 Vue 来改造
+
+2019-11-13
+    /重新规划 ArticleType 并编号，注意部署时要去数据库批量更新
+    /重构App.Utils.To<T>， Parse<T>方法
+    /文档库配置: 热点关键字
+    /Article.Search(..types...)
+    /拆分ArticleForm：ArticleContent\ArticleDoc\ArticleReply，不拆了，其实逻辑是一致的，只是控件显隐藏要控制一下
+
+
+2019-11-12
+    /优化 Datas 检索控件
+        /减少宽度
+        /可隐藏参数：Hide
+        /导出excel，用aspose或spire
+    /重构 UIAttribute、UISetting 等
+        /取消自动导出数据的功能，以简化UIAttribute
+        /简化UIAttribute，抽离出 FormUI部分
+    /ToSignedUrl 删除 hours 参数，由网站统一控制
+
+2019-11-11
+    /重构 TAttribute-ParamAttribute-UIAttribute
+    /UIAttribue 增加全球化文本支持
+    /增加 SearcherAttribute
+    /删除日期时间类型控件的默认值
+    /修正 GetAttribute<T>()
+    /自动补足 GridPage 的几个参数
+
+2019-19-08
+    /MenuForm.aspx 合并 URL 和参数
+        type=App.DAL.ArticleVisit&pv=ArticleView&pn=ArticleEdit&pe=ArticleEdit&pd=ArticleEdit
+    /App.Utils
+        + JsonHelper.AsJObject
+        + JsonHelper.AddProperty
+        + StringHelper.AddQueryString
+    /优化Searchs创建逻辑，增加Show参数（与Requird区分开），若为false，则不显示
+    /FixBug: list -> DataForm.aspx
+    /简化User.aspx 变更Roles和Titles的代码
+    /简化Files.aspx代码
+    /DataFrom.aspx bool 下拉框未设置值
+	/知识库文章访问表 ArticleVisit
+		/查询列表
+		/接口
+	    /文章点赞 ArticleApprove
+		/清单。在表单配置功能实现前，还是用传统的方式写页面。
+
+
+
+2019-11-07
+    /自动补足 FormPage 的两个参数
+    /优化 Datas.aspx 查询控件, 根据 Param 参数选择对应的控件、名称、及数据
+
+
+2019-11-06
+    /优化安全
+        /PageBase实现参数检测能力
+        /忽略安全检测 Auth.Ignore
+        /直接用 page.aspx$ 显示页面访问参数，废除pageinfo.ashx
+    /实现Datas查询逻辑
+        /用非泛型很难实现动态条件查询
+        /考虑用反射调用实体类的 Search 方法，输入条件与方法参数一一对应
+        /若由多个search方法，可考虑加上UI()标签，有找个标签的，优先匹配
+    /Files.aspx BUG:
+        /目录列无法取消显示checkbox
+        /弹窗后关闭，会全部选择
+    /安全性校验
+        /Reses.aspx     + AuthSign
+        /ResForm.aspx   + AuthSign
+
+2019-11-05
+    /DataSchema.ashx 只显示当前类的属性成员，不用显示父类的属性成员，显示继承情况
+    /实现 Datas.aspx 导出能力
+    /删除DbForm.aspx
+    /部署Files.aspx，检测网站安全性
+	/实现 DataForm.aspx 访问权限控制
+        /修改PageBase、HandlerBase，Auth对象不为空
+        /修改Datas.aspx
+        /修改DataForm.aspx
+        /修改GridPro
+    /用Auth改造所有列表页面
+    /用Auth改造所有表单页面
+    /HttpApi.Param -> HttpParam 避免冲突
+    /所有页面的安全设置
+
+
+2019-11-04
+    /readme.md and about.aspx
+    /DataModules.aspx -> DataModels.aspx
+    /DataSchema.ashx -> DataModel.ashx
+    /About.aspx 的内容从readme.md获取
+    /Dashboard.aspx 增加程序集信息
+    /Datas.aspx -> DataForm.aspx url安全控制
+    /MenuForm.aspx -> 改用 FileBox
+        pbUrl.UrlTemplate = string.Format("~/Admins/Files.aspx?root={0}&filter={1}",
+            "/".UrlEncode(),
+            ".aspx .ashx".UrlEncode()
+            );
+        pbIcon.UrlTemplate = string.Format("~/Admins/Files.aspx?root={0}&filter={1}",
+            "/res/icon/".UrlEncode(),
+            ".jpg .png .gif".UrlEncode()
+            );
+        <f:FileBox runat="server" ID="fbIcon" Label="图标"  WinWidth="800" WinHeight="600"  Filter=".jpg .png .gif" Root="/res/icon/"" />
+    /FileBox 仅Files目录允许上传图片文件
+    /找个地方显示Readme.md
+    /Menu + SignUrl
+    /调整菜单，增加类别“开发调测”
+    /简化urlsign长度
+    /完善DataModels.ashx
+    /GetTypeString 要优化一下，支持普通泛型，如 EntityBase<User>
+    /ToSeparatedString 分隔符改为字符串，如支持", "
+
+
+2019-11-04
+    /优化 DbSchema.ashx
+    /统一所有ashx的css：dbschema、dataschema、pageinfo.ashx
+    /DataModules.aspx 提供返回能力
+
+2019-11-02
+	/统一提供/Controls/BulkUp/Index.aspx，支持大数据上传
+    /加深word水印
+    /优化 EntityBase 方法：BeforeSave, AfterSave, AfterDelete, AfterChange
+	/菜单可简单指定系统的中的网页，实际生成的菜单附带了URL签名（UrlSign机制）
+    /ChunkUp 用 UrlSign 改造，可以放出来用了
+	/服务器端钉钉接口：无法输出User.Readname字段
+	/Datas管理用户数据时报错：未将对象引用设置到对象的实例
+    /Files.aspx 查看页面信息
+	/实现 PageInfo.ashx?url=x
+
+2019-11-01
+	/FileBox : PopupBox
+	/接口日志是否记录，可在数据库配置
+		Log调用方式不变动
+		Log逻辑做一下变更：
+			首次调用在日志配置表中记录调用方法，代码行数（或日志来源）
+			日志配置信息做缓存
+			默认做日志记录
+			后台可禁止该日志是否打印，如果禁止，则不再记录。
+	/Users.aspx手机号码模糊查询
+	/api.SetUserKeywords 无效？
+	/开放 Datas.aspx 给网站使用，并做好权限控制
+	/实现用户关键字逻辑、界面
+
+
+2019-10-31
+	/废除 GetArticleHots 接口
+	/首页列表分为：最新、最热、关注
+		统一调用GetArticles 接口
+			- 最新 : keywords="", sort=date
+			- 热点：keywords="", sort=hot
+			- 关注：keywords=user.Keywords, sort=date
+	/个人关键字设置
+			+ User.Keywords
+			+ API GetUserKeywords()
+			+ API GetHotKeywords()
+	/Down.ashx 下载原始文件，不打水印，有sign保护
+	/增加MemoryCacheMinutes, ImageModule 用此参数控制
+	/修改signurl格式，expiredt改为createdt，过期时间统一在后台配置
+	/保存完毕后显示hud
+	/Files.aspx/增加文件大小列
+	/独立项目 App.Spire
+	/优化水印
+		/doc   水印在iphone客户端无法显示，可能还是得用覆盖png的方式实现，doc输出为pdf试试
+		/钉钉端能否显示进度
+	/Bug: a.docx 下载到safari会显示 a.docx.doc，然后读取失败，检查这个问题
+		校对mimetype是否正确
+            <mimeMap fileExtension=".doc" mimeType="application/msword" />
+            <mimeMap fileExtension=".docx" mimeType="application/vnd.openxmlformats-officedocument.wordprocessingml.document" />
+            <mimeMap fileExtension=".xls" mimeType="application/vnd.ms-excel" />
+            <mimeMap fileExtension=".xlsx" mimeType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" />
+            <mimeMap fileExtension=".ppt" mimeType="application/vnd.ms-powerpoint" />
+            <mimeMap fileExtension=".pptx" mimeType="application/vnd.openxmlformats-officedocument.presentationml.presentation" />
+            <mimeMap fileExtension=".pdf" mimeType="application/pdf" />
+
+2019-10-30
+	/文件缓存自动清理
+		直接用文件自己的creationtime+Configs.Site.CacheFileMinutes
+		缓存文件格式如：id-timestamp.xxx
+			缓存文件过期时间在网站中统一设置 CacheFileMinutes
+			调度程序根据时间戳定期删除过期的文件
+			其实也不用，直接解析缓存文件名即可，里面有时间
+	/自动打水印
+		/切换FreeSpire
+		/找Spire的破解版本
+		/破解Spire
+	/解决钉钉下载附件问题
+		/水印字体要改一下，好像字体不支持的话，文字就无法半透明了
+		/cache-mode始终为private，应该为no-cache
+		/ppt的图片水印ok
+
+2019-10-26
+	/IIS部署和调试。IISExpress部署老是无法正确处理Moduler。IIS部署和调试时无法修改文档。
+	/水印能力
+		/excel->循环添加水印文字:https://baijiahao.baidu.com/s?id=1634778173099391083&wfr=spider&for=pc
+		/word-》pdf加水印:http://baijiahao.baidu.com/s?id=1602528271331232755&wfr=spider&for=pc
+		/增加 ResDown.ashx，可下载附件; 更改文章详情附件接口
+	 /LinkFiled + Icon: "<img src='/res/icon/eye.png'/>"
+	 /附件url的保护
+		方案2：在应用层在写一次过滤和转化（很麻烦）
+		方案2：DAL层提供一个回调接口，可以转化和保护文件url，如：
+			DALConfig.ProtecURL = (url) => url.ToSignedUrl();
+		方案3：彻底实现OfficeModule，自动处理office文件的保护。（简单粗暴）
+	/简化webconfig配置
+		/删除静态文件注册
+			<staticContent lockAttributes="isDocFooterFileName">
+			<mimeMap fileExtension=".jpeg" mimeType="image/jpeg" />
+			<mimeMap fileExtension=".jpg" mimeType="image/jpeg" />
+			<mimeMap fileExtension=".png" mimeType="image/png" />
+			<mimeMap fileExtension=".doc" mimeType="application/msword" />
+			<mimeMap fileExtension=".docx" mimeType="application/vnd.openxmlformats-officedocument.wordprocessingml.document" />
+			<mimeMap fileExtension=".ppt" mimeType="application/vnd.ms-powerpoint" />
+			<mimeMap fileExtension=".pptx" mimeType="application/vnd.openxmlformats-officedocument.presentationml.presentation" />
+			<mimeMap fileExtension=".pdf" mimeType="application/pdf" />
+			<mimeMap fileExtension=".xlsx" mimeType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" />
+			<mimeMap fileExtension=".xls" mimeType="application/vnd.ms-excel" />
+		/启用ImageModule
+		/启用OfficeModule
+			<add name="ImageModule" type="App.Components.ImageModule" />
+			<add name="OfficeModule" type="App.Components.OfficeModule" />
+			<!--
+			<add name="Png" path="*.png" verb="*" type="App.Components.ImageHandler" />
+			<add name="Jpg" path="*.jpg" verb="*" type="App.Components.ImageHandler" />
+			<add name="WordHandler" path="*.doc" verb="*" type="App.Components.OfficeHandler" />
+			<add name="OfficeHandler" path="*.xls,*.xlsx,*.ppt,*.pptx" verb="*" type="App.Components.OfficeHandler" />
+			<add name="OfficeHandler" path="*.docx" verb="*" type="App.Components.OfficeHandler" />
+			-->
+
+2019-10-24
+	/Down.ashx 增加 name 参数，下载时作为附件名称
+	/修改上传文件名，用snowflakeid
+	/优化Feedbacks: 逻辑删除、拆分类别、app类型等
+	/优化articles及articleForm页面：图标、
+	/删除主机编号，这个应该用配置表进行管理，而不是只有一个值
+        [UI("配置", "主机编号")]            public int    MachineID             { get; set; } = 1;
+        // SnowflackID
+        protected static SnowflakeID _snowflaker;
+	/IO.GetAppSetting<T>();
+	/Users.aspx 无法打开了：已有打开的与此 Command 相关联的 DataReader，必须首先将它关闭。
+		/先临时解决：MultipleActiveResultSets=true;
+	/Files.aspx 增加下载能力
+	/优化ResForm.aspx，用缩略图
+	/Down.ashx 下载文件改用流（算了）
+
+
+2019-10-23
+	/安卓版本钉钉无法查看大图，检测 ImageModule，补足MimeType & fileName（待测试）
+	/Files.aspx 忽略大小写查找文件
+	/CacheMode 改为枚举
+	/去除表单页面中的所有操作CreateDt, UpdateDt的语句
+	/GridPro.ColumnID = $"{type}-{name}";
+	/文章附件可下载
+	/Down.ashx
+	/GridPro 弹窗关闭后排序丢失
+
+
+2019-10-21
+	/接口
+		/GetArticleDirs(long? rootId)
+		/SetUserFavorites(dirIds)
+		/GetArticles 分页有问题
+		/修正 EFExtensions.Page() 方法，超出总页码部分不显示即可，不必限制到最后一页
+		/加上缓存
+	/恢复老的包管理方式
+		删除
+	  <ItemGroup>
+		<PackageReference Include="App.Utilsr">
+		  <Version>1.6.0</Version>
+		</PackageReference>
+		<PackageReference Include="EntityFramework">
+		  <Version>6.2.0</Version>
+		</PackageReference>
+		<PackageReference Include="EntityFramework.Extended">
+		  <Version>6.1.0.168</Version>
+		</PackageReference>
+		<PackageReference Include="Newtonsoft.Json">
+		  <Version>11.0.2</Version>
+		</PackageReference>
+	  </ItemGroup>
+	/Menu.aspx
+	/Files.aspx + searchName
+	/将UI无关类迁移到App.DAL
+
+2019-10-20
+	/优化UrlSign逻辑和参数：用expireDt，缩短timestamp尺寸
+
+2019-10-18
+	/文件选择器：增加子目录、上级目录连接
+	/EnableTree="true" TreeColumn="Name" DataIDField="Id" DataParentIDField="ParentId" ExpandAllTreeNodes="true"
+	/树可以收缩（做不了）企业版才行
+	/接口及后台
+		/文章检索
+			/根据标题+关键字+内容。接口已更改
+			/限制访问目录查询
+			/文章排序：权重、热度、时间
+			/校对文章查看次数（可放到Get方法里面去）
+	/修正bug：GetArticle 就嗝屁. Res.Cast null异常
+	/组合排序
+
+
+2019-10-17
+	/附件增加FileSizeText属性， Files.aspx增加列
+	/目录树的全路径在内存中再整理吧，缓存到内存，不作为数据库字段。（算了）
+	/修正文章查看次数增1逻辑
+		/System.Web.HttpException:“DataBinding:“App.DAL.Res”不包含名为“Description”的属性。”
+		/文章增加 Remark 属性
+	/APIResult 增加 Code 字段：Code不变，文本可变，以支持国际化
+	/实现 PageToken 机制 -> UrlSign
+		// TODO: 根据URL参数计算token
+		// 剔除token参数
+		// 剩下的参数排序后hash
+		// 判断hash值是否等于token
+	/测试页面仅admin可查看：[Auth(Power.Admin)]
+	/Auth 增加 AuthSign 属性
+	/FormPage, GridPro 等控件的权限可以从 Page.Auth 里面获取
+	/GridPro 缩略图列加上RowBound事件处理，如果不是图片文件，就删除连接，否则会生成访问
+	/分配账户
+	/目录的虚拟删除
+	/目录管理：解决无法编辑的bug
+	/增加文章删除（下架、屏蔽）功能
+	/解决默认图像路径问题，用根目录方式
+
+2019-10-16
+	/统一Multi页面参数：Multiply、Multiple -》 multi
+	/将Multiselect、ShowSearcher属性移到PopupBox上
+	/UI.GetInt64, GetInt64s -> GetLong, GetLongs
+	/GridPro 支持从PopupBox.Value传值
+	/改造Popup，找个地方隐藏ID列表（用hidden）
+		Trigger处理
+			var script = string.Format("{0}{1}",
+				this.Window.GetSaveStateReference(this.ClientID),
+				this.Window.GetShowReference(url, this.WinTitle, this.WinWidth, this.WinHeight)
+				);
+			PageContext.RegisterStartupScript(script);
+		弹窗处理
+			var script = string.Format("{0}{1}",
+				ActiveWindow.GetWriteBackValueReference(txt),
+				ActiveWindow.GetHideReference()
+				);
+			PageContext.RegisterStartupScript(script);
+	/实现资源选择窗口
+		folder
+		extentsions
+		multi
+		菜单》页面选择》列出目录树选择，选中后自动显示对应的访问权限（由插件系统实现后实现）
+		页面可增加ParamAttribute，URL 参数
+		FileSelector.ascx
+
+2019-10-15
+	/创建角色:内容管理员\部门管理员；分配权限
+    /优化检索接口：文章检索时递归到子目录
+	/Asp.GetHandler(url...)
+	/页面可加特性：Param(...)
+
+2019-10-14
+	/将所有依赖角色的代码，全部改为依赖权限（实在嫌麻烦还可以定义例如admin的权限）
+	/获取关注目录：用户、部门、系统
+	/接口文章内容去除所有标签，除了<img> 和 <p>
+    /EntityBase
+        /并发控制. EF自带了 ConcurrenceAttribute
+        /修改自动记录
+
+2019-10-12
+	/数据库 Token 机制
+	/ArticleDir 树形
+	/用户管理的部门： UserDept, UserDepts.aspx, UserDeptForm.aspx
+	/Pages -> Malls
+	/用户部门增加头衔名称
+	/AddThrumbnailColumn 支持普通文件，不压缩就是了
+
+2019-10-11
+	/文章目录管理+图标字段：模型、页面、接口
+
+
+2019-10-09
+	/实现数据列表排序、分页
+    /钉钉登陆接口（未测试）
+	/批量获取钉钉部门接口，先建立起来
+		/+ Dept.DingDeptId
+		/服务器端用户管理不可用
+	/User无法编辑
+	/日志无法查看
+
+2019-10-08
+	/取消自增判断宏 #if USE_SNOWFLAKEID，强制用该方案
+	/自动数据管理
+        /自动模式：只编辑基础数据字段
+		/数据表单
+			/数据表单新增
+			/数据表单编辑完毕后刷新页面
+		/数据列表
+			/数据列表bool值用checkfield表示
+			/数据无法删除（涉及到复杂的级联操作、考虑用简单的方式来删除数据，或构造删除SQL）
+			/只实现简单的删除操作（不负责级联）
+		/数据模型列表：
+			/类型成员的描述信息不准确
+			/类型列表-描述信息无法展示(DataModules.aspx)
+			/分组、备注
+			/排序：需要用个类重新封装一下 TypeInfo{Name, FullName, Group, Description}
+	/重构EntityBase
+		/EntityBase : IID
+		/EntityBase<T> : EntityBase
+
+
+2019-12-07
+	/Grid 自动列：只包含简单数据类型
+    /实现模型管理页面
+        /模型类型列表
+		/类型结构
+        /数据列表
+		/数据编辑表单
+	/类别列表（来自AppContext）
+	/FormPro
+        /增加构造函数 FormPro(object o)
+        /增加事件：AfterSave();
+    /设置登陆页面背景图片
+    /剥离数据库路由
+        /Route
+        /RouteModule
+		/Datas.aspx?type=App.DAL.Route
+            Routes.aspx
+            RouteForm.aspx
+
+
+
+2019-12-06
+    /文本 Log 即时显示，不缓冲。
+    /优化日志显示，不用json了，套一层引号，很难查看
+    /更换登陆页面
+        /新增接口 Common.GetSiteInfo
+        /更换登陆页面
+        /增加SiteInfo.Owner, Copyright， ICP...
+    /Store->Shop
+    /User 增加和修改若干字段
+    /后台重启网站能力：修改web.config保存、刷新
+
+2019-10-01
+    /角色管理挂了
+    /如果是管理员，隐藏删除按钮
+    /GridPro 删除按钮后面有个...
+    /自动枚举所有数据接口
+    /迁移到新的配置管理方案
+        /纯文本的自动生成
+        /不能自动生成的手工处理，如图片上传逻辑
+
+
+2019-09-30
+    /钉钉配置类
+    /钉钉配置窗口
+    /部署到服务器上验证码显示不出来（HttpAPI故障），服务器webconfig配置问题
+    /HttpApi 剥离 App.Utils 依赖
+    /数据库及网站迁移
+    /建模
+        /Article       : 文章 + Weight, Keywords
+        /ArticleDir    : 文章目录
+        /UserFavorite  : 用户关注目录、部门目录、系统目录都放一起
+    /后台管理
+        /Article
+        /ArticleDir
+        /UserFavorite
+        /权限控制
+    /重构 GridPro 页面
+        /Users.aspx，测试
+        /Reses.aspx，测试
+        /Pages/Areas.aspx，测试
+        /Pages/Histories.aspx
+    /测试服务器部署时的出错原因: SessionModule webconfig
+
+
+2019-09-29
+    /FormPro
+        /隐藏ID字段显示，但还存在
+        /.HideFields = "ID, CreateDt, UpdateDt";
+    /改进FormPro
+        /可分组
+        /不处理ignore,notmap, virtual 等属性
+    /改进配置方案
+        /都存储在数据库中
+        /单一表方案
+            /新版本的配置页面
+        /分表方案
+            /优化两种配置方案，先保持使用老的方案
+            /简化 SiteConfig，直接用新数据库表存储，不再使用config表 + webconfig两种方式
+                /WebConfig表（或SiteSetting/SiteConfig)
+                /存取表单展示
+                /是否显示ID字段
+                /废除原SiteConfig表
+                /废除Config表
+
+
+2019-09-27
+    /修改Depts, DeptForm
+    /DbBase.BeforeSave();
+    /用nuget管理App.Utils
+    /EntityBase
+        + CreateDt
+        + UpdateDt
+    /简化Menus.aspx
+
+
+

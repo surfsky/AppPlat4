@@ -1,0 +1,16 @@
+{
+  "version": 2,
+  "dgSpecHash": "CUTm8DwSQcwZ30X3uKxNruWA6E7agIK7XBfR4859fJ3LtB/rVLtkFg6xsFAZQhO5xg5e6G7qzCD8C29sYmhRJA==",
+  "success": true,
+  "projectFilePath": "\\\\Mac\\Downloads\\Dev\\AppPlat\\AppPlat4\\App.Test\\App.Tests.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\CJH\\.nuget\\packages\\entityframework\\6.2.0\\entityframework.6.2.0.nupkg.sha512",
+    "C:\\Users\\CJH\\.nuget\\packages\\mstest.testadapter\\1.4.0\\mstest.testadapter.1.4.0.nupkg.sha512",
+    "C:\\Users\\CJH\\.nuget\\packages\\mstest.testframework\\1.4.0\\mstest.testframework.1.4.0.nupkg.sha512",
+    "C:\\Users\\CJH\\.nuget\\packages\\newtonsoft.json\\11.0.2\\newtonsoft.json.11.0.2.nupkg.sha512",
+    "C:\\Users\\CJH\\.nuget\\packages\\z.entityframework.extensions\\4.0.58\\z.entityframework.extensions.4.0.58.nupkg.sha512",
+    "C:\\Users\\CJH\\.nuget\\packages\\z.entityframework.plus.ef6\\1.12.19\\z.entityframework.plus.ef6.1.12.19.nupkg.sha512",
+    "C:\\Users\\CJH\\.nuget\\packages\\z.expressions.eval\\3.1.8\\z.expressions.eval.3.1.8.nupkg.sha512"
+  ],
+  "logs": []
+}

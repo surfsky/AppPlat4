@@ -1,0 +1,27 @@
+﻿<?xml version="1.0"?>
+<configuration>
+  <configSections>
+    <section name="httpApi" type="App.HttpApi.HttpApiConfig, App.HttpApi"/>
+  </configSections>
+
+  <!-- HttpApi 配置 -->
+  <httpApi
+    formatEnum="Text"
+    formatIndented="Indented"
+    formatDateTime="yyyy-MM-dd HH:mm:ss"
+    formatLongNumber="Int64,UInt64,Decimal"
+    formatLowCamel="false"
+    errorResponse="APIResult"
+    typePrefix="$rootnamespace$." 
+    wrap="false"
+    language="en"
+    banMinutes="60"
+    />
+
+  <system.webServer>
+    <modules>
+      <add name="HttpApiModule" type="App.HttpApi.HttpApiModule" />
+    </modules>
+  </system.webServer>
+  
+</configuration>

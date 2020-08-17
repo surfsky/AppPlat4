@@ -1,0 +1,51 @@
+2020-03-19 16:18:15,667 [3] INFO  Consoler - Logger start
+2020-03-19 16:18:15,676 [3] INFO  Consoler - Connect http://www.baidu.com running
+2020-03-19 16:18:16,006 [3] INFO  Consoler - Connect http://www.baidu.com ok
+2020-03-19 16:18:16,007 [3] INFO  Consoler - Article  running
+2020-03-19 16:28:12,709 [3] INFO  Consoler - Logger start
+2020-03-19 16:28:12,719 [3] INFO  Consoler - Connect http://www.baidu.com running
+2020-03-19 16:28:13,028 [3] INFO  Consoler - Connect http://www.baidu.com ok
+2020-03-19 16:28:13,030 [3] INFO  Consoler - Article  running
+2020-03-19 16:30:09,628 [3] WARN  Consoler - Article  fail, times=1, info=在与 SQL Server 建立连接时出现与网络相关的或特定于实例的错误。未找到或无法访问服务器。请验证实例名称是否正确并且 SQL Server 已配置为允许远程连接。 (provider: SQL Network Interfaces, error: 26 - 定位指定的服务器/实例时出错)
+2020-03-19 16:30:09,638 [3] INFO  Consoler - Log  running
+2020-03-19 16:30:51,727 [3] INFO  Consoler - Logger start
+2020-03-19 16:30:51,737 [3] INFO  Consoler - Connect http://www.baidu.com running
+2020-03-19 16:30:52,025 [3] INFO  Consoler - Connect http://www.baidu.com ok
+2020-03-19 16:30:52,026 [3] INFO  Consoler - Article  running
+2020-03-19 16:33:13,863 [3] INFO  Consoler - Article  ok
+2020-03-19 16:33:13,865 [3] INFO  Consoler - Log  running
+2020-03-19 16:33:36,218 [3] INFO  Consoler - Log  ok
+2020-03-19 16:33:36,421 [3] INFO  Consoler - Connect http://www.baidu.com running
+2020-03-19 16:33:37,405 [3] INFO  Consoler - Connect http://www.baidu.com ok
+2020-03-19 16:34:06,530 [3] INFO  Consoler - Connect http://www.baidu.com running
+2020-03-19 16:34:07,082 [3] INFO  Consoler - Connect http://www.baidu.com ok
+2020-03-19 16:35:09,090 [3] INFO  Consoler - Logger start
+2020-03-19 16:35:09,099 [3] INFO  Consoler - Connect http://www.baidu.com running
+2020-03-19 16:35:11,003 [3] INFO  Consoler - Connect http://www.baidu.com ok
+2020-03-19 16:35:11,004 [3] INFO  Consoler - Article  running
+2020-03-19 16:35:14,855 [3] INFO  Consoler - Article  ok
+2020-03-19 16:35:14,856 [3] INFO  Consoler - Log  running
+2020-03-19 16:35:14,874 [3] INFO  Consoler - Log  ok
+2020-03-19 16:40:02,570 [3] INFO  Consoler - Logger start
+2020-03-19 16:40:02,579 [3] INFO  Consoler - Connect http://doc.oa.wz.zj.cn:88 running
+2020-03-19 16:40:02,977 [3] INFO  Consoler - Connect http://doc.oa.wz.zj.cn:88 ok
+2020-03-19 16:40:02,978 [3] INFO  Consoler - Article  running
+2020-03-19 16:40:13,856 [3] INFO  Consoler - Article  ok
+2020-03-19 16:40:13,857 [3] INFO  Consoler - Log  running
+2020-03-19 16:40:17,282 [3] INFO  Consoler - Log  ok
+2020-03-19 16:49:48,626 [3] INFO  Consoler - Logger start
+2020-03-19 16:49:48,645 [3] INFO  Consoler - Connect http://doc.oa.wz.zj.cn:88 running
+2020-03-19 16:49:49,030 [3] INFO  Consoler - Connect http://doc.oa.wz.zj.cn:88 ok
+2020-03-19 16:49:49,030 [3] INFO  Consoler - Article  running
+2020-03-19 16:49:54,634 [3] INFO  Consoler - Article  ok
+2020-03-19 16:49:54,634 [3] INFO  Consoler - Log  running
+2020-03-19 16:49:54,657 [3] INFO  Consoler - Log  ok
+2020-03-19 16:51:21,267 [3] INFO  Consoler - Logger start
+2020-03-19 16:51:21,281 [3] INFO  Consoler - [Connect] http://doc.oa.wz.zj.cn:88 running
+2020-03-19 16:51:21,672 [3] INFO  Consoler - [Connect] http://doc.oa.wz.zj.cn:88 ok
+2020-03-19 16:51:21,676 [3] INFO  Consoler - [Article]  running
+2020-03-19 16:51:27,427 [3] INFO  Consoler - [Article]  ok
+2020-03-19 16:51:27,428 [3] INFO  Consoler - [Log]  running
+2020-03-19 16:51:27,457 [3] INFO  Consoler - [Log]  ok
+2020-03-19 16:51:51,162 [3] INFO  Consoler - [Connect] http://doc.oa.wz.zj.cn:88 running
+2020-03-19 16:51:51,187 [3] INFO  Consoler - [Connect] http://doc.oa.wz.zj.cn:88 ok

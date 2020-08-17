@@ -1,0 +1,99 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>百度地图测试</title>
+</head>
+<body>
+    <div>
+        <label>GPS</label>
+        <input id="tbGPS" type="textbox" value="120.69063473,28.00283759" style="width:200px">
+        <label>地址</label>
+        <input id="tbAddr" type="textbox" value="" style="width:400px">
+        <input type="button" value="查找" onclick="searchAddr()">
+        <input type="button" value="路况" onclick="showTraffic()">
+        <input type="button" value="当前城市" onclick="setCurrentCity()">
+        <input type="button" value="当前位置" onclick="setCurrentLocation()">
+    </div>
+    <div id="mapContainer" style="width:100%; height:800px;" />
+
+    <!-- baidu 地图的这个脚本经常访问失败，应该有频率限制  -->
+    <script type="text/javascript" src="https://api.map.baidu.com/api?v=2.0&ak=A60cece53af65e45e359f578c9e70d32"></script>
+    <script type="text/javascript" src="/res/js/bmap.js"></script>
+    <script type="text/javascript">
+        // 显示位置信息
+        var map, marker;
+        var tbGPS, tbAddr;
+
+        window.onload = function () {
+            // 解析点坐标
+            tbGPS = document.getElementById("tbGPS");
+            tbAddr = document.getElementById("tbAddr");
+            var point = new BMap.Point(116.404, 39.915);
+            var gps = tbGPS.value;
+            var n = gps.indexOf(",");
+            if (n > 0) {
+                var lng = gps.substring(0, n);
+                var lat = gps.substring(n + 1);
+                point = new BMap.Point(lng, lat);
+            }
+
+            // 百度地图
+            map = new BMap.Map("mapContainer");
+            map.centerAndZoom(point, 15);
+            map.enableScrollWheelZoom();
+            map.enableDoubleClickZoom();
+
+            // 添加放缩按钮
+            addControlGeolocation(map, function (gps, addr) {
+                showGPS(gps);
+                showAddr(addr);
+            });
+
+            // 地图中央的固定图标
+            marker = addMarkerSymbol(map, point);
+            marker.setPosition(point);
+
+            // 地图拖动后重新获取位置信息，拖动结束后尝试获取文本地址
+            map.addEventListener('dragging', function () {
+                var center = map.getCenter();
+                marker.setPosition(center);
+                showGPS(center);
+            });
+            map.addEventListener('dragend', function () {
+                // 逆地址解析(point -> address 文本)
+                var point = map.getCenter();
+                new BMap.Geocoder().getLocation(point, function (result) {
+                    showAddr(result.addressComponents);
+                });
+            });
+        };
+
+        // 显示坐标
+        function showGPS(point) {
+            var gps = point.lng + "," + point.lat;
+            tbGPS.value = gps;
+        }
+
+        // 显示地址
+        function showAddr(ac) {
+            var addr = ac.province + ac.city + ac.district + ac.street + ac.streetNumber;
+            tbAddr.value = addr;
+        }
+
+        // 搜索文本地址并定位
+        function searchAddr() {
+            var addr = tbAddr.value;
+            var city = "温州";
+            new BMap.Geocoder().getPoint(addr, function (point) {
+                if (point != null) {
+                    showGPS(point);
+                    map.centerAndZoom(point, 15);
+                    marker.setPosition(point);
+                }
+            }, city);
+        }
+
+    </script>
+</body>
+</html>

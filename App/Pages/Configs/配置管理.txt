@@ -1,0 +1,27 @@
+﻿此目录保存通用的后台管理页面。
+定制的页面请移到 Pages 目录下。
+网站监控运维相关的网页请移到 Maintains 目录下
+
+框架
+	Main                  : 主页面
+	Welcome               : 欢迎页
+基础管理
+	User                  : 用户
+	RolePower             : 角色、权限
+	Dept                  : 部门
+	Title                 : 职务
+	UserChangePwd         : 用户更改密码
+	UserProfile           : 用户
+内容管理
+	Article               : 文章（页面）
+	Res                   : 资源
+配置管理
+	Menu                  : 菜单
+	Config                : 配置
+开发辅助
+	Api                   ：接口清单
+	DbSchema			  ：数据模型
+	DataForm			  ：通用数据编辑窗口
+	DbForm				  ：数据库记录编辑窗口
+	DbGrid				  ：数据库表
+
