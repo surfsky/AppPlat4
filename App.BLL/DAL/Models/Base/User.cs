@@ -52,8 +52,19 @@ namespace App.DAL
         [UI("生日")]                             public DateTime? Birthday { get; set; }
         [UI("最后登录日期")]                     public DateTime? LastLoginDt { get; set; }
         [UI("最后位置")]                         public string LastGPS { get; set; }              // 格式如：x,y
-        [UI("用户角色ID列表")]                   public string Roles { get; set; }="";          // 格式如：",1,2,4,"
+        [UI("用户角色ID列表")]                   public string Roles { get; set; }="";            // 格式如：",1,2,4,"
         [UI("数据来源")]                         public string Source { get; set; } = "Web";      // Web, Ding, Wechat....
+
+        // 员工信息
+        [UI("就职日期")]                         public DateTime? HireDt { get; set; }
+        [UI("离职日期")]                         public DateTime? LeaveDt { get; set; }
+        [UI("部门")]                             public long? DeptID { get; set; }
+        [UI("组织")]                             public long? OrgID { get; set; }
+        [UI("归属区域")]                         public long? AreaID { get; set; }
+
+        // 邀请信息
+        [UI("归属商店")]                         public long? ShopID { get; set; }
+        [UI("邀请人")]                           public long? InviterID { get; set; }
 
         // 微信认证信息
         [UI("微信UnionID")]                      public string WechatUnionID { get; set; }
@@ -77,19 +88,6 @@ namespace App.DAL
         [UI("账户余额")]                         public double? FinanceBalance { get; set; }= 0;
         [UI("账户收入")]                         public double? FinanceIncome { get; set; } = 0;
         [UI("账户支出")]                         public double? FinanceOutcome { get; set; } = 0;
-
-        // 员工信息
-        [UI("就职日期")]                         public DateTime? HireDt { get; set; }
-        [UI("离职日期")]                         public DateTime? LeaveDt { get; set; }
-        [UI("部门")]                             public long? DeptID { get; set; }
-        [UI("组织")]                             public long? OrgID { get; set; }
-
-        // 邀请信息
-        [UI("归属商店")]                         public long? ShopID { get; set; }
-        [UI("邀请人")]                           public long? InviterID { get; set; }
-
-        // 管理权限
-        [UI("归属区域")]                         public long? AreaID { get; set; }
 
 
         // 导航属性

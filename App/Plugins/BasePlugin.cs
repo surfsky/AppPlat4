@@ -14,9 +14,9 @@ using App.DAL;
 namespace App.Base
 {
     /// <summary>
-    /// 网站基础服务
+    /// 基础模块（插件）
     /// </summary>
-    public class BaseModule : ISitePlugin
+    public class BasePlugin : ISitePlugin
     {
         public string Name => "基础";
         public SitePluginType Type =>  SitePluginType.Base;

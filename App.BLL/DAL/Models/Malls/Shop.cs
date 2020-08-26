@@ -11,11 +11,12 @@ using App.Entities;
 namespace App.DAL
 {
     /// <summary>
-    /// 商店、商店
+    /// 商店
     /// </summary>
     [UI("商城", "商店")]
     public class Shop : EntityBase<Shop>, IDeleteLogic
     {
+        [UI("母店")]                public long? ParentID { get; set; }
         [UI("是否在用")]            public bool? InUsed { get; set; } = true;
         [UI("城市")]                public long? AreaID { get; set; }
         [UI("名称")]                public string Name { get; set; }

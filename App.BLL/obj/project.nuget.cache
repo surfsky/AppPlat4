@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "hIrR2KVc9fnpZFs34Vrs6Jp+i1GI9aGwBr2HfL5oJ9MZHB+StpEiyUj4Xflk2av27VhVG6Ul5Un2jZDQRW2unA==",
+  "dgSpecHash": "DNw1P9pT+FBzPvxSLi2z3YDZiyIxApe67YCIRo4XnN+P3hAA223Eif88bmZurnhNFh7vu11oaQRxDUGy+jqvHg==",
   "success": true,
-  "projectFilePath": "\\\\Mac\\Downloads\\Dev\\AppPlat\\AppPlat4\\App.BLL\\App.BLL.csproj",
+  "projectFilePath": "\\\\Mac\\Downloads\\Dev\\AppPlat\\AppPlat4\\AppPlat4-github\\App.BLL\\App.BLL.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\CJH\\.nuget\\packages\\entityframework\\6.2.0\\entityframework.6.2.0.nupkg.sha512",
     "C:\\Users\\CJH\\.nuget\\packages\\newtonsoft.json\\11.0.2\\newtonsoft.json.11.0.2.nupkg.sha512",

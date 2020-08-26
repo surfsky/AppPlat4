@@ -192,6 +192,7 @@ namespace App.Components
         /// <param name="query">查询字符串（如a=x&b=x）</param>
         public static string GetDatasUrl(Type type, string query = "", PageMode? mode = null, AuthAttribute auth = null)
         {
+            if (type == null) return "";
             var url = string.Format("/Pages/Devs/Datas.aspx?tp={0}", type.FullName);
             //if (query.IsNotEmpty()) url = url.AddQueryString(string.Format("q={0}", query.UrlEncode()));
             if (query.IsNotEmpty()) url = url.AddQueryString(query);

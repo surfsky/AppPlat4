@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "\\\\Mac\\Downloads\\Dev\\AppPlat\\AppPlat4\\App.BLL\\App.BLL.csproj": {}
+    "\\\\Mac\\Downloads\\Dev\\AppPlat\\AppPlat4\\AppPlat4-github\\App.BLL\\App.BLL.csproj": {}
   },
   "projects": {
-    "\\\\Mac\\Downloads\\Dev\\AppPlat\\AppPlat4\\App.BLL\\App.BLL.csproj": {
+    "\\\\Mac\\Downloads\\Dev\\AppPlat\\AppPlat4\\AppPlat4-github\\App.BLL\\App.BLL.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "\\\\Mac\\Downloads\\Dev\\AppPlat\\AppPlat4\\App.BLL\\App.BLL.csproj",
+        "projectUniqueName": "\\\\Mac\\Downloads\\Dev\\AppPlat\\AppPlat4\\AppPlat4-github\\App.BLL\\App.BLL.csproj",
         "projectName": "App.BLL",
-        "projectPath": "\\\\Mac\\Downloads\\Dev\\AppPlat\\AppPlat4\\App.BLL\\App.BLL.csproj",
+        "projectPath": "\\\\Mac\\Downloads\\Dev\\AppPlat\\AppPlat4\\AppPlat4-github\\App.BLL\\App.BLL.csproj",
         "packagesPath": "C:\\Users\\CJH\\.nuget\\packages\\",
-        "outputPath": "\\\\Mac\\Downloads\\Dev\\AppPlat\\AppPlat4\\App.BLL\\obj\\",
+        "outputPath": "\\\\Mac\\Downloads\\Dev\\AppPlat\\AppPlat4\\AppPlat4-github\\App.BLL\\obj\\",
         "projectStyle": "PackageReference",
         "skipContentFileWrite": true,
         "fallbackFolders": [

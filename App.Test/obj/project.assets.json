@@ -790,11 +790,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "\\\\Mac\\Downloads\\Dev\\AppPlat\\AppPlat4\\App.Test\\App.Tests.csproj",
+      "projectUniqueName": "\\\\Mac\\Downloads\\Dev\\AppPlat\\AppPlat4\\AppPlat4-github\\App.Test\\App.Tests.csproj",
       "projectName": "App.Tests",
-      "projectPath": "\\\\Mac\\Downloads\\Dev\\AppPlat\\AppPlat4\\App.Test\\App.Tests.csproj",
+      "projectPath": "\\\\Mac\\Downloads\\Dev\\AppPlat\\AppPlat4\\AppPlat4-github\\App.Test\\App.Tests.csproj",
       "packagesPath": "C:\\Users\\CJH\\.nuget\\packages\\",
-      "outputPath": "\\\\Mac\\Downloads\\Dev\\AppPlat\\AppPlat4\\App.Test\\obj\\",
+      "outputPath": "\\\\Mac\\Downloads\\Dev\\AppPlat\\AppPlat4\\AppPlat4-github\\App.Test\\obj\\",
       "projectStyle": "PackageReference",
       "skipContentFileWrite": true,
       "fallbackFolders": [
@@ -815,11 +815,11 @@
       "frameworks": {
         "net45": {
           "projectReferences": {
-            "\\\\Mac\\Downloads\\Dev\\AppPlat\\AppPlat4\\App.BLL\\App.BLL.csproj": {
-              "projectPath": "\\\\Mac\\Downloads\\Dev\\AppPlat\\AppPlat4\\App.BLL\\App.BLL.csproj"
+            "\\\\Mac\\Downloads\\Dev\\AppPlat\\AppPlat4\\AppPlat4-github\\App.BLL\\App.BLL.csproj": {
+              "projectPath": "\\\\Mac\\Downloads\\Dev\\AppPlat\\AppPlat4\\AppPlat4-github\\App.BLL\\App.BLL.csproj"
             },
-            "\\\\Mac\\Downloads\\Dev\\AppPlat\\AppPlat4\\App\\App.csproj": {
-              "projectPath": "\\\\Mac\\Downloads\\Dev\\AppPlat\\AppPlat4\\App\\App.csproj"
+            "\\\\Mac\\Downloads\\Dev\\AppPlat\\AppPlat4\\AppPlat4-github\\App\\App.csproj": {
+              "projectPath": "\\\\Mac\\Downloads\\Dev\\AppPlat\\AppPlat4\\AppPlat4-github\\App\\App.csproj"
             }
           }
         }

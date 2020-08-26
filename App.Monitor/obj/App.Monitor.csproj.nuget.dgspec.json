@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "\\\\Mac\\Downloads\\Dev\\AppPlat\\AppPlat4\\App.Monitor\\App.Monitor.csproj": {}
+    "\\\\Mac\\Downloads\\Dev\\AppPlat\\AppPlat4\\AppPlat4-github\\App.Monitor\\App.Monitor.csproj": {}
   },
   "projects": {
-    "\\\\Mac\\Downloads\\Dev\\AppPlat\\AppPlat4\\App.BLL\\App.BLL.csproj": {
+    "\\\\Mac\\Downloads\\Dev\\AppPlat\\AppPlat4\\AppPlat4-github\\App.BLL\\App.BLL.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "\\\\Mac\\Downloads\\Dev\\AppPlat\\AppPlat4\\App.BLL\\App.BLL.csproj",
+        "projectUniqueName": "\\\\Mac\\Downloads\\Dev\\AppPlat\\AppPlat4\\AppPlat4-github\\App.BLL\\App.BLL.csproj",
         "projectName": "App.BLL",
-        "projectPath": "\\\\Mac\\Downloads\\Dev\\AppPlat\\AppPlat4\\App.BLL\\App.BLL.csproj",
+        "projectPath": "\\\\Mac\\Downloads\\Dev\\AppPlat\\AppPlat4\\AppPlat4-github\\App.BLL\\App.BLL.csproj",
         "packagesPath": "C:\\Users\\CJH\\.nuget\\packages\\",
-        "outputPath": "\\\\Mac\\Downloads\\Dev\\AppPlat\\AppPlat4\\App.BLL\\obj\\",
+        "outputPath": "\\\\Mac\\Downloads\\Dev\\AppPlat\\AppPlat4\\AppPlat4-github\\App.BLL\\obj\\",
         "projectStyle": "PackageReference",
         "skipContentFileWrite": true,
         "fallbackFolders": [
@@ -65,14 +65,14 @@
         }
       }
     },
-    "\\\\Mac\\Downloads\\Dev\\AppPlat\\AppPlat4\\App.Monitor\\App.Monitor.csproj": {
+    "\\\\Mac\\Downloads\\Dev\\AppPlat\\AppPlat4\\AppPlat4-github\\App.Monitor\\App.Monitor.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "\\\\Mac\\Downloads\\Dev\\AppPlat\\AppPlat4\\App.Monitor\\App.Monitor.csproj",
+        "projectUniqueName": "\\\\Mac\\Downloads\\Dev\\AppPlat\\AppPlat4\\AppPlat4-github\\App.Monitor\\App.Monitor.csproj",
         "projectName": "App.Monitor",
-        "projectPath": "\\\\Mac\\Downloads\\Dev\\AppPlat\\AppPlat4\\App.Monitor\\App.Monitor.csproj",
+        "projectPath": "\\\\Mac\\Downloads\\Dev\\AppPlat\\AppPlat4\\AppPlat4-github\\App.Monitor\\App.Monitor.csproj",
         "packagesPath": "C:\\Users\\CJH\\.nuget\\packages\\",
-        "outputPath": "\\\\Mac\\Downloads\\Dev\\AppPlat\\AppPlat4\\App.Monitor\\obj\\",
+        "outputPath": "\\\\Mac\\Downloads\\Dev\\AppPlat\\AppPlat4\\AppPlat4-github\\App.Monitor\\obj\\",
         "projectStyle": "PackageReference",
         "skipContentFileWrite": true,
         "fallbackFolders": [
@@ -93,8 +93,8 @@
         "frameworks": {
           "net45": {
             "projectReferences": {
-              "\\\\Mac\\Downloads\\Dev\\AppPlat\\AppPlat4\\App.BLL\\App.BLL.csproj": {
-                "projectPath": "\\\\Mac\\Downloads\\Dev\\AppPlat\\AppPlat4\\App.BLL\\App.BLL.csproj"
+              "\\\\Mac\\Downloads\\Dev\\AppPlat\\AppPlat4\\AppPlat4-github\\App.BLL\\App.BLL.csproj": {
+                "projectPath": "\\\\Mac\\Downloads\\Dev\\AppPlat\\AppPlat4\\AppPlat4-github\\App.BLL\\App.BLL.csproj"
               }
             }
           }

@@ -100,6 +100,7 @@
     <Compile Include="DAL\AppDatabaseInitializer.cs" />
     <Compile Include="DAL\AppMigrationConfiguration.cs" />
     <Compile Include="DAL\Models\Articles\ArticleDir.cs" />
+    <Compile Include="DAL\Models\Fits\FitInvite.cs" />
     <Compile Include="DAL\Models\Maintains\LoginLog.cs" />
     <Compile Include="DAL\Models\Opens\OpenApp.cs" />
     <Compile Include="DAL\Models\Base\Power.cs" />
