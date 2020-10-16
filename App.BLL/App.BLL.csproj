@@ -44,10 +44,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>\\Mac\Home\Downloads\Dev\AppPlat\AppPlat4\packages\App.Utils.dll</HintPath>
     </Reference>
-    <Reference Include="App.Wechats, Version=1.1.7163.28908, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\AppPro\bin\App.Wechats.dll</HintPath>
-    </Reference>
     <Reference Include="log4net">
       <HintPath>..\App\bin\log4net.dll</HintPath>
     </Reference>
@@ -162,6 +158,9 @@
     <Compile Include="DAL\Models\Malls\OrderFlow.cs" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="App.Wechats">
+      <Version>1.2.2</Version>
+    </PackageReference>
     <PackageReference Include="EntityFramework">
       <Version>6.2.0</Version>
     </PackageReference>

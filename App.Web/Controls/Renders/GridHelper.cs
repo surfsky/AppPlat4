@@ -59,6 +59,29 @@ namespace App.Controls
             #pragma warning restore 0618
         }
 
+        /// <summary>排序及分页（未完成）</summary>
+        public static IQueryable<T> SortAndPage<T>(this IQueryable<T> query, List<SortInfo> sorts, int pageIndex, int pageSize)
+        {
+            #pragma warning disable 0618
+            for (int i=0; i<sorts.Count; i++)
+            {
+                var sort = sorts[i];
+                if (i == 0)
+                    query = query.Sort(sort.Field, sort.Direction);
+                //else
+                //    query = query.ThenSort(sort.Field, sort.Direction);
+            }
+            return query.Page(pageIndex, pageSize);
+            #pragma warning restore 0618
+        }
+
+        /// <summary>排序参数</summary>
+        public class SortInfo
+        {
+            public string Field;
+            public bool Ascent = true;
+            public string Direction => Ascent ? "ASC" : "DSC";
+        }
 
 
         //-----------------------------------------

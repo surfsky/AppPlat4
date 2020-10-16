@@ -244,3 +244,23 @@ EntityBase
             return o;
         }
 
+事务 Transaction
+
+``` csharp
+    // 用 Transaction 控制异常回滚
+    using (var transaction = AppContext.Current.Database.BeginTransaction())
+    {
+        try
+        {
+            var order = Order.Create(type, userId, ShopId);
+            order.AddItem(productSpecId, n);
+            transaction.Commit();
+            return order;
+        }
+        catch
+        {
+            transaction.Rollback();
+            return null;
+        }
+    }
+```

@@ -11,6 +11,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README.md = README.md
 		Doc\Task.Biz.txt = Doc\Task.Biz.txt
 		Task.txt = Task.txt
+		TaskArchitecture.txt = TaskArchitecture.txt
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.BLL", "App.BLL\App.BLL.csproj", "{250CC1FE-90A5-4679-96A3-4485DF5341F9}"

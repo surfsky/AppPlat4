@@ -84,6 +84,9 @@ namespace App.Apis
             long? inviteUserId = null, long? inviteShopId = null, string getUserInfoReply="")
         {
             var user = User.Get(wechatUnionId: unionId, wechatMPId: openId);
+            //if (user == null)
+            //    user = User.CreateCustomer(null);
+
             var sessionKey = user.WechatMPSessionKey;
             var wechatUser = new WechatUser() { unionid = unionId, mpId = openId, nickname = nickname, headimgurl = photo, mpSessionKey = sessionKey };
             var txt = string.Format("user={0}, reply={1}, sessionKey={2}, aspSessionID={3}", wechatUser.ToJson(), getUserInfoReply, sessionKey, Asp.Session.SessionID);

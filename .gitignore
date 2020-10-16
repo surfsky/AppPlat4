@@ -1,1 +1,9 @@
 /App.Web/obj
+/App/obj
+/App/caches
+/App.BLL/obj
+/App.Monitor/obj
+/App/Logs
+/App/topsdk_1.log
+/Utils/App.Wechats/packages
+/.vs/AppPlat4/v16

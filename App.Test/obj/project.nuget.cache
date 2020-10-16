@@ -1,9 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "h6WlGXY+qR4MV8qRX3rflMZFhvc04CEDMA5J/kzwv+ilDO8p0JiDYzg7W7ASI8xwHmJL/icnYfBmvCWvQWvoyQ==",
+  "dgSpecHash": "X/awYMqX+/1j7ek73vfx5Im5j1/tsHrI9/Gv4GD/ZXvrw7auAiSa5WAKG56HwvHIEdiDHgP9CDBJywoBbOBJGQ==",
   "success": true,
-  "projectFilePath": "\\\\Mac\\Downloads\\Dev\\AppPlat\\AppPlat4\\AppPlat4-github\\App.Test\\App.Tests.csproj",
+  "projectFilePath": "\\\\Mac\\Home\\Downloads\\Dev\\AppPlat\\AppPlat4\\AppPlat4-github\\App.Test\\App.Tests.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\CJH\\.nuget\\packages\\app.wechats\\1.2.2\\app.wechats.1.2.2.nupkg.sha512",
     "C:\\Users\\CJH\\.nuget\\packages\\entityframework\\6.2.0\\entityframework.6.2.0.nupkg.sha512",
     "C:\\Users\\CJH\\.nuget\\packages\\mstest.testadapter\\1.4.0\\mstest.testadapter.1.4.0.nupkg.sha512",
     "C:\\Users\\CJH\\.nuget\\packages\\mstest.testframework\\1.4.0\\mstest.testframework.1.4.0.nupkg.sha512",
